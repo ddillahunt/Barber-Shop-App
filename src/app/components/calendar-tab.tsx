@@ -457,7 +457,7 @@ export function CalendarTab() {
               <DialogTrigger asChild>
                 <Button size="sm" variant="outline">
                   <UserPlus className="size-4 mr-2" />
-                  Add Crew Member
+                  Crew
                 </Button>
               </DialogTrigger>
               <DialogContent>
