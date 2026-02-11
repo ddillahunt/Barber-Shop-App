@@ -48,6 +48,9 @@ export default function App() {
 
   // On mount: check for existing session, seed users, route to correct view
   useEffect(() => {
+    // Clear old seed appointments
+    localStorage.removeItem('kr-appointments');
+
     // Seed users (ensures default admin exists)
     getUsers();
 

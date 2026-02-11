@@ -9,6 +9,7 @@ import { Label } from '@/app/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';
 import { Textarea } from '@/app/components/ui/textarea';
+import { Checkbox } from '@/app/components/ui/checkbox';
 import { ImageWithFallback } from '@/app/components/figma/ImageWithFallback';
 import { Calendar, Upload, Image as ImageIcon, Trash2, Edit, Bell } from 'lucide-react';
 import { format } from 'date-fns';
@@ -89,13 +90,22 @@ export function JobsTab() {
   
   const [editJobForm, setEditJobForm] = useState({
     customerName: '',
-    service: '',
+    services: [] as string[],
     address: '',
     scheduledDate: '',
     assignedCrew: '',
     status: 'scheduled' as Job['status'],
     notes: ''
   });
+
+  const toggleEditService = (service: string) => {
+    setEditJobForm(prev => ({
+      ...prev,
+      services: prev.services.includes(service)
+        ? prev.services.filter(s => s !== service)
+        : [...prev.services, service]
+    }));
+  };
 
   const availableServices = [
     'House Exterior Wash',
@@ -229,9 +239,9 @@ export function JobsTab() {
     setEditingJob(job);
     setEditJobForm({
       customerName: job.customerName,
-      service: job.service,
+      services: job.service ? job.service.split(', ').map(s => s.trim()).filter(Boolean) : [],
       address: job.address,
-      scheduledDate: format(new Date(job.scheduledDate), 'yyyy-MM-dd'), // Use format to ensure proper date
+      scheduledDate: format(new Date(job.scheduledDate), 'yyyy-MM-dd'),
       assignedCrew: job.assignedCrew,
       status: job.status,
       notes: job.notes
@@ -241,23 +251,51 @@ export function JobsTab() {
 
   const handleSaveEditJob = () => {
     if (!editingJob) return;
-    
+
     // Create a date at noon local time to avoid timezone issues
     const [year, month, day] = editJobForm.scheduledDate.split('-').map(Number);
     const scheduledDate = new Date(year, month - 1, day, 12, 0, 0).toISOString();
-    
+
+    const serviceString = editJobForm.services.join(', ');
+
     const updatedJob: Job = {
       ...editingJob,
       customerName: editJobForm.customerName,
-      service: editJobForm.service,
+      service: serviceString,
       address: editJobForm.address,
-      scheduledDate, // Use the properly constructed date
+      scheduledDate,
       assignedCrew: editJobForm.assignedCrew,
       status: editJobForm.status,
       notes: editJobForm.notes
     };
 
     setJobs(jobs.map(j => j.id === editingJob.id ? updatedJob : j));
+
+    // Sync service change to linked quote and invoice
+    if (editingJob.quoteId && serviceString !== editingJob.service) {
+      const savedQuotes = localStorage.getItem('kr-quotes');
+      if (savedQuotes) {
+        const allQuotes = JSON.parse(savedQuotes);
+        const quoteIndex = allQuotes.findIndex((q: any) => q.id === editingJob.quoteId);
+        if (quoteIndex !== -1) {
+          allQuotes[quoteIndex].services = editJobForm.services;
+          localStorage.setItem('kr-quotes', JSON.stringify(allQuotes));
+          window.dispatchEvent(new Event('kr-quotes-updated'));
+        }
+      }
+
+      const savedInvoices = localStorage.getItem('kr-invoices');
+      if (savedInvoices) {
+        const allInvoices = JSON.parse(savedInvoices);
+        const invIndex = allInvoices.findIndex((inv: any) => inv.quoteId === editingJob.quoteId);
+        if (invIndex !== -1) {
+          allInvoices[invIndex].service = serviceString;
+          localStorage.setItem('kr-invoices', JSON.stringify(allInvoices));
+          window.dispatchEvent(new Event('kr-invoices-updated'));
+        }
+      }
+    }
+
     setIsEditDialogOpen(false);
   };
 
@@ -318,7 +356,10 @@ export function JobsTab() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="font-medium">{job.service}</p>
+                <div className="text-sm">
+                  <span className="text-gray-500">Service: </span>
+                  <span className="font-medium">{job.service}</span>
+                </div>
                 <p className="text-sm text-gray-500 mt-1">{job.address}</p>
               </div>
 
@@ -387,11 +428,10 @@ export function JobsTab() {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="flex-1"
                     onClick={() => handleSendReminder(job.id)}
+                    title="Send Reminder"
                   >
-                    <Bell className="size-4 mr-2" />
-                    Send Reminder
+                    <Bell className="size-4" />
                   </Button>
                 )}
               </div>
@@ -494,6 +534,36 @@ export function JobsTab() {
                   value={editJobForm.customerName}
                   onChange={(e) => setEditJobForm({ ...editJobForm, customerName: e.target.value })}
                 />
+              </div>
+
+              <div className="space-y-2 col-span-2">
+                <Label>Service Type (Select one or more)</Label>
+                <div className="space-y-3 border rounded-md p-4 max-h-48 overflow-y-auto bg-gray-50">
+                  {availableServices.map(service => (
+                    <div key={service} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`edit-job-service-${service}`}
+                        checked={editJobForm.services.includes(service)}
+                        onCheckedChange={() => toggleEditService(service)}
+                      />
+                      <label
+                        htmlFor={`edit-job-service-${service}`}
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                      >
+                        {service}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                {editJobForm.services.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {editJobForm.services.map(service => (
+                      <Badge key={service} variant="secondary" className="text-xs">
+                        {service}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
