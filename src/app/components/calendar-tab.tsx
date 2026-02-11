@@ -245,6 +245,10 @@ export function CalendarTab() {
                 <span className="text-xs text-gray-600">Appointments</span>
               </div>
               <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded bg-orange-100 border border-orange-200"></div>
+                <span className="text-xs text-gray-600">Job - Pending</span>
+              </div>
+              <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded bg-purple-100 border border-purple-200"></div>
                 <span className="text-xs text-gray-600">Job - Scheduled</span>
               </div>
