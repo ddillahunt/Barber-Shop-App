@@ -15,7 +15,7 @@ import { ServiceDetailPageEs } from "./pages/ServiceDetailPageEs";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Barber-Shop-App">
       <Toaster />
       <Routes>
         <Route path="/" element={<HomePage />} />
