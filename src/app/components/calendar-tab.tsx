@@ -313,10 +313,31 @@ export function CalendarTab() {
         status: 'scheduled'
       };
       setAppointments([...appointments, appointment]);
+
+      // Create a corresponding job with the assigned crew member
+      const savedJobs = localStorage.getItem('kr-jobs');
+      const existingJobs = savedJobs ? JSON.parse(savedJobs) : [];
+      const jobNumber = existingJobs.length + 1;
+      const newJob = {
+        id: `J-${String(jobNumber).padStart(3, '0')}`,
+        customerName: appointment.customerName,
+        service: appointment.services.join(', '),
+        address: appointment.address,
+        scheduledDate: appointment.date,
+        assignedCrew: appointment.assignedEmployee || 'Unassigned',
+        status: 'scheduled',
+        photos: [],
+        notes: appointment.notes,
+        appointmentId: appointment.id
+      };
+      const updatedJobs = [...existingJobs, newJob];
+      localStorage.setItem('kr-jobs', JSON.stringify(updatedJobs));
+      window.dispatchEvent(new Event('kr-jobs-updated'));
+
       setNewAppointment({ customerName: '', services: [], time: '', address: '', notes: '', assignedEmployee: '' });
       setIsDialogOpen(false);
       setSelectedDate(null);
-      
+
       // Notify crew member of new assignment
       if (appointment.assignedEmployee) {
         createCrewNotification({
@@ -347,6 +368,18 @@ export function CalendarTab() {
         apt.id === editingAppointment.id ? { ...apt, ...newAppointment } : apt
       );
       setAppointments(updatedAppointments);
+
+      // Sync crew member change to corresponding job
+      if (newEmployee) {
+        const savedJobs = localStorage.getItem('kr-jobs');
+        const existingJobs = savedJobs ? JSON.parse(savedJobs) : [];
+        const jobIndex = existingJobs.findIndex((job: any) => job.appointmentId === editingAppointment.id);
+        if (jobIndex !== -1) {
+          existingJobs[jobIndex].assignedCrew = newEmployee;
+          localStorage.setItem('kr-jobs', JSON.stringify(existingJobs));
+          window.dispatchEvent(new Event('kr-jobs-updated'));
+        }
+      }
       
       // Check for crew member change
       if (oldEmployee && newEmployee && oldEmployee !== newEmployee) {
