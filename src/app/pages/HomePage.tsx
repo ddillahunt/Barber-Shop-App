@@ -4,7 +4,7 @@ import { Services } from "../components/Services";
 import { Schedule } from "../components/Schedule";
 import { AppointmentBooking } from "../components/AppointmentBooking";
 import { Contact } from "../components/Contact";
-import { Team } from "../components/Team";
+import { Testimonials } from "../components/Testimonials";
 import { ScrollToTop } from "../components/ScrollToTop";
 import { Scissors } from "lucide-react";
 
@@ -14,7 +14,7 @@ export function HomePage() {
       <Navigation />
       <Hero />
       <Services />
-      <Team />
+      <Testimonials />
       <Schedule />
       <AppointmentBooking />
       <Contact />
