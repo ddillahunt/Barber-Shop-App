@@ -7,8 +7,7 @@ import { Label } from './ui/label';
 import { CrewAppNotifications } from './crew-app-notifications';
 import { Calendar, Clock, MapPin, User, Briefcase, CheckCircle, XCircle } from 'lucide-react';
 import { format, startOfWeek, endOfWeek, addDays, isSameDay, parseISO } from 'date-fns';
-// Logo placeholder - replace with actual logo file path when available
-const logoImage = '';
+import logoImage from '@/assets/logo.svg';
 
 interface CrewMember {
   id: string;

@@ -10,8 +10,7 @@ import { CrewManagementDialog } from '@/app/components/crew-management-dialog';
 import { Users, Calendar, FileText, Briefcase, DollarSign } from 'lucide-react';
 import { Toaster } from '@/app/components/ui/sonner';
 import { CrewNotificationListener } from '@/app/components/crew-notifications';
-// Logo placeholder - replace with actual logo file path when available
-const logoImage = '';
+import logoImage from '@/assets/logo.svg';
 
 /**
  * K&R POWERWASHING - Admin Dashboard
