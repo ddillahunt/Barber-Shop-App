@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { Calendar } from "lucide-react";
+import { Calendar, UserCheck } from "lucide-react";
 import { toast } from "sonner";
 
 const barbers = [
@@ -67,6 +67,10 @@ export function AppointmentBooking() {
         <div className="text-center mb-16">
           <h2 className="text-5xl mb-4 font-bold bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 bg-clip-text text-transparent">Book an Appointment</h2>
           <p className="text-slate-700 text-lg">Reserve your spot with our expert barbers</p>
+          <p className="mt-3 inline-flex items-center gap-2 bg-emerald-100 border border-emerald-300 text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold">
+            <UserCheck className="size-4" />
+            Walk-ins also welcome — no appointment needed!
+          </p>
         </div>
         <Card className="max-w-4xl mx-auto border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 bg-slate-900">
           <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 p-8">

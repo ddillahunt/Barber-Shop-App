@@ -1,4 +1,4 @@
-import { Scissors, ChevronDown, Clock, CalendarCheck, Mail, Languages, Menu, X } from "lucide-react";
+import { Scissors, ChevronDown, Clock, CalendarCheck, Mail, Languages, Menu, X, Users } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   DropdownMenu,
@@ -91,6 +91,10 @@ export function Navigation() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+            <button onClick={() => scrollToSection('team')} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
+              <Users className="size-4" />
+              Our Team
+            </button>
             <button onClick={() => scrollToSection('schedule')} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
               <Clock className="size-4" />
               Schedule
@@ -148,8 +152,15 @@ export function Navigation() {
                 </div>
               </div>
 
-              <button 
-                onClick={() => scrollToSection('schedule')} 
+              <button
+                onClick={() => scrollToSection('team')}
+                className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
+              >
+                <Users className="size-4" />
+                Our Team
+              </button>
+              <button
+                onClick={() => scrollToSection('schedule')}
                 className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
               >
                 <Clock className="size-4" />

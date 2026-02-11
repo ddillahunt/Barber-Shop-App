@@ -104,7 +104,31 @@ export function Contact() {
             </Card>
           </div>
 
-          {/* Contact Form */}
+          {/* Map & Contact Form */}
+          <div className="space-y-6">
+            {/* Google Maps Embed */}
+            <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 overflow-hidden bg-slate-900">
+              <div className="relative">
+                <iframe
+                  title="Grandes Ligas Barber Shop Location"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3024.2219901290355!2d-74.00369368400567!3d40.71312937933185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a23e28c6c1f%3A0x5e0a8b1b0b1b1b1b!2sDowntown%20Manhattan!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
+                  width="100%"
+                  height="250"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full"
+                />
+                <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-slate-900 to-transparent" />
+              </div>
+              <CardContent className="p-4 bg-gradient-to-br from-slate-900 to-black">
+                <p className="text-amber-400 text-sm font-medium text-center">
+                  123 Main Street, Downtown District
+                </p>
+              </CardContent>
+            </Card>
+
           <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 bg-slate-900">
             <CardHeader className="p-8 pb-6">
               <CardTitle className="text-2xl text-amber-400">Send Us a Message</CardTitle>
@@ -150,6 +174,7 @@ export function Contact() {
               </form>
             </CardContent>
           </Card>
+          </div>
         </div>
       </div>
     </section>

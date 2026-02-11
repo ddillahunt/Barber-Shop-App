@@ -1,12 +1,13 @@
 import { Scissors } from "lucide-react";
+import heroBg from "../../../assets/images/hero-bg.jpg";
 
 export function HeroEs() {
   return (
     <section className="relative bg-gradient-to-br from-black via-slate-900 to-slate-800 text-white py-32 overflow-hidden">
       {/* Background Image Overlay */}
-      <div 
+      <div
         className="absolute inset-0 opacity-20 bg-cover bg-center"
-        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1759134198561-e2041049419c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXJiZXIlMjBzaG9wJTIwaW50ZXJpb3IlMjBtb2Rlcm58ZW58MXx8fHwxNzcwMTY3NTI5fDA&ixlib=rb-4.1.0&q=80&w=1080)' }}
+        style={{ backgroundImage: `url(${heroBg})` }}
       />
       
       {/* Animated gradient overlay */}
