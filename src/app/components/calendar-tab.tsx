@@ -373,6 +373,32 @@ export function CalendarTab() {
   };
 
   return (
+    <div className="space-y-4">
+      {/* Calendar Legend Nav */}
+      <div className="flex items-center gap-6 px-4 py-2 bg-white rounded-lg border overflow-x-auto">
+        <span className="text-xs font-medium text-gray-500 shrink-0">Legend:</span>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="size-3 rounded-full bg-blue-500" />
+          <span className="text-xs">Appointment</span>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="size-3 rounded-full bg-primary" />
+          <span className="text-xs">Job Scheduled</span>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="size-3 rounded-full bg-amber-500" />
+          <span className="text-xs">Job In Progress</span>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="size-3 rounded-full bg-green-500" />
+          <span className="text-xs">Job Completed</span>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="size-3 rounded-full bg-red-500" />
+          <span className="text-xs">Job Cancelled</span>
+        </div>
+      </div>
+
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-1 space-y-4">
       <Card>
@@ -452,37 +478,6 @@ export function CalendarTab() {
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
-
-      {/* Calendar Legend */}
-      <Card>
-        <CardHeader className="space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Legend</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="size-3 rounded-full bg-blue-500" />
-              <span className="text-xs">Appointment</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="size-3 rounded-full bg-primary" />
-              <span className="text-xs">Job Scheduled</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="size-3 rounded-full bg-amber-500" />
-              <span className="text-xs">Job In Progress</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="size-3 rounded-full bg-green-500" />
-              <span className="text-xs">Job Completed</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="size-3 rounded-full bg-red-500" />
-              <span className="text-xs">Job Cancelled</span>
-            </div>
-          </div>
         </CardContent>
       </Card>
 
@@ -1131,6 +1126,7 @@ export function CalendarTab() {
           )}
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 }
