@@ -1,4 +1,4 @@
-import { Scissors, ChevronDown, Clock, CalendarCheck, Mail, Languages, Menu, X } from "lucide-react";
+import { Scissors, ChevronDown, Clock, CalendarCheck, Mail, Languages, Menu, X, Info } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   DropdownMenu,
@@ -103,7 +103,11 @@ export function NavigationEs() {
               <Mail className="size-4" />
               Contacto
             </button>
-            <button 
+            <button onClick={() => navigate("/es/acerca-de")} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
+              <Info className="size-4" />
+              Acerca de
+            </button>
+            <button
               onClick={() => navigate("/")} 
               className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5"
             >
@@ -169,7 +173,14 @@ export function NavigationEs() {
                 <Mail className="size-4" />
                 Contacto
               </button>
-              <button 
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate("/es/acerca-de"); }}
+                className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
+              >
+                <Info className="size-4" />
+                Acerca de
+              </button>
+              <button
                 onClick={handleLanguageSwitch}
                 className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
               >

@@ -12,6 +12,8 @@ import { HomePage } from "./pages/HomePage";
 import { ServiceDetailPage } from "./pages/ServiceDetailPage";
 import { HomePageEs } from "./pages/HomePageEs";
 import { ServiceDetailPageEs } from "./pages/ServiceDetailPageEs";
+import { AboutPage } from "./pages/AboutPage";
+import { AboutPageEs } from "./pages/AboutPageEs";
 
 export default function App() {
   return (
@@ -22,6 +24,8 @@ export default function App() {
         <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
         <Route path="/es" element={<HomePageEs />} />
         <Route path="/es/servicios/:serviceId" element={<ServiceDetailPageEs />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/es/acerca-de" element={<AboutPageEs />} />
       </Routes>
     </BrowserRouter>
   );
