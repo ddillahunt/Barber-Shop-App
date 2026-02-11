@@ -31,6 +31,8 @@ Thumbs.db
 # Include project directories
 !src/
 !src/**
+!Barber_new/
+!Barber_new/**
 !supabase/
 !supabase/**
 !utils/
@@ -39,3 +41,32 @@ Thumbs.db
 !guidelines/**
 !assets/
 !assets/**
+
+# Exclude barber shop files from powerwashing repo
+Barber_new/
+src/.claude/
+src/nul
+src/app/App_1.tsx
+src/app/App_original.tsx
+src/app/components/AppointmentBooking.tsx
+src/app/components/AppointmentBooking_1.tsx
+src/app/components/Contact.tsx
+src/app/components/Contact_1.tsx
+src/app/components/Hero.tsx
+src/app/components/Hero_1.tsx
+src/app/components/Navigation.tsx
+src/app/components/Navigation_1.tsx
+src/app/components/Schedule.tsx
+src/app/components/Schedule_1.tsx
+src/app/components/ScrollToTop.tsx
+src/app/components/ScrollToTop_1.tsx
+src/app/components/Services.tsx
+src/app/components/Services_1.tsx
+src/app/components/es/
+src/app/components/figma/ImageWithFallback_1.tsx
+src/app/components/ui/*_1.tsx
+src/app/components/ui/*_1.ts
+src/app/data/
+src/app/pages/
+src/main_1.tsx
+src/styles/*_1.css
