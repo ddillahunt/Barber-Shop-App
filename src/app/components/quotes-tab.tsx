@@ -370,8 +370,7 @@ K&R Powerwashing Team`
       service: newQuote.services.join(', '), // Join services array into a string
       amount: parseFloat(newQuote.amount),
       status: 'pending',
-      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-      quickbooksSynced: false
+      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
     };
     
     // Save invoice to localStorage
