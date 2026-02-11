@@ -170,6 +170,8 @@ export function CalendarTab() {
 
   const handleWeekDateSelect = (day: Date) => {
     setSelectedDate(day);
+    setNewAppointment({ customerName: '', services: [], time: '8:00 AM', assignedCrew: 'Unassigned', address: '', notes: '' });
+    setIsDialogOpen(true);
   };
 
   const selectedDateAppointments = appointments.filter(
@@ -395,7 +397,13 @@ export function CalendarTab() {
             <Calendar
               mode="single"
               selected={selectedDate}
-              onSelect={setSelectedDate}
+              onSelect={(date: Date | undefined) => {
+                setSelectedDate(date);
+                if (date) {
+                  setNewAppointment({ customerName: '', services: [], time: '8:00 AM', assignedCrew: 'Unassigned', address: '', notes: '' });
+                  setIsDialogOpen(true);
+                }
+              }}
               className="rounded-md border"
             />
           ) : (
