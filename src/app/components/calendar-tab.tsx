@@ -155,7 +155,7 @@ export function CalendarTab() {
     let dayJobs = jobs.filter(job => {
       const jobDate = job.scheduledDate.split('T')[0];
       const customerExists = customers.some(c => c.name === job.customerName);
-      return jobDate === dateStr && job.status !== 'pending' && customerExists;
+      return jobDate === dateStr && customerExists;
     });
 
     if (selectedCrewMember) {
@@ -287,12 +287,11 @@ export function CalendarTab() {
                   className="w-full justify-between"
                 >
                   <span>All Crew</span>
-                  {selectedCrewMember === null && <Badge variant="secondary" className="bg-white text-gray-700">{jobs.filter(j => j.status !== 'pending').length + appointments.length}</Badge>}
+                  {selectedCrewMember === null && <Badge variant="secondary" className="bg-white text-gray-700">{jobs.length + appointments.length}</Badge>}
                 </Button>
                 {crewMembers.map((member) => {
                   const memberJobs = jobs.filter(job =>
-                    job.assignedCrew === member.name &&
-                    job.status !== 'pending'
+                    job.assignedCrew === member.name
                   ).length;
                   const memberAppointments = appointments.filter(apt =>
                     apt.assignedEmployee === member.name
@@ -414,6 +413,7 @@ export function CalendarTab() {
                         <HoverCard key={job.id} openDelay={200} closeDelay={100}>
                           <HoverCardTrigger asChild>
                             <div className={`text-xs p-1 rounded truncate cursor-default ${
+                              job.status === 'pending' ? 'bg-orange-100 border border-orange-200' :
                               job.status === 'scheduled' ? 'bg-purple-100 border border-purple-200' :
                               job.status === 'in-progress' ? 'bg-yellow-100 border border-yellow-200' :
                               job.status === 'completed' ? 'bg-green-100 border border-green-200' :
@@ -430,6 +430,7 @@ export function CalendarTab() {
                           </HoverCardTrigger>
                           <HoverCardContent side="right" align="start" className="w-72 p-0">
                             <div className={`p-3 border-b ${
+                              job.status === 'pending' ? 'bg-orange-50' :
                               job.status === 'scheduled' ? 'bg-purple-50' :
                               job.status === 'in-progress' ? 'bg-yellow-50' :
                               job.status === 'completed' ? 'bg-green-50' :
