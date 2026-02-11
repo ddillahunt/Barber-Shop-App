@@ -18,6 +18,8 @@ Thumbs.db
 
 # Include only project files
 !.gitignore
+!.github/
+!.github/**
 !package.json
 !package-lock.json
 !vite.config.ts
