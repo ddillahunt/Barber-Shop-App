@@ -30,6 +30,7 @@ interface Job {
   service: string;
   address: string;
   scheduledDate: string; // Changed to string for localStorage
+  scheduledTime?: string; // e.g. "09:00"
   assignedCrew: string;
   status: 'pending' | 'scheduled' | 'in-progress' | 'completed' | 'cancelled';
   photos: JobPhoto[];
@@ -85,6 +86,7 @@ export function JobsTab() {
   const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [filter, setFilter] = useState<'all' | 'pending' | 'scheduled' | 'in-progress' | 'completed' | 'cancelled'>('all');
   const [isInitialized, setIsInitialized] = useState(false);
+  const isExternalUpdate = useRef(false);
   const [customers, setCustomers] = useState<any[]>([]);
   const [crewMembers, setCrewMembers] = useState<any[]>([]);
   
@@ -93,6 +95,7 @@ export function JobsTab() {
     services: [] as string[],
     address: '',
     scheduledDate: '',
+    scheduledTime: '',
     assignedCrew: '',
     status: 'scheduled' as Job['status'],
     notes: ''
@@ -134,16 +137,25 @@ export function JobsTab() {
   useEffect(() => {
     loadJobs();
 
-    // Listen for storage changes from other tabs/windows only (not same component)
+    // Listen for job updates from other components (quotes, calendar, etc.)
+    const handleJobsUpdate = () => {
+      isExternalUpdate.current = true;
+      loadJobs();
+    };
+
+    // Listen for storage changes from other tabs/windows
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'kr-jobs') {
+        isExternalUpdate.current = true;
         loadJobs();
       }
     };
 
+    window.addEventListener('kr-jobs-updated', handleJobsUpdate);
     window.addEventListener('storage', handleStorageChange);
 
     return () => {
+      window.removeEventListener('kr-jobs-updated', handleJobsUpdate);
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
@@ -152,8 +164,11 @@ export function JobsTab() {
   useEffect(() => {
     if (isInitialized) {
       localStorage.setItem('kr-jobs', JSON.stringify(jobs));
-      // Dispatch event to notify other components (including crew app)
-      window.dispatchEvent(new Event('kr-jobs-updated'));
+      // Only dispatch event when the change originated from this component
+      if (!isExternalUpdate.current) {
+        window.dispatchEvent(new Event('kr-jobs-updated'));
+      }
+      isExternalUpdate.current = false;
     }
   }, [jobs, isInitialized]);
 
@@ -242,6 +257,7 @@ export function JobsTab() {
       services: job.service ? job.service.split(', ').map(s => s.trim()).filter(Boolean) : [],
       address: job.address,
       scheduledDate: format(new Date(job.scheduledDate), 'yyyy-MM-dd'),
+      scheduledTime: job.scheduledTime || '',
       assignedCrew: job.assignedCrew,
       status: job.status,
       notes: job.notes
@@ -264,6 +280,7 @@ export function JobsTab() {
       service: serviceString,
       address: editJobForm.address,
       scheduledDate,
+      scheduledTime: editJobForm.scheduledTime,
       assignedCrew: editJobForm.assignedCrew,
       status: editJobForm.status,
       notes: editJobForm.notes
@@ -366,6 +383,7 @@ export function JobsTab() {
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Calendar className="size-4" />
                 {format(new Date(job.scheduledDate), 'MMM d, yyyy')}
+                {job.scheduledTime && ` at ${job.scheduledTime}`}
               </div>
 
               <div className="text-sm">
@@ -580,6 +598,15 @@ export function JobsTab() {
                   type="date"
                   value={editJobForm.scheduledDate}
                   onChange={(e) => setEditJobForm({ ...editJobForm, scheduledDate: e.target.value })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Scheduled Time</Label>
+                <Input
+                  type="time"
+                  value={editJobForm.scheduledTime}
+                  onChange={(e) => setEditJobForm({ ...editJobForm, scheduledTime: e.target.value })}
                 />
               </div>
 
