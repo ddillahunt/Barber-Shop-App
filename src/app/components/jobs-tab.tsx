@@ -325,6 +325,13 @@ export function JobsTab() {
     }
   };
 
+  const formatTime12h = (time: string) => {
+    const [h, m] = time.split(':').map(Number);
+    const period = h >= 12 ? 'PM' : 'AM';
+    const hour = h % 12 || 12;
+    return `${hour}:${String(m).padStart(2, '0')} ${period}`;
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -383,7 +390,7 @@ export function JobsTab() {
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Calendar className="size-4" />
                 {format(new Date(job.scheduledDate), 'MMM d, yyyy')}
-                {job.scheduledTime && ` at ${job.scheduledTime}`}
+                {job.scheduledTime && ` at ${formatTime12h(job.scheduledTime)}`}
               </div>
 
               <div className="text-sm">
