@@ -11,91 +11,66 @@ export function Terms() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        <Card className="p-6 bg-white shadow-lg">
-          <div className="flex items-start gap-4">
-            <div className="bg-green-100 p-3 rounded-lg">
-              <DollarSign className="size-6 text-green-600" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Payment Terms</h3>
-              <ul className="space-y-2 text-slate-700">
-                <li className="flex items-start gap-2">
-                  <span className="font-semibold min-w-fit">• 40%</span>
-                  <span>upfront deposit to begin project</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="font-semibold min-w-fit">• 30%</span>
-                  <span>upon design approval and development milestone</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="font-semibold min-w-fit">• 30%</span>
-                  <span>upon project completion and launch</span>
-                </li>
-              </ul>
-              <p className="text-sm text-slate-600 mt-4">
-                Accepted payment methods: Bank transfer, credit card, PayPal
-              </p>
-            </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <Card className="p-6 bg-white shadow-lg flex flex-col items-center text-center">
+          <div className="bg-green-100 p-4 rounded-full mb-4">
+            <DollarSign className="size-7 text-green-600" />
           </div>
+          <h3 className="text-xl font-bold text-slate-900 mb-3">Payment Terms</h3>
+          <ul className="space-y-2 text-slate-700 text-sm">
+            <li><span className="font-semibold">40%</span> upfront deposit to begin project</li>
+            <li><span className="font-semibold">30%</span> upon design approval & development milestone</li>
+            <li><span className="font-semibold">30%</span> upon project completion and launch</li>
+          </ul>
+          <p className="text-xs text-slate-500 mt-4">
+            Bank transfer, credit card, PayPal
+          </p>
         </Card>
 
-        <Card className="p-6 bg-white shadow-lg">
-          <div className="flex items-start gap-4">
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <Clock className="size-6 text-blue-600" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Project Timeline</h3>
-              <ul className="space-y-2 text-slate-700 text-sm">
-                <li>• Timeline begins after deposit is received and all content is provided</li>
-                <li>• Delays in content provision may extend the timeline</li>
-                <li>• Each package includes specified revision rounds</li>
-                <li>• Additional revisions billed at hourly rate ($75-125/hour)</li>
-                <li>• Rush delivery available with 25% premium fee</li>
-              </ul>
-            </div>
+        <Card className="p-6 bg-white shadow-lg flex flex-col items-center text-center">
+          <div className="bg-blue-100 p-4 rounded-full mb-4">
+            <Clock className="size-7 text-blue-600" />
           </div>
+          <h3 className="text-xl font-bold text-slate-900 mb-3">Project Timeline</h3>
+          <ul className="space-y-2 text-slate-700 text-sm">
+            <li>Timeline begins after deposit & content provided</li>
+            <li>Delays in content may extend timeline</li>
+            <li>Includes specified revision rounds</li>
+            <li>Extra revisions at $75-125/hr</li>
+            <li>Rush delivery +25% fee</li>
+          </ul>
         </Card>
 
-        <Card className="p-6 bg-white shadow-lg">
-          <div className="flex items-start gap-4">
-            <div className="bg-purple-100 p-3 rounded-lg">
-              <FileCheck className="size-6 text-purple-600" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Deliverables</h3>
-              <ul className="space-y-2 text-slate-700 text-sm">
-                <li>• Fully functional website as per selected package</li>
-                <li>• Source code (client owns the code)</li>
-                <li>• Documentation and training materials</li>
-                <li>• Post-launch support as specified in package</li>
-                <li>• All purchased assets and design files</li>
-              </ul>
-            </div>
+        <Card className="p-6 bg-white shadow-lg flex flex-col items-center text-center">
+          <div className="bg-purple-100 p-4 rounded-full mb-4">
+            <FileCheck className="size-7 text-purple-600" />
           </div>
+          <h3 className="text-xl font-bold text-slate-900 mb-3">Deliverables</h3>
+          <ul className="space-y-2 text-slate-700 text-sm">
+            <li>Fully functional website per package</li>
+            <li>Source code (client owned)</li>
+            <li>Documentation & training</li>
+            <li>Post-launch support included</li>
+            <li>All assets and design files</li>
+          </ul>
         </Card>
 
-        <Card className="p-6 bg-white shadow-lg">
-          <div className="flex items-start gap-4">
-            <div className="bg-amber-100 p-3 rounded-lg">
-              <AlertCircle className="size-6 text-amber-600" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Important Notes</h3>
-              <ul className="space-y-2 text-slate-700 text-sm">
-                <li>• Client must provide all content, images, and branding materials</li>
-                <li>• Client responsible for domain registration and hosting costs</li>
-                <li>• Scope changes may incur additional charges</li>
-                <li>• Website content must comply with all applicable laws</li>
-                <li>• Third-party service fees (hosting, SMS, etc.) not included</li>
-              </ul>
-            </div>
+        <Card className="p-6 bg-white shadow-lg flex flex-col items-center text-center">
+          <div className="bg-amber-100 p-4 rounded-full mb-4">
+            <AlertCircle className="size-7 text-amber-600" />
           </div>
+          <h3 className="text-xl font-bold text-slate-900 mb-3">Important Notes</h3>
+          <ul className="space-y-2 text-slate-700 text-sm">
+            <li>Client provides content, images & branding</li>
+            <li>Client handles domain & hosting costs</li>
+            <li>Scope changes may incur charges</li>
+            <li>Content must comply with laws</li>
+            <li>Third-party fees not included</li>
+          </ul>
         </Card>
       </div>
 
-      <Card className="p-8 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200">
+      <Card className="mt-[3in] p-8 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200">
         <h3 className="text-xl font-bold text-slate-900 mb-4">What's Included in All Packages</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
@@ -128,7 +103,7 @@ export function Terms() {
         </div>
       </Card>
 
-      <Card className="mt-8 p-6 bg-red-50 border-2 border-red-200">
+      <Card className="mt-6 p-6 bg-red-50 border-2 border-red-200">
         <div className="flex items-start gap-3">
           <AlertCircle className="size-6 text-red-600 flex-shrink-0 mt-1" />
           <div>

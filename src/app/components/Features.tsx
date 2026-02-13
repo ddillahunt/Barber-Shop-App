@@ -87,18 +87,35 @@ export function Features() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {features.map((feature, index) => {
+      {/* Row 1 - 6 features in 2 columns, vertical cards */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        {features.slice(0, 6).map((feature, index) => {
           const Icon = feature.icon;
           return (
-            <Card
-              key={index}
-              className="p-6 bg-white shadow-md hover:shadow-lg transition-all hover:-translate-y-1"
-            >
-              <div className="bg-amber-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+            <Card key={index} className="p-5 bg-white shadow-md hover:shadow-lg transition-all hover:-translate-y-1 text-center">
+              <div className="bg-amber-100 w-12 h-12 rounded-lg flex items-center justify-center mb-3 mx-auto">
                 <Icon className="size-6 text-amber-600" />
               </div>
-              <h3 className="font-bold text-slate-900 mb-2">{feature.title}</h3>
+              <h3 className="font-bold text-slate-900 mb-1">{feature.title}</h3>
+              <p className="text-sm text-slate-600">{feature.description}</p>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Row 2 - 6 features in 2 columns, vertical cards */}
+      <div className="page-break-before">
+        <h3 className="text-2xl font-bold text-slate-900 mb-6 text-center">Key Features Cont.</h3>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {features.slice(6).map((feature, index) => {
+          const Icon = feature.icon;
+          return (
+            <Card key={index + 6} className="p-5 bg-white shadow-md hover:shadow-lg transition-all hover:-translate-y-1 text-center">
+              <div className="bg-amber-100 w-12 h-12 rounded-lg flex items-center justify-center mb-3 mx-auto">
+                <Icon className="size-6 text-amber-600" />
+              </div>
+              <h3 className="font-bold text-slate-900 mb-1">{feature.title}</h3>
               <p className="text-sm text-slate-600">{feature.description}</p>
             </Card>
           );

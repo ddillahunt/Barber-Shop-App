@@ -76,16 +76,6 @@ export function ProjectOverview() {
           </ul>
         </Card>
       </div>
-
-      <Card className="p-8 bg-slate-50 border-2 border-slate-200">
-        <h3 className="text-xl font-bold text-slate-900 mb-4">About the Reference Website</h3>
-        <p className="text-slate-700 leading-relaxed">
-          The reference website (<span className="font-mono text-sm bg-white px-2 py-1 rounded">https://ddillahunt.github.io/Barber-Shop-App/</span>) 
-          appears to be a barber shop application. Our proposal includes building a similar Grandes Ligas website with enhanced features, 
-          modern design, better user experience, and additional functionality based on current industry standards. We'll incorporate 
-          best practices for performance, SEO, and accessibility while ensuring the site is easy to maintain and update.
-        </p>
-      </Card>
     </section>
   );
 }

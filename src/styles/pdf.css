@@ -13,3 +13,125 @@
   page-break-inside: avoid;
   break-inside: avoid;
 }
+
+/* Print styles - hide UI elements and format for PDF */
+@media print {
+  /* Hide the download button, sticky header, and footer during print */
+  .no-print,
+  header,
+  footer {
+    display: none !important;
+  }
+
+  /* Reset global layout for print */
+  html, body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    overflow: visible !important;
+  }
+
+  * {
+    transition: none !important;
+    animation: none !important;
+    overflow: visible !important;
+  }
+
+  /* Remove sticky/fixed positioning that causes overlaps */
+  .sticky, .fixed {
+    position: static !important;
+  }
+
+  /* Hide decorative blur circles that overlap content */
+  .blur-3xl {
+    display: none !important;
+  }
+
+  /* Every major section starts on a new page */
+  main > div {
+    page-break-before: always !important;
+    break-before: page !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+
+  /* Except the first section (Hero) */
+  main > div:first-child {
+    page-break-before: auto !important;
+    break-before: auto !important;
+  }
+
+  /* Allow sections to break across pages to prevent blank gaps */
+  section {
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+
+  /* Keep individual cards together when possible */
+  [class*="shadow-"] {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Reduce padding so content fits better on pages */
+  .py-16 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .py-24 {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+
+  /* Remove min-height that can cause blank space */
+  .min-h-screen {
+    min-height: 0 !important;
+  }
+
+  /* Ensure backgrounds and colors print correctly */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Scale down headings slightly so sections fit */
+  .text-4xl {
+    font-size: 1.75rem !important;
+  }
+
+  .text-5xl, .md\:text-7xl {
+    font-size: 2.5rem !important;
+  }
+
+  /* Tighten spacing to prevent overflow */
+  .gap-8 {
+    gap: 1rem !important;
+  }
+
+  .gap-6 {
+    gap: 0.75rem !important;
+  }
+
+  .space-y-6 > * + * {
+    margin-top: 0.75rem !important;
+  }
+
+  .mb-12 {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .mt-12 {
+    margin-top: 1.5rem !important;
+  }
+
+  .mb-8 {
+    margin-bottom: 1rem !important;
+  }
+
+  .mt-8 {
+    margin-top: 1rem !important;
+  }
+}

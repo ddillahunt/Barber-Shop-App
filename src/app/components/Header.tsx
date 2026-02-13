@@ -1,6 +1,4 @@
 import { Scissors } from 'lucide-react';
-// Logo placeholder (Figma asset not available locally)
-const logoImage = "";
 
 export function Header() {
   return (
@@ -17,12 +15,6 @@ export function Header() {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-sm text-slate-300">Prepared by</p>
-            {logoImage ? (
-              <img src={logoImage} alt="GDL Digital Solutions" className="h-8 mt-1" />
-            ) : (
-              <p className="font-semibold text-amber-400">GDL Digital Solutions</p>
-            )}
             <p className="text-xs text-slate-400 mt-1">February 13, 2026</p>
           </div>
         </div>

@@ -69,58 +69,86 @@ export function Timeline() {
         </p>
       </div>
 
-      <div className="space-y-6">
-        {phases.map((phase, index) => {
+      {/* Phases 1-4 */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        {phases.slice(0, 4).map((phase, index) => {
           const Icon = phase.icon;
           return (
             <Card
               key={index}
-              className="p-6 bg-white shadow-lg hover:shadow-xl transition-shadow"
+              className="p-5 bg-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 text-center"
             >
-              <div className="flex items-start gap-6">
-                <div className="flex-shrink-0">
-                  <div className="bg-amber-100 p-4 rounded-full">
-                    <Icon className="size-8 text-amber-600" />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-xl font-bold text-slate-900">{phase.phase}</h3>
-                    <span className="bg-amber-100 text-amber-700 px-4 py-1 rounded-full text-sm font-semibold">
-                      {phase.duration}
-                    </span>
-                  </div>
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {phase.activities.map((activity, activityIndex) => (
-                      <li
-                        key={activityIndex}
-                        className="flex items-start gap-2 text-slate-700"
-                      >
-                        <div className="bg-green-100 rounded-full p-1 mt-1">
-                          <div className="size-2 bg-green-600 rounded-full" />
-                        </div>
-                        <span>{activity}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              <div className="bg-amber-100 w-14 h-14 rounded-full flex items-center justify-center mb-3 mx-auto">
+                <Icon className="size-7 text-amber-600" />
               </div>
+              <h3 className="font-bold text-slate-900 mb-1 text-sm">{phase.phase}</h3>
+              <span className="inline-block bg-amber-100 text-amber-700 px-3 py-0.5 rounded-full text-xs font-semibold mb-3">
+                {phase.duration}
+              </span>
+              <ul className="text-left space-y-1">
+                {phase.activities.map((activity, activityIndex) => (
+                  <li
+                    key={activityIndex}
+                    className="flex items-start gap-1.5 text-slate-700 text-xs"
+                  >
+                    <div className="bg-green-100 rounded-full p-0.5 mt-1 flex-shrink-0">
+                      <div className="size-1.5 bg-green-600 rounded-full" />
+                    </div>
+                    <span>{activity}</span>
+                  </li>
+                ))}
+              </ul>
             </Card>
           );
         })}
       </div>
 
-      <Card className="mt-12 p-8 bg-amber-50 border-2 border-amber-200">
+      {/* Phase 5 - on next page */}
+      <div className="page-break-before">
+        <h3 className="text-2xl font-bold text-slate-900 mb-6 text-center">Development Timeline Cont.</h3>
+      </div>
+      <div className="mb-8">
+        {(() => {
+          const phase = phases[4];
+          const Icon = phase.icon;
+          return (
+            <Card className="p-5 bg-white shadow-lg text-center max-w-sm mx-auto">
+              <div className="bg-amber-100 w-14 h-14 rounded-full flex items-center justify-center mb-3 mx-auto">
+                <Icon className="size-7 text-amber-600" />
+              </div>
+              <h3 className="font-bold text-slate-900 mb-1 text-sm">{phase.phase}</h3>
+              <span className="inline-block bg-amber-100 text-amber-700 px-3 py-0.5 rounded-full text-xs font-semibold mb-3">
+                {phase.duration}
+              </span>
+              <ul className="text-left space-y-1">
+                {phase.activities.map((activity, activityIndex) => (
+                  <li
+                    key={activityIndex}
+                    className="flex items-start gap-1.5 text-slate-700 text-xs"
+                  >
+                    <div className="bg-green-100 rounded-full p-0.5 mt-1 flex-shrink-0">
+                      <div className="size-1.5 bg-green-600 rounded-full" />
+                    </div>
+                    <span>{activity}</span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          );
+        })()}
+      </div>
+
+      <Card className="p-6 bg-amber-50 border-2 border-amber-200">
         <div className="flex items-start gap-4">
-          <Calendar className="size-8 text-amber-600 flex-shrink-0" />
+          <Calendar className="size-6 text-amber-600 flex-shrink-0" />
           <div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Timeline Notes</h3>
-            <p className="text-slate-700 mb-4">
-              The timeline may vary depending on the selected package, complexity of requirements, 
-              and timely provision of content and feedback from the client. We maintain regular 
+            <h3 className="text-lg font-bold text-slate-900 mb-2">Timeline Notes</h3>
+            <p className="text-sm text-slate-700 mb-2">
+              The timeline may vary depending on the selected package, complexity of requirements,
+              and timely provision of content and feedback from the client. We maintain regular
               communication throughout the process and provide weekly progress updates.
             </p>
-            <p className="text-slate-700">
+            <p className="text-sm text-slate-700">
               <span className="font-semibold">Estimated Total Duration:</span> 4-12 weeks depending on package selection
             </p>
           </div>

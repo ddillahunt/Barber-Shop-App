@@ -92,11 +92,10 @@ export function PricingTiers({ selectedTier, onSelectTier }: PricingTiersProps) 
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {tiers.map((tier) => (
+      {tiers.map((tier) => (
+        <div key={tier.id} className={tier.id === 'professional' ? 'page-break-before pt-[1in]' : ''}>
           <Card
-            key={tier.id}
-            className={`relative p-8 bg-white transition-all duration-300 ${
+            className={`relative p-8 bg-white transition-all duration-300 mb-8 ${
               selectedTier === tier.id
                 ? 'ring-4 ring-amber-500 shadow-2xl scale-105'
                 : 'shadow-lg hover:shadow-xl'
@@ -131,7 +130,7 @@ export function PricingTiers({ selectedTier, onSelectTier }: PricingTiersProps) 
               {selectedTier === tier.id ? 'Selected ✓' : 'Select Package'}
             </Button>
 
-            <ul className="space-y-3">
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {tier.features.map((feature, index) => (
                 <li key={index} className="flex items-start gap-3">
                   <Check className="size-5 text-green-600 mt-0.5 flex-shrink-0" />
@@ -140,10 +139,10 @@ export function PricingTiers({ selectedTier, onSelectTier }: PricingTiersProps) 
               ))}
             </ul>
           </Card>
-        ))}
-      </div>
+        </div>
+      ))}
 
-      <Card className="mt-12 p-8 bg-blue-50 border-2 border-blue-200">
+      <Card className="mt-12 p-8 bg-blue-50 border-2 border-blue-200 page-break-before">
         <h3 className="text-xl font-bold text-slate-900 mb-4">Additional Services (Optional Add-ons)</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
