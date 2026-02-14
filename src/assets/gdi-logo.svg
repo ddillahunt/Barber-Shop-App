@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 40">
+  <!-- G -->
+  <path d="M3 8 A8 8 0 0 1 11 1 H26 A8 8 0 0 1 33 8 V13 H19 V19 H33 V32 A8 8 0 0 1 26 39 H11 A8 8 0 0 1 3 32 Z" fill="none" stroke="#2B5AE8" stroke-width="4" stroke-linejoin="round"/>
+  <!-- D -->
+  <path d="M40 1 H52 C62 1 68 9 68 20 C68 31 62 39 52 39 H40 Z" fill="none" stroke="#2B5AE8" stroke-width="4" stroke-linejoin="round"/>
+  <!-- I -->
+  <rect x="75" y="1" width="4" height="38" rx="1" fill="#2B5AE8"/>
+  <!-- Digital Solutions text -->
+  <text x="92" y="28" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="500" fill="#2B5AE8">Digital Solutions</text>
+</svg>

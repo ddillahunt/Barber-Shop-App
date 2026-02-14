@@ -11,6 +11,7 @@ import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner';
 import { FileDown, Loader2 } from 'lucide-react';
 import { Button } from './components/ui/button';
+import gdiLogo from '../assets/gdi-logo.png';
 
 export default function App() {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
@@ -82,6 +83,10 @@ export default function App() {
           <p className="text-sm">© 2026 Grandes Ligas. All rights reserved.</p>
           <p className="text-xs mt-2">Grandes Ligas Barber Shop Website Development Proposal</p>
         </footer>
+      </div>
+      {/* Print-only footer logo on every page */}
+      <div className="print-footer">
+        <img src={gdiLogo} alt="GDI Digital Solutions" className="print-footer-logo" />
       </div>
       <Toaster />
     </>

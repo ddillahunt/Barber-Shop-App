@@ -1,3 +1,8 @@
+/* Hide print footer on screen */
+.print-footer {
+  display: none;
+}
+
 /* PDF-specific styles for page breaks */
 .page-break-before {
   page-break-before: always;
@@ -133,5 +138,21 @@
 
   .mt-8 {
     margin-top: 1rem !important;
+  }
+
+  /* Print footer with GDI logo on every page */
+  .print-footer {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .print-footer-logo {
+    height: 30px;
+    opacity: 0.7;
   }
 }

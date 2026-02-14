@@ -1,4 +1,5 @@
 import { Scissors } from 'lucide-react';
+import gdiLogo from '../../assets/gdi-logo.png';
 
 export function Header() {
   return (
@@ -11,10 +12,11 @@ export function Header() {
             </div>
             <div>
               <h1 className="font-bold">Grandes Ligas Proposal</h1>
-              <p className="text-sm text-slate-300">Barber Shop Website Project</p>
             </div>
           </div>
           <div className="text-right">
+            <p className="text-sm text-slate-300 mb-1">Prepared by</p>
+            <img src={gdiLogo} alt="GDI Digital Solutions" className="h-8 ml-auto" />
             <p className="text-xs text-slate-400 mt-1">February 13, 2026</p>
           </div>
         </div>
