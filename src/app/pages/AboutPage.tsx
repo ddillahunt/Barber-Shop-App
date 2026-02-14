@@ -39,11 +39,17 @@ export function AboutPage() {
               to making every client look and feel their best. We believe a great haircut is more than just
               a service — it's an experience.
             </p>
-            <p className="text-slate-700 text-lg leading-relaxed">
+            <p className="text-slate-700 text-lg leading-relaxed mb-8">
               Our skilled barbers bring years of experience, blending classic techniques with the latest
               trends to deliver cuts that are tailored to each individual. From the moment you walk in,
               you'll feel the difference.
             </p>
+            <button
+              onClick={() => { navigate("/"); setTimeout(() => document.getElementById("booking")?.scrollIntoView(), 100); }}
+              className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-lg shadow-amber-500/50"
+            >
+              Experience the Difference. Schedule Your Visit!
+            </button>
           </div>
         </div>
       </section>

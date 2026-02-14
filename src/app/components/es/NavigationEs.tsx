@@ -93,7 +93,7 @@ export function NavigationEs() {
             </DropdownMenu>
             <button onClick={() => scrollToSection('schedule')} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
               <Clock className="size-4" />
-              Horario
+              Horario de Atención
             </button>
             <button onClick={() => scrollToSection('booking')} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
               <CalendarCheck className="size-4" />
@@ -152,12 +152,12 @@ export function NavigationEs() {
                 </div>
               </div>
 
-              <button 
-                onClick={() => scrollToSection('schedule')} 
+              <button
+                onClick={() => scrollToSection('schedule')}
                 className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
               >
                 <Clock className="size-4" />
-                Horario
+                Horario de Atención
               </button>
               <button 
                 onClick={() => scrollToSection('booking')} 

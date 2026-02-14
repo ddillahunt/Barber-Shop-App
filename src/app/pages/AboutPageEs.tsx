@@ -44,6 +44,14 @@ export function AboutPageEs() {
               ultimas tendencias para ofrecer cortes personalizados para cada individuo. Desde el momento
               en que entras, sentiras la diferencia.
             </p>
+            <div className="mt-8">
+              <button
+                onClick={() => { navigate("/es"); setTimeout(() => document.getElementById("booking")?.scrollIntoView(), 100); }}
+                className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-lg shadow-amber-500/50"
+              >
+                Vive la Diferencia. ¡Agenda Tu Visita!
+              </button>
+            </div>
           </div>
         </div>
       </section>

@@ -36,6 +36,14 @@ export function Services() {
             </Card>
           ))}
         </div>
+        <div className="text-center mt-12">
+          <button
+            onClick={() => document.getElementById('booking')?.scrollIntoView()}
+            className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-lg shadow-amber-500/50"
+          >
+            Ready for a Fresh Cut? Book Appointment Now!
+          </button>
+        </div>
       </div>
     </section>
   );

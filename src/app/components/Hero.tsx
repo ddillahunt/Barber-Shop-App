@@ -50,7 +50,7 @@ export function Hero() {
             onClick={() => document.getElementById('booking')?.scrollIntoView()}
             className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-lg shadow-amber-500/50"
           >
-            Book Your Appointment
+            Book Your Cut Now
           </button>
         </div>
       </div>

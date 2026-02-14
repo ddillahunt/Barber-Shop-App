@@ -93,7 +93,7 @@ export function Navigation() {
             </DropdownMenu>
             <button onClick={() => scrollToSection('schedule')} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
               <Clock className="size-4" />
-              Schedule
+              Business Hours
             </button>
             <button onClick={() => scrollToSection('booking')} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
               <CalendarCheck className="size-4" />
@@ -157,7 +157,7 @@ export function Navigation() {
                 className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
               >
                 <Clock className="size-4" />
-                Schedule
+                Business Hours
               </button>
               <button 
                 onClick={() => scrollToSection('booking')} 

@@ -1,0 +1,77 @@
+const galleryItems = [
+  {
+    id: 1,
+    label: "Degradado de Precisión",
+    image: "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&h=600&fit=crop",
+  },
+  {
+    id: 2,
+    label: "Escultura de Barba",
+    image: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=600&h=600&fit=crop",
+  },
+  {
+    id: 3,
+    label: "Corte Clásico",
+    image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&h=600&fit=crop",
+  },
+  {
+    id: 4,
+    label: "Afeitado con Toalla Caliente",
+    image: "https://images.unsplash.com/photo-1585747860019-8e9b2e4a0472?w=600&h=600&fit=crop",
+  },
+  {
+    id: 5,
+    label: "Recorte de Barba",
+    image: "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=600&h=600&fit=crop",
+  },
+  {
+    id: 6,
+    label: "Delineado Fresco",
+    image: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&h=600&fit=crop",
+  },
+];
+
+export function GalleryEs() {
+  return (
+    <section id="gallery" className="py-20 bg-gradient-to-b from-black via-slate-900 to-black">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-5xl mb-4 font-bold bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-400 bg-clip-text text-transparent">
+            Nuestro Trabajo
+          </h2>
+          <p className="text-amber-200 text-lg max-w-2xl mx-auto">
+            Mira algunos de nuestros cortes y estilos más frescos
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {galleryItems.map((item) => (
+            <div
+              key={item.id}
+              className="relative aspect-square rounded-xl overflow-hidden border-2 border-amber-500/20 group hover:border-amber-500/50 transition-all duration-300"
+            >
+              <img
+                src={item.image}
+                alt={item.label}
+                loading="lazy"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <p className="absolute bottom-3 left-3 text-amber-400 font-bold text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {item.label}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="text-center mt-12">
+          <button
+            onClick={() => document.getElementById('booking')?.scrollIntoView()}
+            className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-lg shadow-amber-500/50"
+          >
+            ¿Te Gusta Lo Que Ves? Obtén Este Look - ¡Reserva Ahora!
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}

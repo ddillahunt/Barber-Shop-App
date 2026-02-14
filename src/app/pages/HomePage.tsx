@@ -1,6 +1,7 @@
 import { Navigation } from "../components/Navigation";
 import { Hero } from "../components/Hero";
 import { Services } from "../components/Services";
+import { Gallery } from "../components/Gallery";
 import { Schedule } from "../components/Schedule";
 import { AppointmentBooking } from "../components/AppointmentBooking";
 import { Contact } from "../components/Contact";
@@ -14,7 +15,7 @@ export function HomePage() {
       <Navigation />
       <Hero />
       <Services />
-
+      <Gallery />
       <Schedule />
       <AppointmentBooking />
       <Contact />
@@ -33,6 +34,14 @@ export function HomePage() {
       </footer>
 
       <ScrollToTop />
+
+      {/* Floating Book Now Button */}
+      <button
+        onClick={() => document.getElementById('booking')?.scrollIntoView()}
+        className="fixed bottom-6 left-6 z-50 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black px-6 py-4 rounded-full font-bold text-lg shadow-2xl shadow-amber-500/50 hover:scale-110 transition-all duration-300 animate-bounce"
+      >
+        📱 BOOK NOW!!
+      </button>
     </div>
   );
 }
