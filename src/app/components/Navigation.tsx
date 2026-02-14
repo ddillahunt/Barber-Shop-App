@@ -103,7 +103,7 @@ export function Navigation() {
               <Mail className="size-4" />
               Contact
             </button>
-            <button onClick={() => navigate("/about")} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
+            <button onClick={() => { navigate("/about"); window.scrollTo(0, 0); }} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
               <Info className="size-4" />
               About
             </button>
@@ -174,7 +174,7 @@ export function Navigation() {
                 Contact
               </button>
               <button
-                onClick={() => { setIsMobileMenuOpen(false); navigate("/about"); }}
+                onClick={() => { setIsMobileMenuOpen(false); navigate("/about"); window.scrollTo(0, 0); }}
                 className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
               >
                 <Info className="size-4" />

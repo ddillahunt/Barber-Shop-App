@@ -2,32 +2,32 @@ const galleryItems = [
   {
     id: 1,
     label: "Degradado de Precisión",
-    image: "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1544215897-e4a5eeae9cc1?w=600&h=600&fit=crop",
   },
   {
     id: 2,
     label: "Escultura de Barba",
-    image: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=600&h=600&fit=crop",
+    image: "https://plus.unsplash.com/premium_photo-1661427581253-1b850ec1b788?w=600&h=600&fit=crop",
   },
   {
     id: 3,
     label: "Corte Clásico",
-    image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&h=600&fit=crop",
+    image: "https://images.unsplash.com/photo-1759408174071-f2971472dc73?w=600&h=600&fit=crop",
   },
   {
     id: 4,
     label: "Afeitado con Toalla Caliente",
-    image: "https://images.unsplash.com/photo-1585747860019-8e9b2e4a0472?w=600&h=600&fit=crop",
+    image: "https://plus.unsplash.com/premium_photo-1661392827793-d8543c341ea3?w=600&h=600&fit=crop",
   },
   {
     id: 5,
     label: "Recorte de Barba",
-    image: "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=600&h=600&fit=crop",
+    image: "https://plus.unsplash.com/premium_photo-1661382196658-9f835c21d6e9?w=600&h=600&fit=crop",
   },
   {
     id: 6,
     label: "Delineado Fresco",
-    image: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&h=600&fit=crop",
+    image: "https://plus.unsplash.com/premium_photo-1661542987765-f39368ff358d?w=600&h=600&fit=crop",
   },
 ];
 

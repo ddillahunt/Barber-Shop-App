@@ -103,7 +103,7 @@ export function NavigationEs() {
               <Mail className="size-4" />
               Contacto
             </button>
-            <button onClick={() => navigate("/es/acerca-de")} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
+            <button onClick={() => { navigate("/es/acerca-de"); window.scrollTo(0, 0); }} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
               <Info className="size-4" />
               Acerca de
             </button>
@@ -174,7 +174,7 @@ export function NavigationEs() {
                 Contacto
               </button>
               <button
-                onClick={() => { setIsMobileMenuOpen(false); navigate("/es/acerca-de"); }}
+                onClick={() => { setIsMobileMenuOpen(false); navigate("/es/acerca-de"); window.scrollTo(0, 0); }}
                 className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
               >
                 <Info className="size-4" />
