@@ -1,4 +1,4 @@
-import { Scissors, ChevronDown, Clock, CalendarCheck, Mail, Languages, Menu, X, Info } from "lucide-react";
+import { Scissors, ChevronDown, Clock, CalendarCheck, Mail, Languages, Menu, X, Info, Image } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   DropdownMenu,
@@ -91,6 +91,10 @@ export function Navigation() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+            <button onClick={() => scrollToSection('gallery')} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
+              <Image className="size-4" />
+              Gallery
+            </button>
             <button onClick={() => scrollToSection('schedule')} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
               <Clock className="size-4" />
               Business Hours
@@ -152,6 +156,13 @@ export function Navigation() {
                 </div>
               </div>
 
+              <button
+                onClick={() => scrollToSection('gallery')}
+                className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
+              >
+                <Image className="size-4" />
+                Gallery
+              </button>
               <button
                 onClick={() => scrollToSection('schedule')}
                 className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
