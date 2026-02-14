@@ -17,7 +17,7 @@ export function Terms() {
             <DollarSign className="size-7 text-green-600" />
           </div>
           <h3 className="text-xl font-bold text-slate-900 mb-3">Payment Terms</h3>
-          <ul className="space-y-2 text-slate-700 text-sm">
+          <ul className="space-y-2 text-slate-700 text-sm list-disc list-inside text-left">
             <li><span className="font-semibold">40%</span> upfront deposit to begin project</li>
             <li><span className="font-semibold">30%</span> upon design approval & development milestone</li>
             <li><span className="font-semibold">30%</span> upon project completion and launch</li>
@@ -32,7 +32,7 @@ export function Terms() {
             <Clock className="size-7 text-blue-600" />
           </div>
           <h3 className="text-xl font-bold text-slate-900 mb-3">Project Timeline</h3>
-          <ul className="space-y-2 text-slate-700 text-sm">
+          <ul className="space-y-2 text-slate-700 text-sm list-disc list-inside text-left">
             <li>Timeline begins after deposit & content provided</li>
             <li>Delays in content may extend timeline</li>
             <li>Includes specified revision rounds</li>
@@ -46,7 +46,7 @@ export function Terms() {
             <FileCheck className="size-7 text-purple-600" />
           </div>
           <h3 className="text-xl font-bold text-slate-900 mb-3">Deliverables</h3>
-          <ul className="space-y-2 text-slate-700 text-sm">
+          <ul className="space-y-2 text-slate-700 text-sm list-disc list-inside text-left">
             <li>Fully functional website per package</li>
             <li>Source code (client owned)</li>
             <li>Documentation & training</li>
@@ -60,7 +60,7 @@ export function Terms() {
             <AlertCircle className="size-7 text-amber-600" />
           </div>
           <h3 className="text-xl font-bold text-slate-900 mb-3">Important Notes</h3>
-          <ul className="space-y-2 text-slate-700 text-sm">
+          <ul className="space-y-2 text-slate-700 text-sm list-disc list-inside text-left">
             <li>Client provides content, images & branding</li>
             <li>Client handles domain & hosting costs</li>
             <li>Scope changes may incur charges</li>
