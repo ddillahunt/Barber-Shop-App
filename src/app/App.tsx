@@ -56,7 +56,25 @@ export default function App() {
           <div>
             <Contact selectedTier={selectedTier} />
           </div>
-          
+
+          {/* Approval / Signature Section */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <h2 className="text-3xl font-bold text-slate-900 mb-4 text-center">Approval</h2>
+            <p className="text-slate-600 text-center mb-12">
+              By signing below, both parties agree to the scope and pricing outlined above.
+            </p>
+            <div className="space-y-10 max-w-2xl mx-auto">
+              <div className="flex items-end justify-between">
+                <p className="text-slate-700">Client Signature: _____________________________</p>
+                <p className="text-sm text-slate-500">Date: ___________</p>
+              </div>
+              <div className="flex items-end justify-between">
+                <p className="text-slate-700">Provider Signature: _____________________________</p>
+                <p className="text-sm text-slate-500">Date: ___________</p>
+              </div>
+            </div>
+          </div>
+
           {/* Download PDF Button */}
           <div className="no-print max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
             <Button

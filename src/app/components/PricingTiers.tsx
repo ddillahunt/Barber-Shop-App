@@ -11,10 +11,10 @@ export function PricingTiers({ selectedTier, onSelectTier }: PricingTiersProps) 
   const tiers = [
     {
       id: 'basic',
-      name: 'Basic Package',
-      price: '$2,500 - $3,500',
+      name: 'Website Development',
+      price: '$1,000',
       popular: false,
-      description: 'Essential website for small barber shops',
+      description: 'Includes full design, build, and launch',
       features: [
         'Responsive design (mobile, tablet, desktop)',
         'Home page with business info',
@@ -32,54 +32,20 @@ export function PricingTiers({ selectedTier, onSelectTier }: PricingTiersProps) 
       timeline: '4-5 weeks',
     },
     {
-      id: 'professional',
-      name: 'Professional Package',
-      price: '$4,500 - $6,500',
-      popular: true,
-      description: 'Most popular choice with booking system',
-      features: [
-        'Everything in Basic Package, plus:',
-        'Online booking system with calendar',
-        'Customer account registration',
-        'Email/SMS appointment reminders',
-        'Service selection and barber choice',
-        'Admin dashboard for managing bookings',
-        'Blog section for updates and tips',
-        'Customer testimonials/reviews section',
-        'Enhanced photo gallery with categories',
-        'Advanced SEO optimization',
-        'Performance optimization',
-        '5 rounds of revisions',
-        '60 days post-launch support',
-        'Training session for admin panel',
-      ],
-      timeline: '6-8 weeks',
-    },
-    {
-      id: 'premium',
-      name: 'Premium Package',
-      price: '$7,500 - $10,000+',
+      id: 'hosting',
+      name: 'Hosting & Security',
+      price: '$50/month',
       popular: false,
-      description: 'Full-featured solution with advanced capabilities',
+      description: 'Reliable hosting with security included',
       features: [
-        'Everything in Professional Package, plus:',
-        'Advanced booking with waitlist management',
-        'Customer loyalty program integration',
-        'Gift card and promotion system',
-        'Inventory management for products',
-        'Online product sales (e-commerce)',
-        'Multiple location support',
-        'Advanced analytics dashboard',
-        'Customer relationship management (CRM)',
-        'Automated marketing emails',
-        'Mobile app (iOS/Android) - optional add-on',
-        'Advanced customization and animations',
-        'Priority support and maintenance',
-        'Unlimited revisions during development',
-        '90 days post-launch support',
-        'Multiple training sessions',
+        'Fast, reliable web hosting',
+        'SSL certificate (HTTPS)',
+        'Daily backups',
+        'Security monitoring',
+        'Uptime monitoring',
+        'Software updates',
       ],
-      timeline: '8-12 weeks',
+      timeline: 'Ongoing',
     },
   ];
 
@@ -93,7 +59,7 @@ export function PricingTiers({ selectedTier, onSelectTier }: PricingTiersProps) 
       </div>
 
       {tiers.map((tier) => (
-        <div key={tier.id} className={tier.id === 'professional' ? 'page-break-before pt-[1in]' : ''}>
+        <div key={tier.id}>
           <Card
             className={`relative p-8 bg-white transition-all duration-300 mb-8 ${
               selectedTier === tier.id
