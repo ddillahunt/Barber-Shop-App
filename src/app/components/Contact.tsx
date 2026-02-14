@@ -25,7 +25,7 @@ export function Contact({ selectedTier }: ContactProps) {
               </div>
               <div>
                 <p className="font-semibold text-slate-900">Email</p>
-                <p className="text-slate-600">contact@gdidigital.com</p>
+                <p className="text-slate-600">Darrell.Dillahunt@gdidigitalsolutions.com</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
@@ -34,7 +34,7 @@ export function Contact({ selectedTier }: ContactProps) {
               </div>
               <div>
                 <p className="font-semibold text-slate-900">Phone</p>
-                <p className="text-slate-600">(555) 123-4567</p>
+                <p className="text-slate-600">774-279-4008</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
