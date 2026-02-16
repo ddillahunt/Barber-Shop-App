@@ -22,10 +22,10 @@ function ScrollToHash() {
     if (hash) {
       const el = document.getElementById(hash.slice(1));
       if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
+        el.scrollIntoView({ behavior: "instant" });
       }
     } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "instant" });
     }
   }, [pathname, hash]);
   return null;
