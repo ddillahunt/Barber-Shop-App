@@ -1,15 +1,19 @@
 import { Scissors } from "lucide-react";
-import heroBg from "../../../assets/images/hero-bg.jpg";
 
 export function HeroEs() {
   return (
     <section className="relative bg-gradient-to-br from-black via-slate-900 to-slate-800 text-white py-32 overflow-hidden">
-      {/* Background Image Overlay */}
-      <div
-        className="absolute inset-0 opacity-20 bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroBg})` }}
-      />
-      
+      {/* Background Video */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover opacity-50"
+        autoPlay
+        muted
+        loop
+        playsInline
+      >
+        <source src={`${import.meta.env.BASE_URL}barber-bg.mp4`} type="video/mp4" />
+      </video>
+
       {/* Animated gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-yellow-500/10 to-amber-500/10 animate-pulse" />
       
