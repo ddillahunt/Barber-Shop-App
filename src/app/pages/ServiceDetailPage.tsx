@@ -1,5 +1,5 @@
 import { ArrowLeft, Clock, DollarSign, CheckCircle } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { services } from "../data/services";
@@ -143,6 +143,17 @@ export function ServiceDetailPage() {
             <Scissors className="size-6 text-amber-400" />
             <span className="font-bold text-xl bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Grandes Ligas</span>
           </div>
+          <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Quick Links</h3>
+          <nav className="flex flex-wrap justify-center gap-6 mb-6">
+            <Link to="/" className="text-slate-300 hover:text-amber-400 transition-colors">Home</Link>
+            <Link to="/#services" className="text-slate-300 hover:text-amber-400 transition-colors">Services</Link>
+            <Link to="/#gallery" className="text-slate-300 hover:text-amber-400 transition-colors">Gallery</Link>
+            <Link to="/#team" className="text-slate-300 hover:text-amber-400 transition-colors">Team</Link>
+            <Link to="/#schedule" className="text-slate-300 hover:text-amber-400 transition-colors">Schedule</Link>
+            <Link to="/#booking" className="text-slate-300 hover:text-amber-400 transition-colors">Book Now</Link>
+            <Link to="/#contact" className="text-slate-300 hover:text-amber-400 transition-colors">Contact</Link>
+            <Link to="/about" className="text-slate-300 hover:text-amber-400 transition-colors">About</Link>
+          </nav>
           <p className="text-amber-200">
             &copy; 2026 Grandes Ligas Barber Shop. All rights reserved.
           </p>

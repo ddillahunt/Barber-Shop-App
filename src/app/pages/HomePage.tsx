@@ -8,6 +8,7 @@ import { Contact } from "../components/Contact";
 
 import { ScrollToTop } from "../components/ScrollToTop";
 import { Scissors } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function HomePage() {
   return (
@@ -27,6 +28,16 @@ export function HomePage() {
             <Scissors className="size-6 text-amber-400" />
             <span className="font-bold text-xl bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Grandes Ligas</span>
           </div>
+          <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Quick Links</h3>
+          <nav className="flex flex-wrap justify-center gap-6 mb-6">
+            <a href="#services" className="text-slate-300 hover:text-amber-400 transition-colors">Services</a>
+            <a href="#gallery" className="text-slate-300 hover:text-amber-400 transition-colors">Gallery</a>
+            <a href="#team" className="text-slate-300 hover:text-amber-400 transition-colors">Team</a>
+            <a href="#schedule" className="text-slate-300 hover:text-amber-400 transition-colors">Schedule</a>
+            <a href="#booking" className="text-slate-300 hover:text-amber-400 transition-colors">Book Now</a>
+            <a href="#contact" className="text-slate-300 hover:text-amber-400 transition-colors">Contact</a>
+            <Link to="/about" className="text-slate-300 hover:text-amber-400 transition-colors">About</Link>
+          </nav>
           <p className="text-amber-200">
             &copy; 2026 Grandes Ligas Barber Shop. All rights reserved.
           </p>
@@ -34,14 +45,6 @@ export function HomePage() {
       </footer>
 
       <ScrollToTop />
-
-      {/* Floating Book Now Button */}
-      <button
-        onClick={() => document.getElementById('booking')?.scrollIntoView()}
-        className="fixed bottom-6 left-6 z-50 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black px-6 py-4 rounded-full font-bold text-lg shadow-2xl shadow-amber-500/50 hover:scale-110 transition-all duration-300 animate-bounce"
-      >
-        📱 BOOK NOW!!
-      </button>
     </div>
   );
 }

@@ -7,7 +7,8 @@ import { Contact } from "./components/Contact";
 import { Toaster } from "./components/ui/sonner";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { Scissors } from "lucide-react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import { HomePage } from "./pages/HomePage";
 import { ServiceDetailPage } from "./pages/ServiceDetailPage";
 import { HomePageEs } from "./pages/HomePageEs";
@@ -15,9 +16,25 @@ import { ServiceDetailPageEs } from "./pages/ServiceDetailPageEs";
 import { AboutPage } from "./pages/AboutPage";
 import { AboutPageEs } from "./pages/AboutPageEs";
 
+function ScrollToHash() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      const el = document.getElementById(hash.slice(1));
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [pathname, hash]);
+  return null;
+}
+
 export default function App() {
   return (
     <BrowserRouter basename="/Barber-Shop-App">
+      <ScrollToHash />
       <Toaster />
       <Routes>
         <Route path="/" element={<HomePage />} />
