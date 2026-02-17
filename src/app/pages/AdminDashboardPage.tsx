@@ -105,19 +105,17 @@ export function AdminDashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             <Button
-              variant="outline"
               size="sm"
               onClick={() => { fetchAppointments(); fetchMessages(); }}
-              className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
+              className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700"
             >
               <RefreshCw className="size-4 mr-1" />
               Refresh
             </Button>
             <Button
-              variant="outline"
               size="sm"
               onClick={handleSignOut}
-              className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+              className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700"
             >
               <LogOut className="size-4 mr-1" />
               Sign Out
