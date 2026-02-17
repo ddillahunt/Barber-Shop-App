@@ -6,6 +6,7 @@ import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Calendar, UserCheck } from "lucide-react";
 import { toast } from "sonner";
+import emailjs from "@emailjs/browser";
 
 const barbers = [
   { id: "1", name: "Carlos Martínez", specialty: "Cortes Clásicos" },
@@ -38,27 +39,74 @@ export function AppointmentBookingEs() {
     time: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.name || !formData.email || !formData.phone || !formData.barber || 
-        !formData.service || !formData.date || !formData.time) {
-      toast.error("Por favor complete todos los campos");
+
+    if (!formData.name || !formData.phone || !formData.date) {
+      toast.error("Por favor complete nombre, teléfono y fecha");
       return;
     }
 
-    toast.success("¡Cita reservada con éxito! Te enviaremos un correo de confirmación.");
-    
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      barber: "",
-      service: "",
-      date: "",
-      time: ""
-    });
+    setSubmitting(true);
+
+    const selectedBarber = barbers.find(b => b.id === formData.barber);
+
+    try {
+      // Enviar notificación a la barbería
+      await emailjs.send(
+        "service_grandesligas",
+        "template_s4xq8bl",
+        {
+          to_email: "ddillahunt59@gmail.com",
+          from_name: formData.name,
+          from_email: formData.email,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.specialty}` : formData.barber,
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+        },
+        "byZkVrNvtLJutxIt5"
+      );
+
+      // Enviar confirmación al cliente
+      await emailjs.send(
+        "service_grandesligas",
+        "template_yqpkz9e",
+        {
+          to_email: formData.email,
+          to_name: formData.name,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.specialty}` : formData.barber,
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+        },
+        "byZkVrNvtLJutxIt5"
+      );
+
+      toast.success("¡Cita reservada con éxito! Te enviaremos un correo de confirmación.");
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        barber: "",
+        service: "",
+        date: "",
+        time: ""
+      });
+    } catch (error) {
+      toast.error("Error al enviar. Llámanos al (508) 872-5556 para reservar.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -180,8 +228,8 @@ export function AppointmentBookingEs() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full h-14 text-lg bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50">
-                Reservar Cita
+              <Button type="submit" disabled={submitting} className="w-full h-14 text-lg bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50">
+                {submitting ? "Enviando..." : "Reservar Cita"}
               </Button>
             </form>
           </CardContent>

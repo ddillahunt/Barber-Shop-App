@@ -6,6 +6,7 @@ import { Label } from "./ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Calendar, UserCheck } from "lucide-react";
 import { toast } from "sonner";
+import emailjs from "@emailjs/browser";
 
 const barbers = [
   { id: "1", name: "Carlos Martinez", specialty: "Classic Cuts" },
@@ -38,27 +39,74 @@ export function AppointmentBooking() {
     time: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.name || !formData.email || !formData.phone || !formData.barber || 
-        !formData.service || !formData.date || !formData.time) {
-      toast.error("Please fill in all fields");
+
+    if (!formData.name || !formData.phone || !formData.date) {
+      toast.error("Please fill in name, phone number, and date");
       return;
     }
 
-    toast.success("Appointment booked successfully! We'll send you a confirmation email.");
-    
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      barber: "",
-      service: "",
-      date: "",
-      time: ""
-    });
+    setSubmitting(true);
+
+    const selectedBarber = barbers.find(b => b.id === formData.barber);
+
+    try {
+      // Send notification to shop
+      await emailjs.send(
+        "service_grandesligas",
+        "template_s4xq8bl",
+        {
+          to_email: "ddillahunt59@gmail.com",
+          from_name: formData.name,
+          from_email: formData.email,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.specialty}` : formData.barber,
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+        },
+        "byZkVrNvtLJutxIt5"
+      );
+
+      // Send confirmation to customer
+      await emailjs.send(
+        "service_grandesligas",
+        "template_yqpkz9e",
+        {
+          to_email: formData.email,
+          to_name: formData.name,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.specialty}` : formData.barber,
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+        },
+        "byZkVrNvtLJutxIt5"
+      );
+
+      toast.success("Appointment booked successfully! We'll send you a confirmation email.");
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        barber: "",
+        service: "",
+        date: "",
+        time: ""
+      });
+    } catch (error) {
+      toast.error("Failed to send. Please call us at (508) 872-5556 to book.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -180,8 +228,8 @@ export function AppointmentBooking() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full h-14 text-lg bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50">
-                Book Appointment
+              <Button type="submit" disabled={submitting} className="w-full h-14 text-lg bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50">
+                {submitting ? "Sending..." : "Book Appointment"}
               </Button>
             </form>
           </CardContent>
