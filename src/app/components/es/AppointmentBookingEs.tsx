@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Calendar, UserCheck } from "lucide-react";
 import { toast } from "sonner";
 import emailjs from "@emailjs/browser";
+import { saveAppointment } from "../../lib/appointments";
 
 const barbers = [
   { id: "1", name: "Carlos Martínez", specialty: "Cortes Clásicos" },
@@ -27,6 +28,13 @@ const services = [
   "Recorte y Diseño de Barba",
   "Paquete de Cuidado Completo"
 ];
+
+function formatPhone(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
 
 export function AppointmentBookingEs() {
   const [formData, setFormData] = useState({
@@ -90,6 +98,22 @@ export function AppointmentBookingEs() {
         },
         "byZkVrNvtLJutxIt5"
       );
+
+      // Guardar en Firestore
+      try {
+        await saveAppointment({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.specialty}` : formData.barber,
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+          source: "es",
+        });
+      } catch (firestoreError) {
+        console.error("Firestore save failed:", firestoreError);
+      }
 
       toast.success("¡Cita reservada con éxito! Te enviaremos un correo de confirmación.");
 
@@ -164,8 +188,9 @@ export function AppointmentBookingEs() {
                     id="phone"
                     type="tel"
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
                     placeholder="(508) 872-5556"
+                    maxLength={14}
                   />
                 </div>
 

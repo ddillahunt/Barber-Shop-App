@@ -40,6 +40,9 @@ export function HomePageEs() {
           <p className="text-amber-200">
             &copy; 2026 Grandes Ligas Barbería. Todos los derechos reservados.
           </p>
+          <Link to="/admin/login" className="text-slate-600 hover:text-amber-400 transition-colors text-xs mt-2 inline-block">
+            Admin
+          </Link>
         </div>
       </footer>
 

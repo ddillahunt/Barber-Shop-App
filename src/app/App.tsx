@@ -15,6 +15,8 @@ import { HomePageEs } from "./pages/HomePageEs";
 import { ServiceDetailPageEs } from "./pages/ServiceDetailPageEs";
 import { AboutPage } from "./pages/AboutPage";
 import { AboutPageEs } from "./pages/AboutPageEs";
+import { AdminLoginPage } from "./pages/AdminLoginPage";
+import { AdminDashboardPage } from "./pages/AdminDashboardPage";
 
 function ScrollToHash() {
   const { pathname, hash } = useLocation();
@@ -43,6 +45,8 @@ export default function App() {
         <Route path="/es/servicios/:serviceId" element={<ServiceDetailPageEs />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/es/acerca-de" element={<AboutPageEs />} />
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route path="/admin" element={<AdminDashboardPage />} />
       </Routes>
     </BrowserRouter>
   );

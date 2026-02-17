@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Calendar, UserCheck } from "lucide-react";
 import { toast } from "sonner";
 import emailjs from "@emailjs/browser";
+import { saveAppointment } from "../lib/appointments";
 
 const barbers = [
   { id: "1", name: "Carlos Martinez", specialty: "Classic Cuts" },
@@ -27,6 +28,13 @@ const services = [
   "Beard Trim & Shape",
   "Full Grooming Package"
 ];
+
+function formatPhone(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
 
 export function AppointmentBooking() {
   const [formData, setFormData] = useState({
@@ -90,6 +98,22 @@ export function AppointmentBooking() {
         },
         "byZkVrNvtLJutxIt5"
       );
+
+      // Save to Firestore
+      try {
+        await saveAppointment({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.specialty}` : formData.barber,
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+          source: "en",
+        });
+      } catch (firestoreError) {
+        console.error("Firestore save failed:", firestoreError);
+      }
 
       toast.success("Appointment booked successfully! We'll send you a confirmation email.");
 
@@ -164,8 +188,9 @@ export function AppointmentBooking() {
                     id="phone"
                     type="tel"
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
                     placeholder="(508) 872-5556"
+                    maxLength={14}
                   />
                 </div>
 
