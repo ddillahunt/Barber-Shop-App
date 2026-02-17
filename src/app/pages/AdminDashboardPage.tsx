@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
-import { getAppointments, deleteAppointment, type Appointment } from "../lib/appointments";
+import { getAppointments, deleteAppointment, getMessages, deleteMessage, type Appointment, type Message } from "../lib/appointments";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -14,12 +14,13 @@ import {
   TableHeader,
   TableRow,
 } from "../components/ui/table";
-import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2 } from "lucide-react";
+import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 
 export function AdminDashboardPage() {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
 
@@ -28,6 +29,7 @@ export function AdminDashboardPage() {
       if (user) {
         setAuthenticated(true);
         fetchAppointments();
+        fetchMessages();
       } else {
         navigate("/admin/login");
       }
@@ -47,6 +49,15 @@ export function AdminDashboardPage() {
     }
   };
 
+  const fetchMessages = async () => {
+    try {
+      const data = await getMessages();
+      setMessages(data);
+    } catch {
+      toast.error("Failed to load messages");
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this appointment?")) return;
     try {
@@ -55,6 +66,17 @@ export function AdminDashboardPage() {
       toast.success("Appointment deleted");
     } catch {
       toast.error("Failed to delete appointment");
+    }
+  };
+
+  const handleDeleteMessage = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this message?")) return;
+    try {
+      await deleteMessage(id);
+      setMessages((prev) => prev.filter((m) => m.id !== id));
+      toast.success("Message deleted");
+    } catch {
+      toast.error("Failed to delete message");
     }
   };
 
@@ -85,7 +107,7 @@ export function AdminDashboardPage() {
             <Button
               variant="outline"
               size="sm"
-              onClick={fetchAppointments}
+              onClick={() => { fetchAppointments(); fetchMessages(); }}
               className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
             >
               <RefreshCw className="size-4 mr-1" />
@@ -106,7 +128,7 @@ export function AdminDashboardPage() {
 
       <main className="container mx-auto px-4 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="border-amber-500/30 bg-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm text-slate-500">Total Appointments</CardTitle>
@@ -141,6 +163,17 @@ export function AdminDashboardPage() {
                 <Badge className="bg-green-100 text-green-700 border-green-300">
                   ES: {appointments.filter((a) => a.source === "es").length}
                 </Badge>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-amber-500/30 bg-white">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-slate-500">Messages</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2">
+                <MessageSquare className="size-5 text-amber-500" />
+                <span className="text-3xl font-bold text-slate-900">{messages.length}</span>
               </div>
             </CardContent>
           </Card>
@@ -190,6 +223,55 @@ export function AdminDashboardPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDelete(appt.id!)}
+                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                          >
+                            <Trash2 className="size-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+        {/* Messages Table */}
+        <Card className="border-amber-500/30 bg-white mt-8">
+          <CardHeader>
+            <CardTitle className="text-xl text-slate-900">Messages</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {messages.length === 0 ? (
+              <p className="text-center text-slate-500 py-8">No messages yet.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Phone</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Message</TableHead>
+                      <TableHead>Source</TableHead>
+                      <TableHead></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {messages.map((msg) => (
+                      <TableRow key={msg.id}>
+                        <TableCell className="font-medium">{msg.name}</TableCell>
+                        <TableCell>{msg.phone || "—"}</TableCell>
+                        <TableCell>{msg.email}</TableCell>
+                        <TableCell className="max-w-md truncate">{msg.message}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{msg.source?.toUpperCase() || "EN"}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteMessage(msg.id!)}
                             className="text-red-500 hover:text-red-700 hover:bg-red-50"
                           >
                             <Trash2 className="size-4" />

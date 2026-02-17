@@ -35,3 +35,36 @@ export async function getAppointments(): Promise<Appointment[]> {
     ...doc.data(),
   })) as Appointment[];
 }
+
+// Messages
+export interface Message {
+  id?: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  createdAt: Timestamp;
+  source: "en" | "es";
+}
+
+const messagesRef = collection(db, "messages");
+
+export async function saveMessage(data: Omit<Message, "id" | "createdAt">) {
+  return addDoc(messagesRef, {
+    ...data,
+    createdAt: Timestamp.now(),
+  });
+}
+
+export async function deleteMessage(id: string) {
+  return deleteDoc(doc(db, "messages", id));
+}
+
+export async function getMessages(): Promise<Message[]> {
+  const q = query(messagesRef, orderBy("createdAt", "desc"));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Message[];
+}

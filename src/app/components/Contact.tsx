@@ -6,29 +6,49 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { MapPin, Phone, Mail, Globe } from "lucide-react";
 import { toast } from "sonner";
+import { saveMessage } from "../lib/appointments";
 
 export function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     message: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  function formatPhone(value: string) {
+    const digits = value.replace(/\D/g, "").slice(0, 10);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  }
+
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.email || !formData.message) {
       toast.error("Please fill in all fields");
       return;
     }
 
-    toast.success("Message sent! We'll get back to you soon.");
-    
-    setFormData({
-      name: "",
-      email: "",
-      message: ""
-    });
+    setSubmitting(true);
+    try {
+      await saveMessage({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        source: "en",
+      });
+      toast.success("Message sent! We'll get back to you soon.");
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    } catch {
+      toast.error("Failed to send message. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -157,6 +177,18 @@ export function Contact() {
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="contact-phone" className="text-base text-amber-400">Phone Number</Label>
+                  <Input
+                    id="contact-phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
+                    placeholder="(508) 872-5556"
+                    maxLength={14}
+                  />
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="message" className="text-base text-amber-400">Message</Label>
                   <Textarea
                     id="message"
@@ -167,8 +199,8 @@ export function Contact() {
                   />
                 </div>
 
-                <Button type="submit" className="w-full h-12 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50">
-                  Send Message
+                <Button type="submit" disabled={submitting} className="w-full h-12 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50">
+                  {submitting ? "Sending..." : "Send Message"}
                 </Button>
               </form>
             </CardContent>
