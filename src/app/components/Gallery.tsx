@@ -48,16 +48,16 @@ export function Gallery() {
           {galleryItems.map((item) => (
             <div
               key={item.id}
-              className="relative aspect-square rounded-xl overflow-hidden border-2 border-amber-500/20 group hover:border-amber-500/50 transition-all duration-300"
+              className="relative aspect-square rounded-xl overflow-hidden border-2 border-amber-500/20"
             >
               <img
                 src={item.image}
                 alt={item.label}
                 loading="lazy"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <p className="absolute bottom-3 left-3 text-amber-400 font-bold text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <p className="absolute bottom-3 left-3 text-amber-400 font-bold text-lg">
                 {item.label}
               </p>
             </div>

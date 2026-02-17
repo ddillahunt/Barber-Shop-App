@@ -16,7 +16,7 @@ export function AboutPage() {
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full">
             <Scissors className="size-4 text-amber-400" />
-            <span className="text-amber-400 text-sm font-medium">Grandes Ligas Barber Shop</span>
+            <span className="text-amber-400 text-sm font-medium italic">Grandes Ligas Barber Shop</span>
           </div>
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
             About Us
@@ -116,7 +116,7 @@ export function AboutPage() {
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 mb-4">
             <Scissors className="size-6 text-amber-400" />
-            <span className="font-bold text-xl bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Grandes Ligas</span>
+            <span className="font-bold italic text-xl bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Grandes Ligas</span>
           </div>
           <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Quick Links</h3>
           <nav className="flex flex-wrap justify-center gap-6 mb-6">

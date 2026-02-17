@@ -57,9 +57,8 @@ export function Contact() {
                   <div>
                     <h3 className="font-semibold mb-2 text-lg text-amber-400">Location</h3>
                     <p className="text-slate-300 leading-relaxed">
-                      123 Main Street<br />
-                      Downtown District<br />
-                      City, State 12345
+                      3A 2nd St<br />
+                      Framingham, MA 01702
                     </p>
                   </div>
                 </div>
@@ -70,7 +69,7 @@ export function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-2 text-lg text-amber-400">Phone</h3>
-                    <p className="text-slate-300">(555) 123-4567</p>
+                    <p className="text-slate-300">(508) 872-5556</p>
                   </div>
                 </div>
 
@@ -111,7 +110,7 @@ export function Contact() {
               <div className="relative">
                 <iframe
                   title="Grandes Ligas Barber Shop Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3024.2219901290355!2d-74.00369368400567!3d40.71312937933185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a23e28c6c1f%3A0x5e0a8b1b0b1b1b1b!2sDowntown%20Manhattan!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2962.123!2d-71.4162!3d42.2793!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89e38a3e1b1b1b1b%3A0x1234567890abcdef!2s3A%202nd%20St%2C%20Framingham%2C%20MA%2001702!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
                   width="100%"
                   height="250"
                   style={{ border: 0 }}
@@ -124,7 +123,7 @@ export function Contact() {
               </div>
               <CardContent className="p-4 bg-gradient-to-br from-slate-900 to-black">
                 <p className="text-amber-400 text-sm font-medium text-center">
-                  123 Main Street, Downtown District
+                  3A 2nd St, Framingham, MA 01702
                 </p>
               </CardContent>
             </Card>

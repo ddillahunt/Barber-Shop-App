@@ -117,7 +117,7 @@ export function AppointmentBooking() {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="(555) 123-4567"
+                    placeholder="(508) 872-5556"
                   />
                 </div>
 

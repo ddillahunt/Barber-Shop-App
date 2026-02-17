@@ -57,9 +57,8 @@ export function ContactEs() {
                   <div>
                     <h3 className="font-semibold mb-2 text-lg text-amber-400">Ubicación</h3>
                     <p className="text-slate-300 leading-relaxed">
-                      123 Calle Principal<br />
-                      Distrito Centro<br />
-                      Ciudad, Estado 12345
+                      3A 2nd St<br />
+                      Framingham, MA 01702
                     </p>
                   </div>
                 </div>
@@ -70,7 +69,7 @@ export function ContactEs() {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-2 text-lg text-amber-400">Teléfono</h3>
-                    <p className="text-slate-300">(555) 123-4567</p>
+                    <p className="text-slate-300">(508) 872-5556</p>
                   </div>
                 </div>
 
@@ -104,7 +103,31 @@ export function ContactEs() {
             </Card>
           </div>
 
-          {/* Contact Form */}
+          {/* Map & Contact Form */}
+          <div className="space-y-6">
+            {/* Google Maps Embed */}
+            <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 overflow-hidden bg-slate-900">
+              <div className="relative">
+                <iframe
+                  title="Ubicación de Grandes Ligas Barbería"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2962.123!2d-71.4162!3d42.2793!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89e38a3e1b1b1b1b%3A0x1234567890abcdef!2s3A%202nd%20St%2C%20Framingham%2C%20MA%2001702!5e0!3m2!1ses!2sus!4v1700000000000!5m2!1ses!2sus"
+                  width="100%"
+                  height="250"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full"
+                />
+                <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-slate-900 to-transparent" />
+              </div>
+              <CardContent className="p-4 bg-gradient-to-br from-slate-900 to-black">
+                <p className="text-amber-400 text-sm font-medium text-center">
+                  3A 2nd St, Framingham, MA 01702
+                </p>
+              </CardContent>
+            </Card>
+
           <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 bg-slate-900">
             <CardHeader className="p-8 pb-6">
               <CardTitle className="text-2xl text-amber-400">Envíanos un Mensaje</CardTitle>
@@ -150,6 +173,7 @@ export function ContactEs() {
               </form>
             </CardContent>
           </Card>
+          </div>
         </div>
       </div>
     </section>

@@ -32,7 +32,7 @@ export function Hero() {
             <div className="absolute bottom-0 left-0 right-0 h-3 bg-gradient-to-br from-amber-500 to-yellow-600 border-t-2 border-amber-500" />
           </div>
           
-          <h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300 bg-clip-text text-transparent drop-shadow-lg">
+          <h1 className="text-6xl md:text-7xl font-bold italic bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300 bg-clip-text text-transparent drop-shadow-lg">
             Grandes Ligas
           </h1>
           
