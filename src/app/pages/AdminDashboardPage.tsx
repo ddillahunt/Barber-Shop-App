@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
-import { getAppointments, deleteAppointment, getMessages, deleteMessage, type Appointment, type Message } from "../lib/appointments";
+import { getAppointments, deleteAppointment, saveAppointment, getMessages, deleteMessage, type Appointment, type Message } from "../lib/appointments";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -14,8 +14,39 @@ import {
   TableHeader,
   TableRow,
 } from "../components/ui/table";
-import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare } from "lucide-react";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X } from "lucide-react";
 import { toast } from "sonner";
+import emailjs from "@emailjs/browser";
+
+const barbers = [
+  { id: "1", name: "Carlos Martinez", specialty: "Classic Cuts" },
+  { id: "2", name: "Miguel Rodriguez", specialty: "Modern Styles" },
+  { id: "3", name: "Juan Hernandez", specialty: "Beard Specialist" },
+  { id: "4", name: "Diego Santos", specialty: "All-Around Master" },
+];
+
+const timeSlots = [
+  "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+  "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM",
+  "5:00 PM", "6:00 PM", "7:00 PM",
+];
+
+const services = [
+  "Classic Haircut",
+  "Premium Cut & Style",
+  "Beard Trim & Shape",
+  "Full Grooming Package",
+];
+
+function formatPhone(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
 
 export function AdminDashboardPage() {
   const navigate = useNavigate();
@@ -23,6 +54,11 @@ export function AdminDashboardPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [newAppt, setNewAppt] = useState({
+    name: "", email: "", phone: "", barber: "", service: "", date: "", time: "",
+  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -77,6 +113,51 @@ export function AdminDashboardPage() {
       toast.success("Message deleted");
     } catch {
       toast.error("Failed to delete message");
+    }
+  };
+
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAppt.name || !newAppt.phone || !newAppt.date) {
+      toast.error("Name, phone, and date are required");
+      return;
+    }
+    setCreating(true);
+    try {
+      await saveAppointment({ ...newAppt, source: "en" });
+
+      // Send confirmation email to customer if email provided
+      if (newAppt.email) {
+        try {
+          await emailjs.send(
+            "service_grandesligas",
+            "template_yqpkz9e",
+            {
+              to_email: newAppt.email,
+              to_name: newAppt.name,
+              name: newAppt.name,
+              email: newAppt.email,
+              phone: newAppt.phone,
+              barber: newAppt.barber,
+              service: newAppt.service,
+              date: newAppt.date,
+              time: newAppt.time,
+            },
+            "byZkVrNvtLJutxIt5"
+          );
+        } catch {
+          console.error("Customer email failed");
+        }
+      }
+
+      toast.success(newAppt.email ? "Appointment created & confirmation email sent" : "Appointment created");
+      setNewAppt({ name: "", email: "", phone: "", barber: "", service: "", date: "", time: "" });
+      setShowCreateForm(false);
+      fetchAppointments();
+    } catch {
+      toast.error("Failed to create appointment");
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -177,10 +258,86 @@ export function AdminDashboardPage() {
           </Card>
         </div>
 
+        {/* Create Appointment */}
+        {showCreateForm && (
+          <Card className="border-amber-500/30 bg-white mb-8">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl text-slate-900">New Appointment</CardTitle>
+              <Button variant="ghost" size="sm" onClick={() => setShowCreateForm(false)}>
+                <X className="size-4" />
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <Label htmlFor="new-name">Full Name *</Label>
+                  <Input id="new-name" value={newAppt.name} onChange={(e) => setNewAppt({ ...newAppt, name: e.target.value })} placeholder="John Doe" />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="new-phone">Phone *</Label>
+                  <Input id="new-phone" type="tel" value={newAppt.phone} onChange={(e) => setNewAppt({ ...newAppt, phone: formatPhone(e.target.value) })} placeholder="(508) 872-5556" maxLength={14} />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="new-email">Email</Label>
+                  <Input id="new-email" type="email" value={newAppt.email} onChange={(e) => setNewAppt({ ...newAppt, email: e.target.value })} placeholder="john@example.com" />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="new-barber">Barber</Label>
+                  <Select value={newAppt.barber} onValueChange={(v) => setNewAppt({ ...newAppt, barber: v })}>
+                    <SelectTrigger id="new-barber"><SelectValue placeholder="Select a barber" /></SelectTrigger>
+                    <SelectContent>
+                      {barbers.map((b) => (
+                        <SelectItem key={b.id} value={`${b.name} - ${b.specialty}`}>{b.name} - {b.specialty}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="new-service">Service</Label>
+                  <Select value={newAppt.service} onValueChange={(v) => setNewAppt({ ...newAppt, service: v })}>
+                    <SelectTrigger id="new-service"><SelectValue placeholder="Select a service" /></SelectTrigger>
+                    <SelectContent>
+                      {services.map((s) => (
+                        <SelectItem key={s} value={s}>{s}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="new-date">Date *</Label>
+                  <Input id="new-date" type="date" value={newAppt.date} onChange={(e) => setNewAppt({ ...newAppt, date: e.target.value })} />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="new-time">Time</Label>
+                  <Select value={newAppt.time} onValueChange={(v) => setNewAppt({ ...newAppt, time: v })}>
+                    <SelectTrigger id="new-time"><SelectValue placeholder="Select a time" /></SelectTrigger>
+                    <SelectContent>
+                      {timeSlots.map((t) => (
+                        <SelectItem key={t} value={t}>{t}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-end">
+                  <Button type="submit" disabled={creating} className="w-full bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
+                    {creating ? "Creating..." : "Create Appointment"}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Appointments Table */}
         <Card className="border-amber-500/30 bg-white">
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-xl text-slate-900">All Appointments</CardTitle>
+            {!showCreateForm && (
+              <Button size="sm" onClick={() => setShowCreateForm(true)} className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
+                <Plus className="size-4 mr-1" />
+                New Appointment
+              </Button>
+            )}
           </CardHeader>
           <CardContent>
             {loading ? (
