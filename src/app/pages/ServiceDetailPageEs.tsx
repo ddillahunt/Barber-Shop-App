@@ -157,7 +157,7 @@ export function ServiceDetailPageEs() {
           <p className="text-amber-200">
             &copy; 2026 Grandes Ligas Barbería. Todos los derechos reservados.
           </p>
-          <p className="text-slate-500 text-xs mt-3">Powered by GDI Digital Solutions</p>
+          <p className="text-slate-400 text-sm mt-3">Powered by GDI Digital Solutions</p>
         </div>
       </footer>
 
