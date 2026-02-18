@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, Timestamp } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, where, Timestamp } from "firebase/firestore";
 import { db } from "./firebase";
 
 export interface Appointment {
@@ -25,6 +25,12 @@ export async function saveAppointment(data: Omit<Appointment, "id" | "createdAt"
 
 export async function deleteAppointment(id: string) {
   return deleteDoc(doc(db, "appointments", id));
+}
+
+export async function getBookedTimes(date: string): Promise<string[]> {
+  const q = query(appointmentsRef, where("date", "==", date));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => doc.data().time).filter(Boolean);
 }
 
 export async function getAppointments(): Promise<Appointment[]> {

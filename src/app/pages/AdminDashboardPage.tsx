@@ -171,6 +171,11 @@ export function AdminDashboardPage() {
   const todayStr = new Date().toISOString().split("T")[0];
   const todayCount = appointments.filter((a) => a.date === todayStr).length;
 
+  const bookedTimesForDate = newAppt.date
+    ? appointments.filter((a) => a.date === newAppt.date).map((a) => a.time).filter(Boolean)
+    : [];
+  const availableTimeSlots = timeSlots.filter((t) => !bookedTimesForDate.includes(t));
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100">
       {/* Header */}
@@ -305,14 +310,14 @@ export function AdminDashboardPage() {
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="new-date">Date *</Label>
-                  <Input id="new-date" type="date" value={newAppt.date} onChange={(e) => setNewAppt({ ...newAppt, date: e.target.value })} />
+                  <Input id="new-date" type="date" value={newAppt.date} onChange={(e) => setNewAppt({ ...newAppt, date: e.target.value, time: "" })} />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="new-time">Time</Label>
                   <Select value={newAppt.time} onValueChange={(v) => setNewAppt({ ...newAppt, time: v })}>
-                    <SelectTrigger id="new-time"><SelectValue placeholder="Select a time" /></SelectTrigger>
+                    <SelectTrigger id="new-time"><SelectValue placeholder={availableTimeSlots.length === 0 && newAppt.date ? "No times available" : "Select a time"} /></SelectTrigger>
                     <SelectContent>
-                      {timeSlots.map((t) => (
+                      {availableTimeSlots.map((t) => (
                         <SelectItem key={t} value={t}>{t}</SelectItem>
                       ))}
                     </SelectContent>

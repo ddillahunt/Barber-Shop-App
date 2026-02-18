@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Calendar, UserCheck } from "lucide-react";
 import { toast } from "sonner";
 import emailjs from "@emailjs/browser";
-import { saveAppointment } from "../lib/appointments";
+import { saveAppointment, getBookedTimes } from "../lib/appointments";
 
 const barbers = [
   { id: "1", name: "Carlos Martinez", specialty: "Classic Cuts" },
@@ -48,6 +48,17 @@ export function AppointmentBooking() {
   });
 
   const [submitting, setSubmitting] = useState(false);
+  const [bookedTimes, setBookedTimes] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (formData.date) {
+      getBookedTimes(formData.date).then(setBookedTimes).catch(() => setBookedTimes([]));
+    } else {
+      setBookedTimes([]);
+    }
+  }, [formData.date]);
+
+  const availableTimeSlots = timeSlots.filter((t) => !bookedTimes.includes(t));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -232,7 +243,7 @@ export function AppointmentBooking() {
                     id="date"
                     type="date"
                     value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, date: e.target.value, time: "" })}
                   />
                 </div>
 
@@ -240,10 +251,10 @@ export function AppointmentBooking() {
                   <Label htmlFor="time">Preferred Time</Label>
                   <Select value={formData.time} onValueChange={(value) => setFormData({ ...formData, time: value })}>
                     <SelectTrigger id="time">
-                      <SelectValue placeholder="Select a time" />
+                      <SelectValue placeholder={availableTimeSlots.length === 0 && formData.date ? "No times available" : "Select a time"} />
                     </SelectTrigger>
                     <SelectContent>
-                      {timeSlots.map((time) => (
+                      {availableTimeSlots.map((time) => (
                         <SelectItem key={time} value={time}>
                           {time}
                         </SelectItem>
