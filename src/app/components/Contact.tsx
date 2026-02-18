@@ -44,6 +44,25 @@ export function Contact() {
         source: "en",
       });
 
+      // Send notification email to owner
+      try {
+        await emailjs.send(
+          "service_grandesligas",
+          "template_s4xq8bl",
+          {
+            to_email: "ddillahunt59@gmail.com",
+            from_name: formData.name,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            message: formData.message,
+          },
+          "byZkVrNvtLJutxIt5"
+        );
+      } catch {
+        console.error("Owner email failed");
+      }
+
       // Send auto-reply email to customer
       try {
         await emailjs.send(
