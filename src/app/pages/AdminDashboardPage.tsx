@@ -178,6 +178,28 @@ export function AdminDashboardPage() {
     try {
       await saveAppointment({ ...newAppt, source: "en" });
 
+      // Send notification email to owner
+      try {
+        await emailjs.send(
+          "service_grandesligas",
+          "template_s4xq8bl",
+          {
+            to_email: "ddillahunt59@gmail.com",
+            from_name: newAppt.name,
+            name: newAppt.name,
+            email: newAppt.email,
+            phone: newAppt.phone,
+            barber: newAppt.barber,
+            service: newAppt.service,
+            date: newAppt.date,
+            time: newAppt.time,
+          },
+          "byZkVrNvtLJutxIt5"
+        );
+      } catch {
+        console.error("Owner email failed");
+      }
+
       // Send confirmation email to customer if email provided
       if (newAppt.email) {
         try {
@@ -202,7 +224,7 @@ export function AdminDashboardPage() {
         }
       }
 
-      toast.success(newAppt.email ? "Appointment created & confirmation email sent" : "Appointment created");
+      toast.success("Appointment created & emails sent");
       setNewAppt({ name: "", email: "", phone: "", barber: "", service: "", date: "", time: "" });
       setShowCreateForm(false);
       fetchAppointments();
