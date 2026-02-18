@@ -7,6 +7,7 @@ import { Textarea } from "../ui/textarea";
 import { MapPin, Phone, Mail, Globe } from "lucide-react";
 import { toast } from "sonner";
 import { saveMessage } from "../../lib/appointments";
+import emailjs from "@emailjs/browser";
 
 export function ContactEs() {
   const [formData, setFormData] = useState({
@@ -42,6 +43,24 @@ export function ContactEs() {
         message: formData.message,
         source: "es",
       });
+
+      // Send auto-reply email to customer
+      try {
+        await emailjs.send(
+          "service_grandesligas",
+          "template_yqpkz9e",
+          {
+            to_email: formData.email,
+            to_name: formData.name,
+            name: formData.name,
+            message: "Thank you for your message. We'll get back to you shortly!",
+          },
+          "byZkVrNvtLJutxIt5"
+        );
+      } catch {
+        console.error("Auto-reply email failed");
+      }
+
       toast.success("¡Mensaje enviado! Te responderemos pronto.");
       setFormData({ name: "", email: "", phone: "", message: "" });
     } catch {
