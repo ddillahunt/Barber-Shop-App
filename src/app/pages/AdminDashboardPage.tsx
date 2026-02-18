@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
-import { getAppointments, deleteAppointment, saveAppointment, getMessages, deleteMessage, type Appointment, type Message } from "../lib/appointments";
+import { getAppointments, deleteAppointment, saveAppointment, updateAppointment, getMessages, deleteMessage, type Appointment, type Message } from "../lib/appointments";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -17,9 +17,13 @@ import {
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X } from "lucide-react";
+import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import emailjs from "@emailjs/browser";
+import { Calendar } from "../components/ui/calendar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
+import { format } from "date-fns";
 
 const barbers = [
   { id: "1", name: "Carlos Martinez", specialty: "Classic Cuts" },
@@ -59,6 +63,13 @@ export function AdminDashboardPage() {
   const [newAppt, setNewAppt] = useState({
     name: "", email: "", phone: "", barber: "", service: "", date: "", time: "",
   });
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
+  const [editingAppt, setEditingAppt] = useState<Appointment | null>(null);
+  const [editForm, setEditForm] = useState({
+    name: "", email: "", phone: "", barber: "", service: "", date: "", time: "",
+  });
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -113,6 +124,48 @@ export function AdminDashboardPage() {
       toast.success("Message deleted");
     } catch {
       toast.error("Failed to delete message");
+    }
+  };
+
+  const handleEditOpen = (appt: Appointment) => {
+    setEditingAppt(appt);
+    setEditForm({
+      name: appt.name || "",
+      email: appt.email || "",
+      phone: appt.phone || "",
+      barber: appt.barber || "",
+      service: appt.service || "",
+      date: appt.date || "",
+      time: appt.time || "",
+    });
+  };
+
+  const handleEditSave = async () => {
+    if (!editingAppt?.id) return;
+    if (!editForm.name || !editForm.phone || !editForm.date) {
+      toast.error("Name, phone, and date are required");
+      return;
+    }
+    setSaving(true);
+    try {
+      await updateAppointment(editingAppt.id, {
+        name: editForm.name,
+        email: editForm.email,
+        phone: editForm.phone,
+        barber: editForm.barber,
+        service: editForm.service,
+        date: editForm.date,
+        time: editForm.time,
+      });
+      setAppointments((prev) =>
+        prev.map((a) => a.id === editingAppt.id ? { ...a, ...editForm } : a)
+      );
+      toast.success("Appointment updated");
+      setEditingAppt(null);
+    } catch {
+      toast.error("Failed to update appointment");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -175,6 +228,18 @@ export function AdminDashboardPage() {
     ? appointments.filter((a) => a.date === newAppt.date).map((a) => a.time).filter(Boolean)
     : [];
   const availableTimeSlots = timeSlots.filter((t) => !bookedTimesForDate.includes(t));
+
+  const appointmentDates = appointments.reduce<Record<string, number>>((acc, appt) => {
+    if (appt.date) acc[appt.date] = (acc[appt.date] || 0) + 1;
+    return acc;
+  }, {});
+  const selectedDateStr = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
+  const selectedDateAppointments = appointments.filter((a) => a.date === selectedDateStr);
+
+  const editBookedTimes = editForm.date
+    ? appointments.filter((a) => a.date === editForm.date && a.id !== editingAppt?.id).map((a) => a.time).filter(Boolean)
+    : [];
+  const editAvailableTimeSlots = timeSlots.filter((t) => !editBookedTimes.includes(t));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100">
@@ -333,7 +398,7 @@ export function AdminDashboardPage() {
           </Card>
         )}
 
-        {/* Appointments Table */}
+        {/* Appointments Section with Tabs */}
         <Card className="border-amber-500/30 bg-white">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-xl text-slate-900">All Appointments</CardTitle>
@@ -345,55 +410,114 @@ export function AdminDashboardPage() {
             )}
           </CardHeader>
           <CardContent>
-            {loading ? (
-              <p className="text-center text-slate-500 py-8">Loading appointments...</p>
-            ) : appointments.length === 0 ? (
-              <p className="text-center text-slate-500 py-8">No appointments yet.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Phone</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Barber</TableHead>
-                      <TableHead>Service</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Time</TableHead>
-                      <TableHead>Source</TableHead>
-                      <TableHead></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {appointments.map((appt) => (
-                      <TableRow key={appt.id}>
-                        <TableCell className="font-medium">{appt.name}</TableCell>
-                        <TableCell>{appt.phone}</TableCell>
-                        <TableCell>{appt.email || "—"}</TableCell>
-                        <TableCell>{appt.barber || "—"}</TableCell>
-                        <TableCell>{appt.service || "—"}</TableCell>
-                        <TableCell>{appt.date}</TableCell>
-                        <TableCell>{appt.time || "—"}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{appt.source?.toUpperCase() || "EN"}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete(appt.id!)}
-                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
+            <Tabs defaultValue="table">
+              <TabsList className="mb-4">
+                <TabsTrigger value="table">Table</TabsTrigger>
+                <TabsTrigger value="calendar">Calendar</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="table">
+                {loading ? (
+                  <p className="text-center text-slate-500 py-8">Loading appointments...</p>
+                ) : appointments.length === 0 ? (
+                  <p className="text-center text-slate-500 py-8">No appointments yet.</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Phone</TableHead>
+                          <TableHead>Email</TableHead>
+                          <TableHead>Barber</TableHead>
+                          <TableHead>Service</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Time</TableHead>
+                          <TableHead>Source</TableHead>
+                          <TableHead></TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {appointments.map((appt) => (
+                          <TableRow key={appt.id}>
+                            <TableCell className="font-medium">{appt.name}</TableCell>
+                            <TableCell>{appt.phone}</TableCell>
+                            <TableCell>{appt.email || "—"}</TableCell>
+                            <TableCell>{appt.barber || "—"}</TableCell>
+                            <TableCell>{appt.service || "—"}</TableCell>
+                            <TableCell>{appt.date}</TableCell>
+                            <TableCell>{appt.time || "—"}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{appt.source?.toUpperCase() || "EN"}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-1">
+                                <Button variant="ghost" size="sm" onClick={() => handleEditOpen(appt)} className="text-amber-600 hover:text-amber-800 hover:bg-amber-50">
+                                  <Pencil className="size-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm" onClick={() => handleDelete(appt.id!)} className="text-red-500 hover:text-red-700 hover:bg-red-50">
+                                  <Trash2 className="size-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="calendar">
+                <div className="flex flex-col lg:flex-row gap-6">
+                  <div className="flex-shrink-0">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={setSelectedDate}
+                      month={calendarMonth}
+                      onMonthChange={setCalendarMonth}
+                      modifiers={{
+                        hasAppointment: (date: Date) => !!appointmentDates[format(date, "yyyy-MM-dd")],
+                      }}
+                      modifiersClassNames={{
+                        hasAppointment: "has-appointment",
+                      }}
+                      className="rounded-md border border-amber-500/30"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-slate-900 mb-3 text-lg">
+                      {selectedDate ? format(selectedDate, "EEEE, MMMM d, yyyy") : "Select a date"}
+                    </h3>
+                    {selectedDateAppointments.length === 0 ? (
+                      <p className="text-slate-500 text-sm py-4">No appointments on this date.</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {selectedDateAppointments.map((appt) => (
+                          <div
+                            key={appt.id}
+                            onClick={() => handleEditOpen(appt)}
+                            className="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:border-amber-500/50 hover:bg-amber-50/50 cursor-pointer transition-colors"
                           >
-                            <Trash2 className="size-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium text-slate-900">{appt.name}</div>
+                              <div className="text-sm text-slate-500 truncate">
+                                {appt.time || "No time"}{appt.barber ? ` \u2022 ${appt.barber}` : ""}{appt.service ? ` \u2022 ${appt.service}` : ""}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                              <Badge variant="outline">{appt.source?.toUpperCase() || "EN"}</Badge>
+                              <Pencil className="size-4 text-amber-500" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
         {/* Messages Table */}
@@ -446,6 +570,75 @@ export function AdminDashboardPage() {
           </CardContent>
         </Card>
       </main>
+
+      {/* Edit Appointment Dialog */}
+      <Dialog open={!!editingAppt} onOpenChange={(open) => { if (!open) setEditingAppt(null); }}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Edit Appointment</DialogTitle>
+            <DialogDescription>Update the appointment details below.</DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4">
+            <div className="space-y-1">
+              <Label htmlFor="edit-name">Full Name *</Label>
+              <Input id="edit-name" value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="edit-phone">Phone *</Label>
+              <Input id="edit-phone" type="tel" value={editForm.phone} onChange={(e) => setEditForm({ ...editForm, phone: formatPhone(e.target.value) })} maxLength={14} />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="edit-email">Email</Label>
+              <Input id="edit-email" type="email" value={editForm.email} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="edit-barber">Barber</Label>
+              <Select value={editForm.barber} onValueChange={(v) => setEditForm({ ...editForm, barber: v })}>
+                <SelectTrigger id="edit-barber"><SelectValue placeholder="Select a barber" /></SelectTrigger>
+                <SelectContent>
+                  {barbers.map((b) => (
+                    <SelectItem key={b.id} value={`${b.name} - ${b.specialty}`}>{b.name} - {b.specialty}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="edit-service">Service</Label>
+              <Select value={editForm.service} onValueChange={(v) => setEditForm({ ...editForm, service: v })}>
+                <SelectTrigger id="edit-service"><SelectValue placeholder="Select a service" /></SelectTrigger>
+                <SelectContent>
+                  {services.map((s) => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="edit-date">Date *</Label>
+              <Input id="edit-date" type="date" value={editForm.date} onChange={(e) => setEditForm({ ...editForm, date: e.target.value, time: "" })} />
+            </div>
+            <div className="space-y-1 sm:col-span-2">
+              <Label htmlFor="edit-time">Time</Label>
+              <Select value={editForm.time} onValueChange={(v) => setEditForm({ ...editForm, time: v })}>
+                <SelectTrigger id="edit-time">
+                  <SelectValue placeholder={editAvailableTimeSlots.length === 0 && editForm.date ? "No times available" : "Select a time"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {editAvailableTimeSlots.map((t) => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingAppt(null)}>Cancel</Button>
+            <Button onClick={handleEditSave} disabled={saving} className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
+              {saving ? "Saving..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, where, Timestamp } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc, query, orderBy, where, Timestamp } from "firebase/firestore";
 import { db } from "./firebase";
 
 export interface Appointment {
@@ -25,6 +25,10 @@ export async function saveAppointment(data: Omit<Appointment, "id" | "createdAt"
 
 export async function deleteAppointment(id: string) {
   return deleteDoc(doc(db, "appointments", id));
+}
+
+export async function updateAppointment(id: string, data: Partial<Omit<Appointment, "id" | "createdAt">>) {
+  return updateDoc(doc(db, "appointments", id), data);
 }
 
 export async function getBookedTimes(date: string): Promise<string[]> {
