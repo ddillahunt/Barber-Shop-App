@@ -17,13 +17,12 @@ import {
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil } from "lucide-react";
+import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import emailjs from "@emailjs/browser";
-import { Calendar } from "../components/ui/calendar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
-import { format } from "date-fns";
+import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths, isSameMonth, isSameDay, isToday } from "date-fns";
 
 const barbers = [
   { id: "1", name: "Carlos Martinez", specialty: "Classic Cuts" },
@@ -469,31 +468,98 @@ export function AdminDashboardPage() {
               </TabsContent>
 
               <TabsContent value="calendar">
-                <div className="flex flex-col lg:flex-row gap-6">
-                  <div className="flex-shrink-0">
-                    <Calendar
-                      mode="single"
-                      selected={selectedDate}
-                      onSelect={setSelectedDate}
-                      month={calendarMonth}
-                      onMonthChange={setCalendarMonth}
-                      modifiers={{
-                        hasAppointment: (date: Date) => !!appointmentDates[format(date, "yyyy-MM-dd")],
-                      }}
-                      modifiersClassNames={{
-                        hasAppointment: "has-appointment",
-                      }}
-                      className="rounded-md border border-amber-500/30"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
+                {/* Month navigation */}
+                <div className="flex items-center justify-between mb-4">
+                  <Button variant="outline" size="sm" onClick={() => setCalendarMonth(subMonths(calendarMonth, 1))}>
+                    <ChevronLeft className="size-4" />
+                  </Button>
+                  <h3 className="font-bold text-lg text-slate-900">
+                    {format(calendarMonth, "MMMM yyyy")}
+                  </h3>
+                  <Button variant="outline" size="sm" onClick={() => setCalendarMonth(addMonths(calendarMonth, 1))}>
+                    <ChevronRight className="size-4" />
+                  </Button>
+                </div>
+
+                {/* Day headers */}
+                <div className="grid grid-cols-7 border-b border-slate-200">
+                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                    <div key={day} className="py-2 text-center text-sm font-semibold text-slate-500">
+                      {day}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Calendar grid */}
+                <div className="grid grid-cols-7 border-l border-slate-200">
+                  {(() => {
+                    const monthStart = startOfMonth(calendarMonth);
+                    const monthEnd = endOfMonth(calendarMonth);
+                    const gridStart = startOfWeek(monthStart);
+                    const gridEnd = endOfWeek(monthEnd);
+                    const days: Date[] = [];
+                    let d = gridStart;
+                    while (d <= gridEnd) {
+                      days.push(d);
+                      d = addDays(d, 1);
+                    }
+                    return days.map((day) => {
+                      const dateStr = format(day, "yyyy-MM-dd");
+                      const dayAppts = appointments.filter((a) => a.date === dateStr);
+                      const inMonth = isSameMonth(day, calendarMonth);
+                      const today = isToday(day);
+                      const selected = selectedDate && isSameDay(day, selectedDate);
+                      return (
+                        <div
+                          key={dateStr}
+                          onClick={() => setSelectedDate(day)}
+                          className={`min-h-[120px] border-r border-b border-slate-200 p-1.5 cursor-pointer transition-colors ${
+                            !inMonth ? "bg-slate-50/50" : "bg-white hover:bg-amber-50/30"
+                          } ${selected ? "ring-2 ring-amber-500 ring-inset" : ""}`}
+                        >
+                          <div className={`text-xs font-medium mb-1 ${
+                            today ? "bg-amber-500 text-white rounded-full w-6 h-6 flex items-center justify-center" :
+                            !inMonth ? "text-slate-300" : "text-slate-700"
+                          }`}>
+                            {format(day, "d")}
+                          </div>
+                          <div className="space-y-1">
+                            {dayAppts.slice(0, 3).map((appt) => (
+                              <div
+                                key={appt.id}
+                                onClick={(e) => { e.stopPropagation(); handleEditOpen(appt); }}
+                                className="text-xs p-1 rounded bg-amber-100 border border-amber-200 hover:bg-amber-200 cursor-pointer truncate transition-colors"
+                                title={`${appt.time || ""} ${appt.name} - ${appt.barber || ""} - ${appt.service || ""} - ${appt.phone || ""}`}
+                              >
+                                <span className="font-semibold">{appt.time || "—"}</span>{" "}
+                                <span className="text-slate-700">{appt.name}</span>
+                              </div>
+                            ))}
+                            {dayAppts.length > 3 && (
+                              <div className="text-xs text-amber-600 font-medium pl-1">
+                                +{dayAppts.length - 3} more
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    });
+                  })()}
+                </div>
+
+                {/* Selected day detail panel */}
+                {selectedDate && (
+                  <div className="mt-6 border-t border-slate-200 pt-4">
                     <h3 className="font-semibold text-slate-900 mb-3 text-lg">
-                      {selectedDate ? format(selectedDate, "EEEE, MMMM d, yyyy") : "Select a date"}
+                      {format(selectedDate, "EEEE, MMMM d, yyyy")}
+                      <span className="text-sm font-normal text-slate-500 ml-2">
+                        ({selectedDateAppointments.length} appointment{selectedDateAppointments.length !== 1 ? "s" : ""})
+                      </span>
                     </h3>
                     {selectedDateAppointments.length === 0 ? (
-                      <p className="text-slate-500 text-sm py-4">No appointments on this date.</p>
+                      <p className="text-slate-500 text-sm py-2">No appointments on this date.</p>
                     ) : (
-                      <div className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {selectedDateAppointments.map((appt) => (
                           <div
                             key={appt.id}
@@ -524,7 +590,7 @@ export function AdminDashboardPage() {
                       </div>
                     )}
                   </div>
-                </div>
+                )}
               </TabsContent>
             </Tabs>
           </CardContent>
