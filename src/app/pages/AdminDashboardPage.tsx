@@ -493,22 +493,31 @@ export function AdminDashboardPage() {
                     {selectedDateAppointments.length === 0 ? (
                       <p className="text-slate-500 text-sm py-4">No appointments on this date.</p>
                     ) : (
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         {selectedDateAppointments.map((appt) => (
                           <div
                             key={appt.id}
                             onClick={() => handleEditOpen(appt)}
-                            className="flex items-center justify-between p-3 rounded-lg border border-slate-200 hover:border-amber-500/50 hover:bg-amber-50/50 cursor-pointer transition-colors"
+                            className="p-4 rounded-lg border border-slate-200 hover:border-amber-500/50 hover:bg-amber-50/50 cursor-pointer transition-colors"
                           >
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium text-slate-900">{appt.name}</div>
-                              <div className="text-sm text-slate-500 truncate">
-                                {appt.time || "No time"}{appt.barber ? ` \u2022 ${appt.barber}` : ""}{appt.service ? ` \u2022 ${appt.service}` : ""}
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="font-semibold text-slate-900 text-base">{appt.name}</div>
+                              <div className="flex items-center gap-2 flex-shrink-0">
+                                <Badge variant="outline">{appt.source?.toUpperCase() || "EN"}</Badge>
+                                <Pencil className="size-4 text-amber-500" />
                               </div>
                             </div>
-                            <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                              <Badge variant="outline">{appt.source?.toUpperCase() || "EN"}</Badge>
-                              <Pencil className="size-4 text-amber-500" />
+                            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                              <div className="text-slate-500">Time</div>
+                              <div className="text-slate-800">{appt.time || "—"}</div>
+                              <div className="text-slate-500">Phone</div>
+                              <div className="text-slate-800">{appt.phone || "—"}</div>
+                              <div className="text-slate-500">Email</div>
+                              <div className="text-slate-800">{appt.email || "—"}</div>
+                              <div className="text-slate-500">Barber</div>
+                              <div className="text-slate-800">{appt.barber || "—"}</div>
+                              <div className="text-slate-500">Service</div>
+                              <div className="text-slate-800">{appt.service || "—"}</div>
                             </div>
                           </div>
                         ))}
