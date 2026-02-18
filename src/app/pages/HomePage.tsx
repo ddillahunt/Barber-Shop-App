@@ -44,6 +44,7 @@ export function HomePage() {
           <Link to="/admin/login" className="text-slate-600 hover:text-amber-400 transition-colors text-xs mt-2 inline-block">
             Admin
           </Link>
+          <p className="text-slate-500 text-xs mt-3">Powered by GDI Digital Solutions</p>
         </div>
       </footer>
 
