@@ -32,8 +32,7 @@ export function HomePageEs() {
           <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Enlaces Rápidos</h3>
           <nav className="flex flex-wrap justify-center gap-6 mb-6">
             <a href="#services" className="text-slate-300 hover:text-amber-400 transition-colors">Servicios</a>
-
-            <a href="#team" className="text-slate-300 hover:text-amber-400 transition-colors">Equipo</a>
+            <a href="#team" className="text-slate-300 hover:text-amber-400 transition-colors">Nuestro Equipo</a>
             <a href="#schedule" className="text-slate-300 hover:text-amber-400 transition-colors">Horario</a>
             <a href="#booking" className="text-slate-300 hover:text-amber-400 transition-colors">Reservar</a>
             <a href="#contact" className="text-slate-300 hover:text-amber-400 transition-colors">Contacto</a>
