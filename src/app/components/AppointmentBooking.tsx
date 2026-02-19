@@ -11,10 +11,13 @@ import emailjs from "@emailjs/browser";
 import { saveAppointment, getBookedTimes } from "../lib/appointments";
 
 const barbers = [
-  { id: "1", name: "Carlos Martinez", specialty: "Classic Cuts" },
-  { id: "2", name: "Miguel Rodriguez", specialty: "Modern Styles" },
-  { id: "3", name: "Juan Hernandez", specialty: "Beard Specialist" },
-  { id: "4", name: "Diego Santos", specialty: "All-Around Master" }
+  { id: "1", name: "Yorki", phone: "(774) 244-2984" },
+  { id: "2", name: "Maestro", phone: "(774) 204-1098" },
+  { id: "3", name: "El Menor", phone: "(774) 219-1098" },
+  { id: "4", name: "Yefri", phone: "(774) 303-8891" },
+  { id: "5", name: "Montro", phone: "(508) 371-5827" },
+  { id: "6", name: "Jairo", phone: "(347) 374-9866" },
+  { id: "7", name: "Jose", phone: "(774) 279-2882" }
 ];
 
 const timeSlots = [
@@ -86,7 +89,7 @@ export function AppointmentBooking() {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.specialty}` : formData.barber,
+          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.phone}` : formData.barber,
           service: formData.service,
           date: formData.date,
           time: formData.time,
@@ -105,7 +108,7 @@ export function AppointmentBooking() {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.specialty}` : formData.barber,
+          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.phone}` : formData.barber,
           service: formData.service,
           date: formData.date,
           time: formData.time,
@@ -120,7 +123,7 @@ export function AppointmentBooking() {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.specialty}` : formData.barber,
+          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.phone}` : formData.barber,
           service: formData.service,
           date: formData.date,
           time: formData.time,
@@ -220,7 +223,7 @@ export function AppointmentBooking() {
                     <SelectContent>
                       {barbers.map((barber) => (
                         <SelectItem key={barber.id} value={barber.id}>
-                          {barber.name} - {barber.specialty}
+                          {barber.name} - {barber.phone}
                         </SelectItem>
                       ))}
                     </SelectContent>
