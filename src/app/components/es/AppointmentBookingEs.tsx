@@ -244,7 +244,7 @@ export function AppointmentBookingEs() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="date">Fecha Preferida <span className="text-red-500">*</span></Label>
+                  <Label htmlFor="date">Fecha Preferida *</Label>
                   <Input
                     id="date"
                     type="date"
