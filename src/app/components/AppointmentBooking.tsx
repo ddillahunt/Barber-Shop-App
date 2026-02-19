@@ -65,8 +65,8 @@ export function AppointmentBooking() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.phone || !formData.date) {
-      toast.error("Please fill in name, phone number, and date");
+    if (!formData.name || !formData.phone || !formData.date || !formData.time) {
+      toast.error("Please fill in name, phone number, date, and time");
       return;
     }
 
@@ -179,7 +179,7 @@ export function AppointmentBooking() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name">Full Name <span className="text-red-500">*</span></Label>
                   <Input
                     id="name"
                     value={formData.name}
@@ -200,7 +200,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone">Phone Number <span className="text-red-500">*</span></Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -244,7 +244,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="date">Preferred Date</Label>
+                  <Label htmlFor="date">Preferred Date <span className="text-red-500">*</span></Label>
                   <Input
                     id="date"
                     type="date"
@@ -254,7 +254,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="time">Preferred Time</Label>
+                  <Label htmlFor="time">Preferred Time <span className="text-red-500">*</span></Label>
                   <Select value={formData.time} onValueChange={(value) => setFormData({ ...formData, time: value })}>
                     <SelectTrigger id="time">
                       <SelectValue placeholder={availableTimeSlots.length === 0 && formData.date ? "No times available" : "Select a time"} />
