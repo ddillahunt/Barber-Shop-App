@@ -182,12 +182,12 @@ export function AppointmentBookingEs() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Nombre Completo</Label>
+                  <Label htmlFor="name" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Nombre Completo *</Label>
                   <Input
                     id="name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Juan Pérez *"
+                    placeholder="Juan Pérez"
                   />
                 </div>
 
@@ -203,13 +203,13 @@ export function AppointmentBookingEs() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Número de Teléfono</Label>
+                  <Label htmlFor="phone" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Número de Teléfono *</Label>
                   <Input
                     id="phone"
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
-                    placeholder="(508) 872-5556 *"
+                    placeholder="(508) 872-5556"
                     maxLength={14}
                   />
                 </div>
@@ -257,10 +257,10 @@ export function AppointmentBookingEs() {
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="time" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Hora Preferida</Label>
+                  <Label htmlFor="time" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Hora Preferida *</Label>
                   <Select value={formData.time} onValueChange={(value) => setFormData({ ...formData, time: value })}>
                     <SelectTrigger id="time">
-                      <SelectValue placeholder={availableTimeSlots.length === 0 && formData.date ? "No hay horarios disponibles" : "Selecciona una hora *"} />
+                      <SelectValue placeholder={availableTimeSlots.length === 0 && formData.date ? "No hay horarios disponibles" : "Selecciona una hora"} />
                     </SelectTrigger>
                     <SelectContent>
                       {availableTimeSlots.map((time) => (
