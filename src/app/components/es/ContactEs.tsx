@@ -97,15 +97,15 @@ export function ContactEs() {
 
         <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {/* Contact Information */}
-          <div className="space-y-6">
-            <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 overflow-hidden bg-slate-900">
+          <div>
+            <Card className="h-full flex flex-col border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 overflow-hidden bg-slate-900">
               <div className="bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 p-6">
                 <CardHeader className="p-0">
                   <CardTitle className="text-black text-2xl mb-2 font-bold">Ponte en Contacto</CardTitle>
                   <CardDescription className="text-slate-900 font-medium">Visítanos o contáctanos con cualquier pregunta</CardDescription>
                 </CardHeader>
               </div>
-              <CardContent className="space-y-8 p-8 bg-gradient-to-br from-slate-900 to-black">
+              <CardContent className="flex-1 space-y-8 p-8 bg-gradient-to-br from-slate-900 to-black">
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-xl shadow-lg shadow-amber-500/50">
                     <MapPin className="size-6 text-black" />
