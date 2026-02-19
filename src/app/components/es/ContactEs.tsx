@@ -30,7 +30,7 @@ export function ContactEs() {
     e.preventDefault();
 
     if (!formData.name || !formData.email || !formData.message) {
-      toast.error("Por favor complete todos los campos");
+      toast.error("Por favor completa todos los campos");
       return;
     }
 
@@ -44,7 +44,6 @@ export function ContactEs() {
         source: "es",
       });
 
-      // Send notification email to owner
       try {
         await emailjs.send(
           "service_grandesligas",
@@ -63,7 +62,6 @@ export function ContactEs() {
         console.error("Owner email failed");
       }
 
-      // Send auto-reply email to customer
       try {
         await emailjs.send(
           "service_grandesligas",
@@ -72,7 +70,7 @@ export function ContactEs() {
             to_email: formData.email,
             to_name: formData.name,
             name: formData.name,
-            message: "Thank you for your message. We'll get back to you shortly!",
+            message: "Gracias por tu mensaje. ¡Te responderemos pronto!",
           },
           "byZkVrNvtLJutxIt5"
         );
@@ -83,7 +81,7 @@ export function ContactEs() {
       toast.success("¡Mensaje enviado! Te responderemos pronto.");
       setFormData({ name: "", email: "", phone: "", message: "" });
     } catch {
-      toast.error("Error al enviar mensaje. Inténtalo de nuevo.");
+      toast.error("Error al enviar el mensaje. Por favor intenta de nuevo.");
     } finally {
       setSubmitting(false);
     }
@@ -96,7 +94,7 @@ export function ContactEs() {
           <h2 className="text-5xl mb-4 font-bold bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-400 bg-clip-text text-transparent">Contáctanos</h2>
           <p className="text-amber-200 text-lg">Ponte en contacto con nuestro equipo</p>
         </div>
-        
+
         <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {/* Contact Information */}
           <div className="space-y-6">
@@ -137,7 +135,7 @@ export function ContactEs() {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-2 text-lg text-amber-400">Correo Electrónico</h3>
-                    <p className="text-slate-300">info@grandesligas.com</p>
+                    <a href="mailto:ddillahunt59@gmail.com" className="text-slate-300 hover:text-amber-400 transition-colors underline underline-offset-4">ddillahunt59@gmail.com</a>
                   </div>
                 </div>
 
@@ -147,9 +145,9 @@ export function ContactEs() {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-2 text-lg text-amber-400">Sitio Web</h3>
-                    <a 
-                      href="https://www.grandesligas.com" 
-                      target="_blank" 
+                    <a
+                      href="https://www.grandesligas.com"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-slate-300 hover:text-amber-400 transition-colors underline underline-offset-4"
                     >
@@ -163,7 +161,6 @@ export function ContactEs() {
 
           {/* Map & Contact Form */}
           <div className="space-y-6">
-            {/* Google Maps Embed */}
             <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 overflow-hidden bg-slate-900">
               <div className="relative">
                 <iframe
@@ -186,63 +183,63 @@ export function ContactEs() {
               </CardContent>
             </Card>
 
-          <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 bg-slate-900">
-            <CardHeader className="p-8 pb-6">
-              <CardTitle className="text-2xl text-amber-400">Envíanos un Mensaje</CardTitle>
-              <CardDescription className="text-base text-slate-300">Responderemos en 24 horas</CardDescription>
-            </CardHeader>
-            <CardContent className="p-8 pt-0">
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="space-y-2">
-                  <Label htmlFor="contact-name" className="text-base text-amber-400">Nombre</Label>
-                  <Input
-                    id="contact-name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Tu nombre"
-                  />
-                </div>
+            <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 bg-slate-900">
+              <CardHeader className="p-8 pb-6">
+                <CardTitle className="text-2xl text-amber-400">Envíanos un Mensaje</CardTitle>
+                <CardDescription className="text-base text-slate-300">Te responderemos en 24 horas</CardDescription>
+              </CardHeader>
+              <CardContent className="p-8 pt-0">
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="contact-name-es" className="text-base text-amber-400">Nombre</Label>
+                    <Input
+                      id="contact-name-es"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Tu nombre"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="contact-email" className="text-base text-amber-400">Correo Electrónico</Label>
-                  <Input
-                    id="contact-email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="tu@correo.com"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contact-email-es" className="text-base text-amber-400">Correo Electrónico</Label>
+                    <Input
+                      id="contact-email-es"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="tu@correo.com"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="contact-phone" className="text-base text-amber-400">Número de Teléfono</Label>
-                  <Input
-                    id="contact-phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
-                    placeholder="(508) 872-5556"
-                    maxLength={14}
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contact-phone-es" className="text-base text-amber-400">Número de Teléfono</Label>
+                    <Input
+                      id="contact-phone-es"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
+                      placeholder="(508) 872-5556"
+                      maxLength={14}
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="message" className="text-base text-amber-400">Mensaje</Label>
-                  <Textarea
-                    id="message"
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="¿Cómo podemos ayudarte?"
-                    rows={5}
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="message-es" className="text-base text-amber-400">Mensaje</Label>
+                    <Textarea
+                      id="message-es"
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      placeholder="¿Cómo podemos ayudarte?"
+                      rows={5}
+                    />
+                  </div>
 
-                <Button type="submit" disabled={submitting} className="w-full h-12 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50">
-                  {submitting ? "Enviando..." : "Enviar Mensaje"}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+                  <Button type="submit" disabled={submitting} className="w-full h-12 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50">
+                    {submitting ? "Enviando..." : "Enviar Mensaje"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

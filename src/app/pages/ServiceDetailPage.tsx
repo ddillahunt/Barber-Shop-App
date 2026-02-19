@@ -147,8 +147,7 @@ export function ServiceDetailPage() {
           <nav className="flex flex-wrap justify-center gap-6 mb-6">
             <Link to="/" className="text-slate-300 hover:text-amber-400 transition-colors">Home</Link>
             <Link to="/#services" className="text-slate-300 hover:text-amber-400 transition-colors">Services</Link>
-            <Link to="/#gallery" className="text-slate-300 hover:text-amber-400 transition-colors">Gallery</Link>
-            <Link to="/#team" className="text-slate-300 hover:text-amber-400 transition-colors">Team</Link>
+<Link to="/#team" className="text-slate-300 hover:text-amber-400 transition-colors">Team</Link>
             <Link to="/#schedule" className="text-slate-300 hover:text-amber-400 transition-colors">Schedule</Link>
             <Link to="/#booking" className="text-slate-300 hover:text-amber-400 transition-colors">Book Now</Link>
             <Link to="/#contact" className="text-slate-300 hover:text-amber-400 transition-colors">Contact</Link>

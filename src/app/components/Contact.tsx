@@ -1,7 +1,92 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
 import { MapPin, Phone, Mail, Globe } from "lucide-react";
+import { toast } from "sonner";
+import { saveMessage } from "../lib/appointments";
+import emailjs from "@emailjs/browser";
 
 export function Contact() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: ""
+  });
+
+  function formatPhone(value: string) {
+    const digits = value.replace(/\D/g, "").slice(0, 10);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  }
+
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await saveMessage({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        source: "en",
+      });
+
+      try {
+        await emailjs.send(
+          "service_grandesligas",
+          "template_s4xq8bl",
+          {
+            to_email: "ddillahunt59@gmail.com",
+            from_name: formData.name,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            message: formData.message,
+          },
+          "byZkVrNvtLJutxIt5"
+        );
+      } catch {
+        console.error("Owner email failed");
+      }
+
+      try {
+        await emailjs.send(
+          "service_grandesligas",
+          "template_yqpkz9e",
+          {
+            to_email: formData.email,
+            to_name: formData.name,
+            name: formData.name,
+            message: "Thank you for your message. We'll get back to you shortly!",
+          },
+          "byZkVrNvtLJutxIt5"
+        );
+      } catch {
+        console.error("Auto-reply email failed");
+      }
+
+      toast.success("Message sent! We'll get back to you soon.");
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    } catch {
+      toast.error("Failed to send message. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-20 bg-gradient-to-br from-slate-900 via-black to-slate-900">
       <div className="container mx-auto px-4">
@@ -50,7 +135,7 @@ export function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-2 text-lg text-amber-400">Email</h3>
-                    <p className="text-slate-300">info@grandesligas.com</p>
+                    <a href="mailto:ddillahunt59@gmail.com" className="text-slate-300 hover:text-amber-400 transition-colors underline underline-offset-4">ddillahunt59@gmail.com</a>
                   </div>
                 </div>
 
@@ -74,20 +159,20 @@ export function Contact() {
             </Card>
           </div>
 
-          {/* Map */}
+          {/* Map & Contact Form */}
           <div className="space-y-6">
-            <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 overflow-hidden bg-slate-900 h-full flex flex-col">
-              <div className="relative flex-1">
+            <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 overflow-hidden bg-slate-900">
+              <div className="relative">
                 <iframe
                   title="Grandes Ligas Barber Shop Location"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2962.123!2d-71.4162!3d42.2793!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89e38a3e1b1b1b1b%3A0x1234567890abcdef!2s3A%202nd%20St%2C%20Framingham%2C%20MA%2001702!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
                   width="100%"
-                  height="100%"
-                  style={{ border: 0, position: "absolute", top: 0, left: 0 }}
+                  height="250"
+                  style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  className="w-full h-full"
+                  className="w-full"
                 />
                 <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-slate-900 to-transparent" />
               </div>
@@ -95,6 +180,64 @@ export function Contact() {
                 <p className="text-amber-400 text-sm font-medium text-center">
                   3A 2nd St, Framingham, MA 01702
                 </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 bg-slate-900">
+              <CardHeader className="p-8 pb-6">
+                <CardTitle className="text-2xl text-amber-400">Send Us a Message</CardTitle>
+                <CardDescription className="text-base text-slate-300">We'll respond within 24 hours</CardDescription>
+              </CardHeader>
+              <CardContent className="p-8 pt-0">
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="contact-name" className="text-base text-amber-400">Name</Label>
+                    <Input
+                      id="contact-name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Your name"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="contact-email" className="text-base text-amber-400">Email</Label>
+                    <Input
+                      id="contact-email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="your@email.com"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="contact-phone" className="text-base text-amber-400">Phone Number</Label>
+                    <Input
+                      id="contact-phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
+                      placeholder="(508) 872-5556"
+                      maxLength={14}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="message" className="text-base text-amber-400">Message</Label>
+                    <Textarea
+                      id="message"
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      placeholder="How can we help you?"
+                      rows={5}
+                    />
+                  </div>
+
+                  <Button type="submit" disabled={submitting} className="w-full h-12 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50">
+                    {submitting ? "Sending..." : "Send Message"}
+                  </Button>
+                </form>
               </CardContent>
             </Card>
           </div>

@@ -34,12 +34,17 @@ export function Schedule() {
               </div>
             </CardHeader>
           </div>
-          <CardContent className="p-8 bg-gradient-to-br from-slate-900 to-black">
-            <div className="space-y-6">
+          <CardContent className="p-0 bg-gradient-to-br from-slate-900 to-black">
+            <div className="grid grid-cols-3 px-8 py-4" style={{ backgroundColor: "rgba(245, 158, 11, 0.2)", borderBottom: "2px solid rgba(245, 158, 11, 0.5)" }}>
+              <span style={{ color: "#fbbf24", fontSize: "1.25rem", fontWeight: 700 }}>Day</span>
+              <span style={{ color: "#fbbf24", fontSize: "1.25rem", fontWeight: 700, textAlign: "center" }}>Status</span>
+              <span style={{ color: "#fbbf24", fontSize: "1.25rem", fontWeight: 700, textAlign: "right" }}>Hours</span>
+            </div>
+            <div className="px-8 py-4">
               {schedule.map((item) => (
-                <div key={item.day} className="flex justify-between items-center py-4 border-b last:border-b-0 border-amber-500/30">
-                  <div className="flex items-center gap-3">
-                    <span className="font-semibold text-lg text-amber-400">{item.day}</span>
+                <div key={item.day} className="grid grid-cols-3 items-center py-4 border-b last:border-b-0 border-amber-500/30">
+                  <span className="font-semibold text-lg text-amber-400">{item.day}</span>
+                  <div className="text-center">
                     {item.walkIn && (
                       <span className="inline-flex items-center gap-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-medium px-2 py-0.5 rounded-full">
                         <UserCheck className="size-3" />
@@ -47,7 +52,7 @@ export function Schedule() {
                       </span>
                     )}
                   </div>
-                  <span className="text-amber-200 text-lg font-medium">{item.hours}</span>
+                  <span className="text-amber-200 text-lg font-medium text-right">{item.hours}</span>
                 </div>
               ))}
             </div>

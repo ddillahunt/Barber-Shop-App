@@ -124,8 +124,7 @@ export function AboutPageEs() {
           <nav className="flex flex-wrap justify-center gap-6 mb-6">
             <Link to="/es" className="text-slate-300 hover:text-amber-400 transition-colors">Inicio</Link>
             <Link to="/es#services" className="text-slate-300 hover:text-amber-400 transition-colors">Servicios</Link>
-            <Link to="/es#gallery" className="text-slate-300 hover:text-amber-400 transition-colors">Galería</Link>
-            <Link to="/es#team" className="text-slate-300 hover:text-amber-400 transition-colors">Equipo</Link>
+<Link to="/es#team" className="text-slate-300 hover:text-amber-400 transition-colors">Equipo</Link>
             <Link to="/es#schedule" className="text-slate-300 hover:text-amber-400 transition-colors">Horario</Link>
             <Link to="/es#booking" className="text-slate-300 hover:text-amber-400 transition-colors">Reservar</Link>
             <Link to="/es#contact" className="text-slate-300 hover:text-amber-400 transition-colors">Contacto</Link>

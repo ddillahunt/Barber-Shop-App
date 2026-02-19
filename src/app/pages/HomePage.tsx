@@ -1,7 +1,7 @@
 import { Navigation } from "../components/Navigation";
 import { Hero } from "../components/Hero";
 import { Services } from "../components/Services";
-import { Gallery } from "../components/Gallery";
+
 import { Schedule } from "../components/Schedule";
 import { AppointmentBooking } from "../components/AppointmentBooking";
 import { Contact } from "../components/Contact";
@@ -16,7 +16,7 @@ export function HomePage() {
       <Navigation />
       <Hero />
       <Services />
-      <Gallery />
+
       <Schedule />
       <AppointmentBooking />
       <Contact />
@@ -31,7 +31,7 @@ export function HomePage() {
           <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Quick Links</h3>
           <nav className="flex flex-wrap justify-center gap-6 mb-6">
             <a href="#services" className="text-slate-300 hover:text-amber-400 transition-colors">Services</a>
-            <a href="#gallery" className="text-slate-300 hover:text-amber-400 transition-colors">Gallery</a>
+
             <a href="#team" className="text-slate-300 hover:text-amber-400 transition-colors">Team</a>
             <a href="#schedule" className="text-slate-300 hover:text-amber-400 transition-colors">Schedule</a>
             <a href="#booking" className="text-slate-300 hover:text-amber-400 transition-colors">Book Now</a>
