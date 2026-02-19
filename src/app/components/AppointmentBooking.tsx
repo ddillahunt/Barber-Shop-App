@@ -8,7 +8,7 @@ import { Textarea } from "./ui/textarea";
 import { Calendar, UserCheck } from "lucide-react";
 import { toast } from "sonner";
 import emailjs from "@emailjs/browser";
-import { saveAppointment, getBookedTimes } from "../lib/appointments";
+import { saveAppointment, getBookedTimes, getBlockedTimes } from "../lib/appointments";
 
 const barbers = [
   { id: "1", name: "Carlos Martinez", specialty: "Classic Cuts" },
@@ -51,16 +51,19 @@ export function AppointmentBooking() {
 
   const [submitting, setSubmitting] = useState(false);
   const [bookedTimes, setBookedTimes] = useState<string[]>([]);
+  const [blockedTimes, setBlockedTimes] = useState<string[]>([]);
 
   useEffect(() => {
     if (formData.date) {
       getBookedTimes(formData.date).then(setBookedTimes).catch(() => setBookedTimes([]));
+      getBlockedTimes(formData.date).then((bts) => setBlockedTimes(bts.map((bt) => bt.time))).catch(() => setBlockedTimes([]));
     } else {
       setBookedTimes([]);
+      setBlockedTimes([]);
     }
   }, [formData.date]);
 
-  const availableTimeSlots = timeSlots.filter((t) => !bookedTimes.includes(t));
+  const availableTimeSlots = timeSlots.filter((t) => !bookedTimes.includes(t) && !blockedTimes.includes(t));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
