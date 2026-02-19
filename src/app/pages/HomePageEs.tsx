@@ -2,6 +2,7 @@ import { NavigationEs } from "../components/es/NavigationEs";
 import { HeroEs } from "../components/es/HeroEs";
 import { ServicesEs } from "../components/es/ServicesEs";
 
+import { TeamEs } from "../components/es/TeamEs";
 import { ScheduleEs } from "../components/es/ScheduleEs";
 import { AppointmentBookingEs } from "../components/es/AppointmentBookingEs";
 import { ContactEs } from "../components/es/ContactEs";
@@ -15,6 +16,7 @@ export function HomePageEs() {
       <NavigationEs />
       <HeroEs />
       <ServicesEs />
+      <TeamEs />
 
       <ScheduleEs />
       <AppointmentBookingEs />

@@ -2,6 +2,7 @@ import { Navigation } from "../components/Navigation";
 import { Hero } from "../components/Hero";
 import { Services } from "../components/Services";
 
+import { Team } from "../components/Team";
 import { Schedule } from "../components/Schedule";
 import { AppointmentBooking } from "../components/AppointmentBooking";
 import { Contact } from "../components/Contact";
@@ -16,6 +17,7 @@ export function HomePage() {
       <Navigation />
       <Hero />
       <Services />
+      <Team />
 
       <Schedule />
       <AppointmentBooking />

@@ -1,4 +1,4 @@
-import { Card, CardContent } from "./ui/card";
+import { Card, CardContent } from "../ui/card";
 import { Phone, User } from "lucide-react";
 
 const barbers = [
@@ -11,16 +11,16 @@ const barbers = [
   { id: "7", name: "Jose", phone: "(774) 279-2882" },
 ];
 
-export function Team() {
+export function TeamEs() {
   return (
     <section id="team" className="py-20 bg-gradient-to-b from-slate-100 via-slate-200 to-slate-100">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-5xl mb-4 font-bold bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 bg-clip-text text-transparent">
-            Meet Our Team
+            Conoce a Nuestro Equipo
           </h2>
           <p className="text-slate-700 text-lg max-w-2xl mx-auto">
-            Expert barbers dedicated to making you look and feel your best
+            Barberos expertos dedicados a que te veas y te sientas mejor
           </p>
         </div>
 
