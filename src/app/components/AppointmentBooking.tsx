@@ -179,12 +179,12 @@ export function AppointmentBooking() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name <span className="text-red-500">*</span></Label>
+                  <Label htmlFor="name">Full Name</Label>
                   <Input
                     id="name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="John Doe"
+                    placeholder="John Doe *"
                   />
                 </div>
 
@@ -200,13 +200,13 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number <span className="text-red-500">*</span></Label>
+                  <Label htmlFor="phone">Phone Number</Label>
                   <Input
                     id="phone"
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
-                    placeholder="(508) 872-5556"
+                    placeholder="(508) 872-5556 *"
                     maxLength={14}
                   />
                 </div>
@@ -244,7 +244,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="date">Preferred Date <span className="text-red-500">*</span></Label>
+                  <Label htmlFor="date">Preferred Date</Label>
                   <Input
                     id="date"
                     type="date"
@@ -254,10 +254,10 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="time">Preferred Time <span className="text-red-500">*</span></Label>
+                  <Label htmlFor="time">Preferred Time</Label>
                   <Select value={formData.time} onValueChange={(value) => setFormData({ ...formData, time: value })}>
                     <SelectTrigger id="time">
-                      <SelectValue placeholder={availableTimeSlots.length === 0 && formData.date ? "No times available" : "Select a time"} />
+                      <SelectValue placeholder={availableTimeSlots.length === 0 && formData.date ? "No times available" : "Select a time *"} />
                     </SelectTrigger>
                     <SelectContent>
                       {availableTimeSlots.map((time) => (
