@@ -157,7 +157,7 @@ export function AppointmentBooking() {
     <section id="booking" className="py-20 bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-5xl mb-4 font-bold bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 bg-clip-text text-transparent">Book an Appointment</h2>
+          <h2 className="text-5xl mb-4 font-bold text-black">Book an Appointment</h2>
           <p className="text-slate-700 text-lg">Reserve your spot with our expert barbers</p>
           <p className="mt-3 inline-flex items-center gap-2 bg-emerald-100 border border-emerald-300 text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold">
             <UserCheck className="size-4" />

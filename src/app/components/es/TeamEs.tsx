@@ -16,7 +16,7 @@ export function TeamEs() {
     <section id="team" className="py-20 bg-gradient-to-b from-slate-100 via-slate-200 to-slate-100">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-5xl mb-4 font-bold bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 bg-clip-text text-transparent">
+          <h2 className="text-5xl mb-4 font-bold text-black">
             Conoce a Nuestro Equipo
           </h2>
           <p className="text-slate-700 text-lg max-w-2xl mx-auto">
