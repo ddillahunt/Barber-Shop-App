@@ -76,18 +76,18 @@ export function Contact() {
 
           {/* Map */}
           <div className="space-y-6">
-            <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 overflow-hidden bg-slate-900">
-              <div className="relative">
+            <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 overflow-hidden bg-slate-900 h-full flex flex-col">
+              <div className="relative flex-1">
                 <iframe
                   title="Grandes Ligas Barber Shop Location"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2962.123!2d-71.4162!3d42.2793!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89e38a3e1b1b1b1b%3A0x1234567890abcdef!2s3A%202nd%20St%2C%20Framingham%2C%20MA%2001702!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
                   width="100%"
-                  height="250"
-                  style={{ border: 0 }}
+                  height="100%"
+                  style={{ border: 0, position: "absolute", top: 0, left: 0 }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  className="w-full"
+                  className="w-full h-full"
                 />
                 <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-slate-900 to-transparent" />
               </div>
