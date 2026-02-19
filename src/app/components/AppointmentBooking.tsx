@@ -179,7 +179,7 @@ export function AppointmentBooking() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Full Name</Label>
                   <Input
                     id="name"
                     value={formData.name}
@@ -189,7 +189,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -200,7 +200,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Phone Number</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -212,7 +212,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="barber">Choose Your Barber</Label>
+                  <Label htmlFor="barber" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Choose Your Barber</Label>
                   <Select value={formData.barber} onValueChange={(value) => setFormData({ ...formData, barber: value })}>
                     <SelectTrigger id="barber">
                       <SelectValue placeholder="Select a barber" />
@@ -228,7 +228,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="service">Service</Label>
+                  <Label htmlFor="service" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Service</Label>
                   <Select value={formData.service} onValueChange={(value) => setFormData({ ...formData, service: value })}>
                     <SelectTrigger id="service">
                       <SelectValue placeholder="Select a service" />
@@ -244,7 +244,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="date">Preferred Date *</Label>
+                  <Label htmlFor="date" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Preferred Date *</Label>
                   <Input
                     id="date"
                     type="date"
@@ -254,7 +254,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="time">Preferred Time</Label>
+                  <Label htmlFor="time" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Preferred Time</Label>
                   <Select value={formData.time} onValueChange={(value) => setFormData({ ...formData, time: value })}>
                     <SelectTrigger id="time">
                       <SelectValue placeholder={availableTimeSlots.length === 0 && formData.date ? "No times available" : "Select a time *"} />
@@ -270,7 +270,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="notes">Notes</Label>
+                  <Label htmlFor="notes" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Notes</Label>
                   <Textarea
                     id="notes"
                     value={formData.notes}

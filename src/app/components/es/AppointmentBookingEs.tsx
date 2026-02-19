@@ -179,7 +179,7 @@ export function AppointmentBookingEs() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Nombre Completo</Label>
+                  <Label htmlFor="name" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Nombre Completo</Label>
                   <Input
                     id="name"
                     value={formData.name}
@@ -189,7 +189,7 @@ export function AppointmentBookingEs() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Correo Electrónico</Label>
+                  <Label htmlFor="email" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Correo Electrónico</Label>
                   <Input
                     id="email"
                     type="email"
@@ -200,7 +200,7 @@ export function AppointmentBookingEs() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Número de Teléfono</Label>
+                  <Label htmlFor="phone" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Número de Teléfono</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -212,7 +212,7 @@ export function AppointmentBookingEs() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="barber">Elige Tu Barbero</Label>
+                  <Label htmlFor="barber" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Elige Tu Barbero</Label>
                   <Select value={formData.barber} onValueChange={(value) => setFormData({ ...formData, barber: value })}>
                     <SelectTrigger id="barber">
                       <SelectValue placeholder="Selecciona un barbero" />
@@ -228,7 +228,7 @@ export function AppointmentBookingEs() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="service">Servicio</Label>
+                  <Label htmlFor="service" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Servicio</Label>
                   <Select value={formData.service} onValueChange={(value) => setFormData({ ...formData, service: value })}>
                     <SelectTrigger id="service">
                       <SelectValue placeholder="Selecciona un servicio" />
@@ -244,7 +244,7 @@ export function AppointmentBookingEs() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="date">Fecha Preferida *</Label>
+                  <Label htmlFor="date" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Fecha Preferida *</Label>
                   <Input
                     id="date"
                     type="date"
@@ -254,7 +254,7 @@ export function AppointmentBookingEs() {
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="time">Hora Preferida</Label>
+                  <Label htmlFor="time" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Hora Preferida</Label>
                   <Select value={formData.time} onValueChange={(value) => setFormData({ ...formData, time: value })}>
                     <SelectTrigger id="time">
                       <SelectValue placeholder={availableTimeSlots.length === 0 && formData.date ? "No hay horarios disponibles" : "Selecciona una hora *"} />
@@ -270,7 +270,7 @@ export function AppointmentBookingEs() {
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="notes">Notas</Label>
+                  <Label htmlFor="notes" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Notas</Label>
                   <Textarea
                     id="notes"
                     value={formData.notes}
