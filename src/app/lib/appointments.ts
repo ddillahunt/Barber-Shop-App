@@ -79,37 +79,3 @@ export async function getMessages(): Promise<Message[]> {
     ...doc.data(),
   })) as Message[];
 }
-
-// Blocked Times
-export interface BlockedTime {
-  id?: string;
-  date: string;
-  time: string;
-}
-
-const blockedTimesRef = collection(db, "blockedTimes");
-
-export async function saveBlockedTime(data: Omit<BlockedTime, "id">) {
-  return addDoc(blockedTimesRef, data);
-}
-
-export async function deleteBlockedTime(id: string) {
-  return deleteDoc(doc(db, "blockedTimes", id));
-}
-
-export async function getBlockedTimes(date: string): Promise<BlockedTime[]> {
-  const q = query(blockedTimesRef, where("date", "==", date));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({
-    id: d.id,
-    ...d.data(),
-  })) as BlockedTime[];
-}
-
-export async function getAllBlockedTimes(): Promise<BlockedTime[]> {
-  const snapshot = await getDocs(blockedTimesRef);
-  return snapshot.docs.map((d) => ({
-    id: d.id,
-    ...d.data(),
-  })) as BlockedTime[];
-}

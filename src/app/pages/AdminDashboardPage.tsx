@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
-import { getAppointments, deleteAppointment, saveAppointment, updateAppointment, getMessages, deleteMessage, getAllBlockedTimes, saveBlockedTime, deleteBlockedTime, type Appointment, type Message, type BlockedTime } from "../lib/appointments";
+import { getAppointments, deleteAppointment, saveAppointment, updateAppointment, getMessages, deleteMessage, type Appointment, type Message } from "../lib/appointments";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -18,7 +18,7 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Ban } from "lucide-react";
+import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import emailjs from "@emailjs/browser";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
@@ -70,9 +70,6 @@ export function AdminDashboardPage() {
     name: "", email: "", phone: "", barber: "", service: "", date: "", time: "", notes: "",
   });
   const [saving, setSaving] = useState(false);
-  const [blockedTimes, setBlockedTimes] = useState<BlockedTime[]>([]);
-  const [blockDate, setBlockDate] = useState("");
-  const [blockingTime, setBlockingTime] = useState("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -80,7 +77,6 @@ export function AdminDashboardPage() {
         setAuthenticated(true);
         fetchAppointments();
         fetchMessages();
-        fetchBlockedTimes();
       } else {
         navigate("/admin/login");
       }
@@ -106,45 +102,6 @@ export function AdminDashboardPage() {
       setMessages(data);
     } catch {
       toast.error("Failed to load messages");
-    }
-  };
-
-  const fetchBlockedTimes = async () => {
-    try {
-      const data = await getAllBlockedTimes();
-      setBlockedTimes(data);
-    } catch {
-      toast.error("Failed to load blocked times");
-    }
-  };
-
-  const handleBlockTime = async () => {
-    if (!blockDate || !blockingTime) {
-      toast.error("Select a date and time to block");
-      return;
-    }
-    const already = blockedTimes.some((bt) => bt.date === blockDate && bt.time === blockingTime);
-    if (already) {
-      toast.error("This time is already blocked");
-      return;
-    }
-    try {
-      await saveBlockedTime({ date: blockDate, time: blockingTime });
-      toast.success(`Blocked ${blockingTime} on ${blockDate}`);
-      setBlockingTime("");
-      fetchBlockedTimes();
-    } catch {
-      toast.error("Failed to block time");
-    }
-  };
-
-  const handleUnblockTime = async (id: string) => {
-    try {
-      await deleteBlockedTime(id);
-      setBlockedTimes((prev) => prev.filter((bt) => bt.id !== id));
-      toast.success("Time unblocked");
-    } catch {
-      toast.error("Failed to unblock time");
     }
   };
 
@@ -296,10 +253,7 @@ export function AdminDashboardPage() {
   const bookedTimesForDate = newAppt.date
     ? appointments.filter((a) => a.date === newAppt.date).map((a) => a.time).filter(Boolean)
     : [];
-  const blockedTimesForDate = newAppt.date
-    ? blockedTimes.filter((bt) => bt.date === newAppt.date).map((bt) => bt.time)
-    : [];
-  const availableTimeSlots = timeSlots.filter((t) => !bookedTimesForDate.includes(t) && !blockedTimesForDate.includes(t));
+  const availableTimeSlots = timeSlots.filter((t) => !bookedTimesForDate.includes(t));
 
   const appointmentDates = appointments.reduce<Record<string, number>>((acc, appt) => {
     if (appt.date) acc[appt.date] = (acc[appt.date] || 0) + 1;
@@ -311,10 +265,7 @@ export function AdminDashboardPage() {
   const editBookedTimes = editForm.date
     ? appointments.filter((a) => a.date === editForm.date && a.id !== editingAppt?.id).map((a) => a.time).filter(Boolean)
     : [];
-  const editBlockedTimes = editForm.date
-    ? blockedTimes.filter((bt) => bt.date === editForm.date).map((bt) => bt.time)
-    : [];
-  const editAvailableTimeSlots = timeSlots.filter((t) => !editBookedTimes.includes(t) && !editBlockedTimes.includes(t));
+  const editAvailableTimeSlots = timeSlots.filter((t) => !editBookedTimes.includes(t));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100">
@@ -332,7 +283,7 @@ export function AdminDashboardPage() {
           <div className="flex items-center gap-3">
             <Button
               size="sm"
-              onClick={() => { fetchAppointments(); fetchMessages(); fetchBlockedTimes(); }}
+              onClick={() => { fetchAppointments(); fetchMessages(); }}
               className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700"
             >
               <RefreshCw className="size-4 mr-1" />
@@ -728,66 +679,6 @@ export function AdminDashboardPage() {
             )}
           </CardContent>
         </Card>
-        {/* Block Times */}
-        <Card className="border-amber-500/30 bg-white mt-8">
-          <CardHeader>
-            <CardTitle className="text-xl text-slate-900 flex items-center gap-2">
-              <Ban className="size-5 text-red-500" />
-              Block Time Slots
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <div className="space-y-1 flex-1">
-                <Label htmlFor="block-date">Date</Label>
-                <Input id="block-date" type="date" value={blockDate} onChange={(e) => { setBlockDate(e.target.value); setBlockingTime(""); }} />
-              </div>
-              <div className="space-y-1 flex-1">
-                <Label htmlFor="block-time">Time</Label>
-                <Select value={blockingTime} onValueChange={setBlockingTime}>
-                  <SelectTrigger id="block-time">
-                    <SelectValue placeholder={blockDate ? "Select a time" : "Select a date first"} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {timeSlots.filter((t) => !blockedTimes.some((bt) => bt.date === blockDate && bt.time === t)).map((t) => (
-                      <SelectItem key={t} value={t}>{t}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-end">
-                <Button onClick={handleBlockTime} className="bg-red-500 hover:bg-red-600 text-white font-bold">
-                  <Ban className="size-4 mr-1" />
-                  Block
-                </Button>
-              </div>
-            </div>
-            {blockedTimes.length === 0 ? (
-              <p className="text-slate-500 text-sm">No blocked times.</p>
-            ) : (
-              <div className="space-y-2">
-                {Object.entries(
-                  blockedTimes.reduce<Record<string, BlockedTime[]>>((acc, bt) => {
-                    acc[bt.date] = acc[bt.date] || [];
-                    acc[bt.date].push(bt);
-                    return acc;
-                  }, {})
-                ).sort(([a], [b]) => a.localeCompare(b)).map(([date, times]) => (
-                  <div key={date} className="flex flex-wrap items-center gap-2 p-3 rounded-lg border border-slate-200 bg-slate-50">
-                    <span className="font-semibold text-slate-700 text-sm min-w-[100px]">{date}</span>
-                    {times.sort((a, b) => timeSlots.indexOf(a.time) - timeSlots.indexOf(b.time)).map((bt) => (
-                      <Badge key={bt.id} className="bg-red-100 text-red-700 border-red-300 gap-1 cursor-pointer hover:bg-red-200" onClick={() => handleUnblockTime(bt.id!)}>
-                        {bt.time}
-                        <X className="size-3" />
-                      </Badge>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
         <p className="text-center text-slate-400 text-sm mt-8 mb-4">Powered by GDI Digital Solutions</p>
       </main>
 
