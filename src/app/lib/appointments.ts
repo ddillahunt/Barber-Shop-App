@@ -10,6 +10,7 @@ export interface Appointment {
   service: string;
   date: string;
   time: string;
+  notes?: string;
   createdAt: Timestamp;
   source: "en" | "es";
 }

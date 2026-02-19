@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Textarea } from "../ui/textarea";
 import { Calendar, UserCheck } from "lucide-react";
 import { toast } from "sonner";
 import emailjs from "@emailjs/browser";
@@ -44,7 +45,8 @@ export function AppointmentBookingEs() {
     barber: "",
     service: "",
     date: "",
-    time: ""
+    time: "",
+    notes: ""
   });
 
   const [submitting, setSubmitting] = useState(false);
@@ -88,6 +90,7 @@ export function AppointmentBookingEs() {
           service: formData.service,
           date: formData.date,
           time: formData.time,
+          notes: formData.notes,
         },
         "byZkVrNvtLJutxIt5"
       );
@@ -106,6 +109,7 @@ export function AppointmentBookingEs() {
           service: formData.service,
           date: formData.date,
           time: formData.time,
+          notes: formData.notes,
         },
         "byZkVrNvtLJutxIt5"
       );
@@ -120,6 +124,7 @@ export function AppointmentBookingEs() {
           service: formData.service,
           date: formData.date,
           time: formData.time,
+          notes: formData.notes,
           source: "es",
         });
       } catch (firestoreError) {
@@ -135,7 +140,8 @@ export function AppointmentBookingEs() {
         barber: "",
         service: "",
         date: "",
-        time: ""
+        time: "",
+        notes: ""
       });
     } catch (error) {
       toast.error("Error al enviar. Llámanos al (508) 872-5556 para reservar.");
@@ -261,6 +267,17 @@ export function AppointmentBookingEs() {
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="notes">Notas</Label>
+                  <Textarea
+                    id="notes"
+                    value={formData.notes}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    placeholder="Cualquier solicitud especial o información adicional"
+                    rows={3}
+                  />
                 </div>
               </div>
 

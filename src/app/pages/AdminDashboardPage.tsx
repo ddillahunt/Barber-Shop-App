@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "../components/ui/table";
 import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight } from "lucide-react";
@@ -60,13 +61,13 @@ export function AdminDashboardPage() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [creating, setCreating] = useState(false);
   const [newAppt, setNewAppt] = useState({
-    name: "", email: "", phone: "", barber: "", service: "", date: "", time: "",
+    name: "", email: "", phone: "", barber: "", service: "", date: "", time: "", notes: "",
   });
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
   const [editingAppt, setEditingAppt] = useState<Appointment | null>(null);
   const [editForm, setEditForm] = useState({
-    name: "", email: "", phone: "", barber: "", service: "", date: "", time: "",
+    name: "", email: "", phone: "", barber: "", service: "", date: "", time: "", notes: "",
   });
   const [saving, setSaving] = useState(false);
 
@@ -136,6 +137,7 @@ export function AdminDashboardPage() {
       service: appt.service || "",
       date: appt.date || "",
       time: appt.time || "",
+      notes: appt.notes || "",
     });
   };
 
@@ -155,6 +157,7 @@ export function AdminDashboardPage() {
         service: editForm.service,
         date: editForm.date,
         time: editForm.time,
+        notes: editForm.notes,
       });
       setAppointments((prev) =>
         prev.map((a) => a.id === editingAppt.id ? { ...a, ...editForm } : a)
@@ -193,6 +196,7 @@ export function AdminDashboardPage() {
             service: newAppt.service,
             date: newAppt.date,
             time: newAppt.time,
+            notes: newAppt.notes,
           },
           "byZkVrNvtLJutxIt5"
         );
@@ -216,6 +220,7 @@ export function AdminDashboardPage() {
               service: newAppt.service,
               date: newAppt.date,
               time: newAppt.time,
+              notes: newAppt.notes,
             },
             "byZkVrNvtLJutxIt5"
           );
@@ -225,7 +230,7 @@ export function AdminDashboardPage() {
       }
 
       toast.success("Appointment created & emails sent");
-      setNewAppt({ name: "", email: "", phone: "", barber: "", service: "", date: "", time: "" });
+      setNewAppt({ name: "", email: "", phone: "", barber: "", service: "", date: "", time: "", notes: "" });
       setShowCreateForm(false);
       fetchAppointments();
     } catch {
@@ -409,7 +414,11 @@ export function AdminDashboardPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-end">
+                <div className="space-y-1 md:col-span-2">
+                  <Label htmlFor="new-notes">Notes</Label>
+                  <Textarea id="new-notes" value={newAppt.notes} onChange={(e) => setNewAppt({ ...newAppt, notes: e.target.value })} placeholder="Any special requests or additional information" rows={2} />
+                </div>
+                <div className="flex items-end md:col-span-2">
                   <Button type="submit" disabled={creating} className="w-full bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
                     {creating ? "Creating..." : "Create Appointment"}
                   </Button>
@@ -454,6 +463,7 @@ export function AdminDashboardPage() {
                           <TableHead>Service</TableHead>
                           <TableHead>Date</TableHead>
                           <TableHead>Time</TableHead>
+                          <TableHead>Notes</TableHead>
                           <TableHead>Source</TableHead>
                           <TableHead></TableHead>
                         </TableRow>
@@ -468,6 +478,7 @@ export function AdminDashboardPage() {
                             <TableCell>{appt.service || "—"}</TableCell>
                             <TableCell>{appt.date}</TableCell>
                             <TableCell>{appt.time || "—"}</TableCell>
+                            <TableCell className="max-w-[150px] truncate">{appt.notes || "—"}</TableCell>
                             <TableCell>
                               <Badge variant="outline">{appt.source?.toUpperCase() || "EN"}</Badge>
                             </TableCell>
@@ -606,6 +617,8 @@ export function AdminDashboardPage() {
                               <div className="text-slate-800">{appt.barber || "—"}</div>
                               <div className="text-slate-500">Service</div>
                               <div className="text-slate-800">{appt.service || "—"}</div>
+                              <div className="text-slate-500">Notes</div>
+                              <div className="text-slate-800">{appt.notes || "—"}</div>
                             </div>
                           </div>
                         ))}
@@ -727,6 +740,10 @@ export function AdminDashboardPage() {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            <div className="space-y-1 sm:col-span-2">
+              <Label htmlFor="edit-notes">Notes</Label>
+              <Textarea id="edit-notes" value={editForm.notes} onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })} placeholder="Any special requests or additional information" rows={2} />
             </div>
           </div>
           <DialogFooter>
