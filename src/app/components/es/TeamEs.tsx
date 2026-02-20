@@ -1,16 +1,16 @@
 import { Card, CardContent } from "../ui/card";
 import { Phone, User } from "lucide-react";
-import yorkiImg from "../../../assets/images/barber-yorki.png";
+import joelImg from "../../../assets/images/barber-joel.png";
 
 const barbers = [
-  { id: "1", name: "Yorki", phone: "(774) 244-2984", image: yorkiImg },
+  { id: "1", name: "Yorki", phone: "(774) 244-2984" },
   { id: "2", name: "Maestro", phone: "(774) 204-1098" },
   { id: "3", name: "El Menor", phone: "(774) 219-1098" },
   { id: "4", name: "Yefri", phone: "(774) 303-8891" },
   { id: "5", name: "Montro", phone: "(508) 371-5827" },
   { id: "6", name: "Jairo", phone: "(347) 374-9866" },
   { id: "7", name: "Jose", phone: "(774) 279-2882" },
-  { id: "8", name: "Joel", phone: "(774) 522-9135" },
+  { id: "8", name: "Joel", phone: "(774) 522-9135", image: joelImg },
 ];
 
 export function TeamEs() {
