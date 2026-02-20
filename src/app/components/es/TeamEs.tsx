@@ -10,6 +10,7 @@ const barbers = [
   { id: "5", name: "Montro", phone: "(508) 371-5827" },
   { id: "6", name: "Jairo", phone: "(347) 374-9866" },
   { id: "7", name: "Jose", phone: "(774) 279-2882" },
+  { id: "8", name: "Joel", phone: "(774) 522-9135" },
 ];
 
 export function TeamEs() {
