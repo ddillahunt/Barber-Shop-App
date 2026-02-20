@@ -1,8 +1,9 @@
 import { Card, CardContent } from "../ui/card";
 import { Phone, User } from "lucide-react";
+import yorkiImg from "../../../assets/images/barber-yorki.png";
 
 const barbers = [
-  { id: "1", name: "Yorki", phone: "(774) 244-2984" },
+  { id: "1", name: "Yorki", phone: "(774) 244-2984", image: yorkiImg },
   { id: "2", name: "Maestro", phone: "(774) 204-1098" },
   { id: "3", name: "El Menor", phone: "(774) 219-1098" },
   { id: "4", name: "Yefri", phone: "(774) 303-8891" },
@@ -31,9 +32,15 @@ export function TeamEs() {
               className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] border-2 border-amber-500/20 bg-gradient-to-br from-slate-900 to-slate-800 overflow-hidden hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-300 hover:-translate-y-2"
             >
               <CardContent className="p-6 flex flex-col items-center text-center gap-4">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
-                  <User className="size-10 text-black" />
-                </div>
+                {barber.image ? (
+                  <div className="w-20 h-20 rounded-full overflow-hidden shadow-lg shadow-amber-500/30 border-2 border-amber-500/30">
+                    <img src={barber.image} alt={barber.name} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
+                    <User className="size-10 text-black" />
+                  </div>
+                )}
                 <div>
                   <h3 style={{ color: "#fbbf24", fontSize: "1.25rem", fontWeight: 700 }}>{barber.name}</h3>
                 </div>
