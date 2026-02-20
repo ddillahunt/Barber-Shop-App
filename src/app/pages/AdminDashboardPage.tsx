@@ -74,7 +74,7 @@ export function AdminDashboardPage() {
     name: "", email: "", phone: "", barber: "", service: "", date: "", time: "", notes: "",
   });
   const [saving, setSaving] = useState(false);
-  const [expandedBarber, setExpandedBarber] = useState<string | null>(null);
+  const [expandedBarbers, setExpandedBarbers] = useState<string[]>([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -367,11 +367,11 @@ export function AdminDashboardPage() {
             const todayBarberCount = appointments.filter(
               (a) => a.barber?.startsWith(barber.name) && a.date === todayStr
             ).length;
-            const isExpanded = expandedBarber === barber.name;
+            const isExpanded = expandedBarbers.includes(barber.name);
             return (
               <Card
                 key={barber.id}
-                onClick={() => setExpandedBarber(isExpanded ? null : barber.name)}
+                onClick={() => setExpandedBarbers(isExpanded ? expandedBarbers.filter((b) => b !== barber.name) : [...expandedBarbers, barber.name])}
                 className={`border-amber-500/30 bg-white cursor-pointer transition-all hover:shadow-lg hover:border-amber-500/60 ${isExpanded ? "ring-2 ring-amber-500" : ""}`}
               >
                 <CardContent className="p-4 text-center">
@@ -387,19 +387,19 @@ export function AdminDashboardPage() {
         </div>
 
         {/* Expanded Barber Appointments */}
-        {expandedBarber && (() => {
-          const barberAppts = appointments.filter((a) => a.barber?.startsWith(expandedBarber));
+        {expandedBarbers.map((barberName) => {
+          const barberAppts = appointments.filter((a) => a.barber?.startsWith(barberName));
           return (
-            <Card className="border-amber-500/30 bg-white mb-8">
+            <Card key={barberName} className="border-amber-500/30 bg-white mb-4">
               <CardHeader className="flex flex-row items-center justify-between pb-3">
-                <CardTitle className="text-lg text-slate-900">{expandedBarber}'s Appointments ({barberAppts.length})</CardTitle>
-                <Button variant="ghost" size="sm" onClick={() => setExpandedBarber(null)}>
+                <CardTitle className="text-lg text-slate-900">{barberName}'s Appointments ({barberAppts.length})</CardTitle>
+                <Button variant="ghost" size="sm" onClick={() => setExpandedBarbers(expandedBarbers.filter((b) => b !== barberName))}>
                   <X className="size-4" />
                 </Button>
               </CardHeader>
               <CardContent>
                 {barberAppts.length === 0 ? (
-                  <p className="text-slate-500 text-sm py-4 text-center">No appointments for {expandedBarber}.</p>
+                  <p className="text-slate-500 text-sm py-4 text-center">No appointments for {barberName}.</p>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {barberAppts.map((appt) => (
@@ -446,7 +446,7 @@ export function AdminDashboardPage() {
               </CardContent>
             </Card>
           );
-        })()}
+        })}
 
         {/* Create Appointment */}
         {showCreateForm && (
