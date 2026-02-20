@@ -74,6 +74,7 @@ export function AdminDashboardPage() {
     name: "", email: "", phone: "", barber: "", service: "", date: "", time: "", notes: "",
   });
   const [saving, setSaving] = useState(false);
+  const [expandedBarber, setExpandedBarber] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -359,14 +360,20 @@ export function AdminDashboardPage() {
         </div>
 
         {/* Appointments by Barber */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-8">
+        <h2 className="text-xl font-bold text-slate-900 mb-4">Individual Barber Appointments</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-2">
           {barbers.map((barber) => {
             const count = appointments.filter((a) => a.barber?.startsWith(barber.name)).length;
             const todayBarberCount = appointments.filter(
               (a) => a.barber?.startsWith(barber.name) && a.date === todayStr
             ).length;
+            const isExpanded = expandedBarber === barber.name;
             return (
-              <Card key={barber.id} className="border-amber-500/30 bg-white">
+              <Card
+                key={barber.id}
+                onClick={() => setExpandedBarber(isExpanded ? null : barber.name)}
+                className={`border-amber-500/30 bg-white cursor-pointer transition-all hover:shadow-lg hover:border-amber-500/60 ${isExpanded ? "ring-2 ring-amber-500" : ""}`}
+              >
                 <CardContent className="p-4 text-center">
                   <div className="font-bold text-slate-900 text-sm mb-1">{barber.name}</div>
                   <div className="text-2xl font-bold text-amber-600">{count}</div>
@@ -378,6 +385,66 @@ export function AdminDashboardPage() {
             );
           })}
         </div>
+
+        {/* Expanded Barber Appointments */}
+        {expandedBarber && (() => {
+          const barberAppts = appointments.filter((a) => a.barber?.startsWith(expandedBarber));
+          return (
+            <Card className="border-amber-500/30 bg-white mb-8">
+              <CardHeader className="flex flex-row items-center justify-between pb-3">
+                <CardTitle className="text-lg text-slate-900">{expandedBarber}'s Appointments ({barberAppts.length})</CardTitle>
+                <Button variant="ghost" size="sm" onClick={() => setExpandedBarber(null)}>
+                  <X className="size-4" />
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {barberAppts.length === 0 ? (
+                  <p className="text-slate-500 text-sm py-4 text-center">No appointments for {expandedBarber}.</p>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {barberAppts.map((appt) => (
+                      <div
+                        key={appt.id}
+                        className="p-4 rounded-lg border border-slate-200 hover:border-amber-500/50 hover:bg-amber-50/50 transition-colors"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="font-semibold text-slate-900">{appt.name}</div>
+                          <div className="flex items-center gap-1">
+                            <Badge variant="outline" className="text-xs">{appt.source?.toUpperCase() || "EN"}</Badge>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEditOpen(appt)}
+                              className="text-amber-600 hover:text-amber-800 hover:bg-amber-50 h-7 w-7 p-0"
+                            >
+                              <Pencil className="size-3.5" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
+                          <div className="text-slate-500">Date</div>
+                          <div className="text-slate-800">{appt.date}</div>
+                          <div className="text-slate-500">Time</div>
+                          <div className="text-slate-800">{appt.time || "—"}</div>
+                          <div className="text-slate-500">Phone</div>
+                          <div className="text-slate-800">{appt.phone || "—"}</div>
+                          <div className="text-slate-500">Service</div>
+                          <div className="text-slate-800">{appt.service || "—"}</div>
+                          {appt.notes && (
+                            <>
+                              <div className="text-slate-500">Notes</div>
+                              <div className="text-slate-800 truncate">{appt.notes}</div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          );
+        })()}
 
         {/* Create Appointment */}
         {showCreateForm && (
