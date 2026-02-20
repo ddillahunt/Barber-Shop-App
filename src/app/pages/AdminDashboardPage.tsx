@@ -112,10 +112,30 @@ export function AdminDashboardPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this appointment?")) return;
+    const appt = appointments.find((a) => a.id === id);
     try {
       await deleteAppointment(id);
       setAppointments((prev) => prev.filter((a) => a.id !== id));
-      toast.success("Appointment deleted");
+
+      if (appt?.email) {
+        try {
+          await emailjs.send(
+            "service_grandesligas",
+            "template_yqpkz9e",
+            {
+              to_email: appt.email,
+              to_name: appt.name,
+              name: appt.name,
+              message: `Your appointment on ${appt.date}${appt.time ? ` at ${appt.time}` : ""}${appt.barber ? ` with ${appt.barber}` : ""} has been cancelled. Please contact us if you have any questions or would like to reschedule.`,
+            },
+            "byZkVrNvtLJutxIt5"
+          );
+        } catch {
+          console.error("Cancellation email failed");
+        }
+      }
+
+      toast.success("Appointment deleted & cancellation email sent");
     } catch {
       toast.error("Failed to delete appointment");
     }
