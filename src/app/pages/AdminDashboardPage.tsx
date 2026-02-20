@@ -126,13 +126,19 @@ export function AdminDashboardPage() {
               to_email: appt.email,
               to_name: appt.name,
               name: appt.name,
+              email: appt.email,
+              phone: appt.phone,
+              barber: appt.barber,
+              service: appt.service,
+              date: appt.date,
+              time: appt.time,
               message: `Your appointment on ${appt.date}${appt.time ? ` at ${appt.time}` : ""}${appt.barber ? ` with ${appt.barber}` : ""} has been cancelled. Please contact us if you have any questions or would like to reschedule.`,
             },
             "byZkVrNvtLJutxIt5"
           );
-          toast.success("Appointment deleted & cancellation email sent");
-        } catch {
-          toast.warning("Appointment deleted but cancellation email failed");
+          toast.success("Appointment deleted & cancellation email sent to " + appt.email);
+        } catch (err) {
+          toast.error("Appointment deleted but email failed: " + (err instanceof Error ? err.message : String(err)));
         }
       } else {
         toast.success("Appointment deleted (no email on file)");
