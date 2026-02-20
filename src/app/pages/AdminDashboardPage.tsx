@@ -358,6 +358,27 @@ export function AdminDashboardPage() {
           </Card>
         </div>
 
+        {/* Appointments by Barber */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-8">
+          {barbers.map((barber) => {
+            const count = appointments.filter((a) => a.barber?.startsWith(barber.name)).length;
+            const todayBarberCount = appointments.filter(
+              (a) => a.barber?.startsWith(barber.name) && a.date === todayStr
+            ).length;
+            return (
+              <Card key={barber.id} className="border-amber-500/30 bg-white">
+                <CardContent className="p-4 text-center">
+                  <div className="font-bold text-slate-900 text-sm mb-1">{barber.name}</div>
+                  <div className="text-2xl font-bold text-amber-600">{count}</div>
+                  <div className="text-xs text-slate-500 mt-1">
+                    {todayBarberCount} today
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
         {/* Create Appointment */}
         {showCreateForm && (
           <Card className="border-amber-500/30 bg-white mb-8">
