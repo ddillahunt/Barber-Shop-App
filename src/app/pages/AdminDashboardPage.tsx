@@ -121,17 +121,11 @@ export function AdminDashboardPage() {
         try {
           await emailjs.send(
             "service_grandesligas",
-            "template_s4xq8bl",
+            "template_yqpkz9e",
             {
               to_email: appt.email,
-              from_name: "Grandes Ligas Barber Shop",
+              to_name: appt.name,
               name: appt.name,
-              email: appt.email,
-              phone: appt.phone,
-              barber: appt.barber,
-              service: appt.service,
-              date: appt.date,
-              time: appt.time,
               message: `Your appointment on ${appt.date}${appt.time ? ` at ${appt.time}` : ""}${appt.barber ? ` with ${appt.barber}` : ""} has been cancelled. Please contact us if you have any questions or would like to reschedule.`,
             },
             "byZkVrNvtLJutxIt5"
