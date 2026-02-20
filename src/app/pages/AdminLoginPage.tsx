@@ -84,9 +84,9 @@ export function AdminLoginPage() {
           >
             Back to website
           </button>
+          <p className="text-slate-500 text-xs text-center mt-4">Powered by GDI Digital Solutions</p>
         </CardContent>
       </Card>
-      <p className="text-slate-400 text-sm mt-6">Powered by GDI Digital Solutions</p>
     </div>
   );
 }
