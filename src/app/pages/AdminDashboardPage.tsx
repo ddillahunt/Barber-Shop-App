@@ -428,6 +428,8 @@ export function AdminDashboardPage() {
                           <div className="text-slate-800">{appt.time || "—"}</div>
                           <div className="text-slate-500">Phone</div>
                           <div className="text-slate-800">{appt.phone || "—"}</div>
+                          <div className="text-slate-500">Email</div>
+                          <div className="text-slate-800 truncate">{appt.email || "—"}</div>
                           <div className="text-slate-500">Service</div>
                           <div className="text-slate-800">{appt.service || "—"}</div>
                           {appt.notes && (
