@@ -276,13 +276,13 @@ export function AdminDashboardPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100">
       {/* Header */}
       <header className="bg-gradient-to-r from-black via-slate-900 to-black border-b-2 border-amber-500/50 px-4 py-4">
-        <div className="container mx-auto flex items-center justify-between">
+        <div className="container mx-auto flex flex-col items-center gap-3">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-lg">
               <Scissors className="size-5 text-black" />
             </div>
             <span className="font-bold italic text-lg bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
-              Grandes Ligas Admin
+              Grandes Ligas Admin Dashboard
             </span>
           </div>
           <div className="flex items-center gap-3">
