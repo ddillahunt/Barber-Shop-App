@@ -387,10 +387,11 @@ export function AdminDashboardPage() {
         </div>
 
         {/* Expanded Barber Appointments */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
         {expandedBarbers.map((barberName) => {
           const barberAppts = appointments.filter((a) => a.barber?.startsWith(barberName));
           return (
-            <Card key={barberName} className="border-amber-500/30 bg-white mb-4">
+            <Card key={barberName} className="border-amber-500/30 bg-white">
               <CardHeader className="flex flex-row items-center justify-between pb-3">
                 <CardTitle className="text-lg text-slate-900">{barberName}'s Appointments ({barberAppts.length})</CardTitle>
                 <Button variant="ghost" size="sm" onClick={() => setExpandedBarbers(expandedBarbers.filter((b) => b !== barberName))}>
@@ -401,7 +402,7 @@ export function AdminDashboardPage() {
                 {barberAppts.length === 0 ? (
                   <p className="text-slate-500 text-sm py-4 text-center">No appointments for {barberName}.</p>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 gap-3">
                     {barberAppts.map((appt) => (
                       <div
                         key={appt.id}
@@ -447,6 +448,7 @@ export function AdminDashboardPage() {
             </Card>
           );
         })}
+        </div>
 
         {/* Create Appointment */}
         {showCreateForm && (
