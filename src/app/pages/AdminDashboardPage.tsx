@@ -423,7 +423,7 @@ export function AdminDashboardPage() {
                   <Textarea id="new-notes" value={newAppt.notes} onChange={(e) => setNewAppt({ ...newAppt, notes: e.target.value })} placeholder="Any special requests or additional information" rows={2} />
                 </div>
                 <div className="flex items-end md:col-span-2">
-                  <Button type="submit" disabled={creating} className="w-full bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
+                  <Button type="submit" disabled={creating} className="h-9 px-4 text-sm bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
                     {creating ? "Creating..." : "Create Appointment"}
                   </Button>
                 </div>
