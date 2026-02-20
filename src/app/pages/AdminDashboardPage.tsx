@@ -26,10 +26,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs"
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths, isSameMonth, isSameDay, isToday } from "date-fns";
 
 const barbers = [
-  { id: "1", name: "Carlos Martinez", specialty: "Classic Cuts" },
-  { id: "2", name: "Miguel Rodriguez", specialty: "Modern Styles" },
-  { id: "3", name: "Juan Hernandez", specialty: "Beard Specialist" },
-  { id: "4", name: "Diego Santos", specialty: "All-Around Master" },
+  { id: "1", name: "Yorki", specialty: "(774) 244-2984" },
+  { id: "2", name: "Maestro", specialty: "(774) 204-1098" },
+  { id: "3", name: "El Menor", specialty: "(774) 219-1098" },
+  { id: "4", name: "Yefri", specialty: "(774) 303-8891" },
+  { id: "5", name: "Joel", specialty: "(774) 522-9135" },
+  { id: "6", name: "Montro", specialty: "(508) 371-5827" },
+  { id: "7", name: "Jairo", specialty: "(347) 374-9866" },
+  { id: "8", name: "Jose", specialty: "(774) 279-2881" },
 ];
 
 const timeSlots = [

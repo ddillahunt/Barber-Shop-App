@@ -15,9 +15,10 @@ const barbers = [
   { id: "2", name: "Maestro", phone: "(774) 204-1098" },
   { id: "3", name: "El Menor", phone: "(774) 219-1098" },
   { id: "4", name: "Yefri", phone: "(774) 303-8891" },
-  { id: "5", name: "Montro", phone: "(508) 371-5827" },
-  { id: "6", name: "Jairo", phone: "(347) 374-9866" },
-  { id: "7", name: "Jose", phone: "(774) 279-2882" }
+  { id: "5", name: "Joel", phone: "(774) 522-9135" },
+  { id: "6", name: "Montro", phone: "(508) 371-5827" },
+  { id: "7", name: "Jairo", phone: "(347) 374-9866" },
+  { id: "8", name: "Jose", phone: "(774) 279-2881" },
 ];
 
 const timeSlots = [
