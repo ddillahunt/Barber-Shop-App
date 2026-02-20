@@ -437,8 +437,8 @@ export function AdminDashboardPage() {
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-xl text-slate-900">All Appointments</CardTitle>
             {!showCreateForm && (
-              <Button size="sm" onClick={() => setShowCreateForm(true)} className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
-                <Plus className="size-4 mr-1" />
+              <Button size="sm" onClick={() => setShowCreateForm(true)} className="h-8 px-3 text-xs bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
+                <Plus className="size-3 mr-1" />
                 New Appointment
               </Button>
             )}
