@@ -121,21 +121,28 @@ export function AdminDashboardPage() {
         try {
           await emailjs.send(
             "service_grandesligas",
-            "template_yqpkz9e",
+            "template_s4xq8bl",
             {
               to_email: appt.email,
-              to_name: appt.name,
+              from_name: "Grandes Ligas Barber Shop",
               name: appt.name,
+              email: appt.email,
+              phone: appt.phone,
+              barber: appt.barber,
+              service: appt.service,
+              date: appt.date,
+              time: appt.time,
               message: `Your appointment on ${appt.date}${appt.time ? ` at ${appt.time}` : ""}${appt.barber ? ` with ${appt.barber}` : ""} has been cancelled. Please contact us if you have any questions or would like to reschedule.`,
             },
             "byZkVrNvtLJutxIt5"
           );
+          toast.success("Appointment deleted & cancellation email sent");
         } catch {
-          console.error("Cancellation email failed");
+          toast.warning("Appointment deleted but cancellation email failed");
         }
+      } else {
+        toast.success("Appointment deleted (no email on file)");
       }
-
-      toast.success("Appointment deleted & cancellation email sent");
     } catch {
       toast.error("Failed to delete appointment");
     }
