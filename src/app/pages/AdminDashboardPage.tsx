@@ -360,7 +360,7 @@ export function AdminDashboardPage() {
         </div>
 
         {/* Appointments by Barber */}
-        <h2 className="text-xl font-bold text-slate-900 mb-4">Individual Barber Appointments</h2>
+        <h2 className="text-xl font-bold text-slate-900 mb-4 text-center">Individual Barber Appointments</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-2">
           {barbers.map((barber) => {
             const count = appointments.filter((a) => a.barber?.startsWith(barber.name)).length;
