@@ -11,6 +11,7 @@ export interface Appointment {
   date: string;
   time: string;
   notes?: string;
+  completed?: boolean;
   createdAt: Timestamp;
   source: "en" | "es";
 }

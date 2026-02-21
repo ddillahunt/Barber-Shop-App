@@ -18,7 +18,7 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight } from "lucide-react";
+import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { toast } from "sonner";
 import emailjs from "@emailjs/browser";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
@@ -130,6 +130,18 @@ export function AdminDashboardPage() {
       toast.success("Message deleted");
     } catch {
       toast.error("Failed to delete message");
+    }
+  };
+
+  const handleToggleCompleted = async (appt: Appointment) => {
+    const newCompleted = !appt.completed;
+    try {
+      await updateAppointment(appt.id!, { completed: newCompleted });
+      setAppointments((prev) =>
+        prev.map((a) => a.id === appt.id ? { ...a, completed: newCompleted } : a)
+      );
+    } catch {
+      toast.error("Failed to update appointment");
     }
   };
 
@@ -416,10 +428,18 @@ export function AdminDashboardPage() {
                     {barberAppts.map((appt) => (
                       <div
                         key={appt.id}
-                        className="p-4 rounded-lg border border-slate-200 hover:border-amber-500/50 hover:bg-amber-50/50 transition-colors"
+                        className={`p-4 rounded-lg border transition-colors ${appt.completed ? "border-green-300 bg-green-50/50" : "border-slate-200 hover:border-amber-500/50 hover:bg-amber-50/50"}`}
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <div className="font-semibold text-slate-900">{appt.name}</div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleToggleCompleted(appt)}
+                              className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${appt.completed ? "bg-green-500 border-green-500 text-white" : "border-slate-300 hover:border-amber-500"}`}
+                            >
+                              {appt.completed && <Check className="size-3" />}
+                            </button>
+                            <div className={`font-semibold ${appt.completed ? "text-slate-400 line-through" : "text-slate-900"}`}>{appt.name}</div>
+                          </div>
                           <div className="flex items-center gap-1">
                             <Badge variant="outline" className="text-xs">{appt.source?.toUpperCase() || "EN"}</Badge>
                             <Button
