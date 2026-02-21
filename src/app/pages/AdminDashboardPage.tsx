@@ -132,7 +132,7 @@ export function AdminDashboardPage() {
               service: appt.service,
               date: appt.date,
               time: appt.time,
-              message: `Your appointment on ${appt.date}${appt.time ? ` at ${appt.time}` : ""}${appt.barber ? ` with ${appt.barber}` : ""} has been cancelled. Please contact us if you have any questions or would like to reschedule.`,
+              message: "Your appointment has been cancelled. Please contact us if you have any questions or would like to reschedule.",
             },
             "byZkVrNvtLJutxIt5"
           );
