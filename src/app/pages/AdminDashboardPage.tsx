@@ -209,6 +209,15 @@ export function AdminDashboardPage() {
       toast.error("Name, phone, and date are required");
       return;
     }
+    if (newAppt.barber && newAppt.time && newAppt.date) {
+      const conflict = appointments.find(
+        (a) => a.date === newAppt.date && a.time === newAppt.time && a.barber === newAppt.barber
+      );
+      if (conflict) {
+        toast.error(`${newAppt.barber.split(" - ")[0]} is already booked at ${newAppt.time} on ${newAppt.date}`);
+        return;
+      }
+    }
     setCreating(true);
     try {
       await saveAppointment({ ...newAppt, source: "en" });
@@ -282,8 +291,8 @@ export function AdminDashboardPage() {
   const todayStr = new Date().toISOString().split("T")[0];
   const todayCount = appointments.filter((a) => a.date === todayStr).length;
 
-  const bookedTimesForDate = newAppt.date
-    ? appointments.filter((a) => a.date === newAppt.date).map((a) => a.time).filter(Boolean)
+  const bookedTimesForDate = newAppt.date && newAppt.barber
+    ? appointments.filter((a) => a.date === newAppt.date && a.barber === newAppt.barber).map((a) => a.time).filter(Boolean)
     : [];
   const availableTimeSlots = timeSlots.filter((t) => !bookedTimesForDate.includes(t));
 
@@ -502,7 +511,7 @@ export function AdminDashboardPage() {
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="new-barber">Barber</Label>
-                  <Select value={newAppt.barber} onValueChange={(v) => setNewAppt({ ...newAppt, barber: v })}>
+                  <Select value={newAppt.barber} onValueChange={(v) => setNewAppt({ ...newAppt, barber: v, time: "" })}>
                     <SelectTrigger id="new-barber"><SelectValue placeholder="Select a barber" /></SelectTrigger>
                     <SelectContent>
                       {barbers.map((b) => (
