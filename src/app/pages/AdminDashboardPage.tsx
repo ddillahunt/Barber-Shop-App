@@ -126,12 +126,6 @@ export function AdminDashboardPage() {
               to_email: appt.email,
               to_name: appt.name,
               name: appt.name,
-              email: appt.email,
-              phone: appt.phone,
-              barber: appt.barber,
-              service: appt.service,
-              date: appt.date,
-              time: appt.time,
               message: "Your appointment has been cancelled. Please contact us if you have any questions or would like to reschedule.",
             },
             "byZkVrNvtLJutxIt5"
