@@ -116,27 +116,7 @@ export function AdminDashboardPage() {
     try {
       await deleteAppointment(id);
       setAppointments((prev) => prev.filter((a) => a.id !== id));
-
-      if (appt?.email) {
-        try {
-          await emailjs.send(
-            "service_grandesligas",
-            "template_yqpkz9e",
-            {
-              to_email: appt.email,
-              to_name: appt.name,
-              name: appt.name,
-              message: "Your appointment has been cancelled. Please contact us if you have any questions or would like to reschedule.",
-            },
-            "byZkVrNvtLJutxIt5"
-          );
-          toast.success("Appointment deleted & cancellation email sent to " + appt.email);
-        } catch (err) {
-          toast.error("Appointment deleted but email failed: " + (err instanceof Error ? err.message : String(err)));
-        }
-      } else {
-        toast.success("Appointment deleted (no email on file)");
-      }
+      toast.success("Appointment deleted");
     } catch {
       toast.error("Failed to delete appointment");
     }
