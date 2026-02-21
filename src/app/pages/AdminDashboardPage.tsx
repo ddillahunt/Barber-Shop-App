@@ -456,6 +456,14 @@ export function AdminDashboardPage() {
                             >
                               <Pencil className="size-3.5" />
                             </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete(appt.id!)}
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50 h-7 w-7 p-0"
+                            >
+                              <Trash2 className="size-3.5" />
+                            </Button>
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
