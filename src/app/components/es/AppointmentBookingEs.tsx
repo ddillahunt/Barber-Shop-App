@@ -285,7 +285,7 @@ export function AppointmentBookingEs() {
                 </div>
               </div>
 
-              <Button type="submit" disabled={submitting} className="w-full h-14 text-lg bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50">
+              <Button type="submit" disabled={submitting} className="mx-auto block h-10 px-6 text-sm bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50">
                 {submitting ? "Enviando..." : "Reservar Cita"}
               </Button>
             </form>
