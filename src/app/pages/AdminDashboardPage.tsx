@@ -158,6 +158,12 @@ export function AdminDashboardPage() {
           to_email: appt.email,
           to_name: appt.name,
           name: appt.name,
+          email: appt.email,
+          phone: appt.phone,
+          barber: appt.barber,
+          service: appt.service,
+          date: appt.date,
+          time: appt.time,
           message: `This is a reminder for your upcoming appointment on ${appt.date}${appt.time ? ` at ${appt.time}` : ""}${appt.barber ? ` with ${appt.barber.split(" - ")[0]}` : ""}. We look forward to seeing you!`,
         },
         "byZkVrNvtLJutxIt5"
