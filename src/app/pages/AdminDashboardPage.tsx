@@ -18,7 +18,7 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell } from "lucide-react";
 import { toast } from "sonner";
 import emailjs from "@emailjs/browser";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
@@ -142,6 +142,29 @@ export function AdminDashboardPage() {
       );
     } catch {
       toast.error("Failed to update appointment");
+    }
+  };
+
+  const handleSendReminder = async (appt: Appointment) => {
+    if (!appt.email) {
+      toast.error("No email on file for " + appt.name);
+      return;
+    }
+    try {
+      await emailjs.send(
+        "service_grandesligas",
+        "template_yqpkz9e",
+        {
+          to_email: appt.email,
+          to_name: appt.name,
+          name: appt.name,
+          message: `This is a reminder for your upcoming appointment on ${appt.date}${appt.time ? ` at ${appt.time}` : ""}${appt.barber ? ` with ${appt.barber.split(" - ")[0]}` : ""}. We look forward to seeing you!`,
+        },
+        "byZkVrNvtLJutxIt5"
+      );
+      toast.success("Reminder sent to " + appt.email);
+    } catch (err) {
+      toast.error("Failed to send reminder: " + (err instanceof Error ? err.message : String(err)));
     }
   };
 
@@ -442,6 +465,15 @@ export function AdminDashboardPage() {
                           </div>
                           <div className="flex items-center gap-1">
                             <Badge variant="outline" className="text-xs">{appt.source?.toUpperCase() || "EN"}</Badge>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleSendReminder(appt)}
+                              className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 h-7 w-7 p-0"
+                              title="Send Reminder"
+                            >
+                              <Bell className="size-3.5" />
+                            </Button>
                             <Button
                               variant="ghost"
                               size="sm"
