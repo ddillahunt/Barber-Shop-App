@@ -76,6 +76,7 @@ export function AdminDashboardPage() {
   });
   const [saving, setSaving] = useState(false);
   const [expandedBarbers, setExpandedBarbers] = useState<string[]>([]);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     let unsubAppts: (() => void) | undefined;
@@ -118,6 +119,35 @@ export function AdminDashboardPage() {
       toast.success("Appointment deleted");
     } catch {
       toast.error("Failed to delete appointment");
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    if (!confirm(`Are you sure you want to delete ${selectedIds.size} appointment${selectedIds.size > 1 ? "s" : ""}?`)) return;
+    try {
+      await Promise.all(Array.from(selectedIds).map((id) => deleteAppointment(id)));
+      setAppointments((prev) => prev.filter((a) => !selectedIds.has(a.id!)));
+      toast.success(`${selectedIds.size} appointment${selectedIds.size > 1 ? "s" : ""} deleted`);
+      setSelectedIds(new Set());
+    } catch {
+      toast.error("Failed to delete some appointments");
+    }
+  };
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === appointments.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(appointments.map((a) => a.id!)));
     }
   };
 
@@ -624,9 +654,29 @@ export function AdminDashboardPage() {
                   <p className="text-center text-slate-500 py-8">No appointments yet.</p>
                 ) : (
                   <div className="overflow-x-auto">
+                    {selectedIds.size > 0 && (
+                      <div className="flex items-center gap-3 mb-3 p-2 bg-amber-50 border border-amber-200 rounded-lg">
+                        <span className="text-sm font-medium text-slate-700">{selectedIds.size} selected</span>
+                        <Button size="sm" variant="outline" onClick={() => setSelectedIds(new Set())} className="h-7 px-2 text-xs">
+                          Clear
+                        </Button>
+                        <Button size="sm" onClick={handleBulkDelete} className="h-7 px-3 text-xs bg-red-500 hover:bg-red-600 text-white font-bold">
+                          <Trash2 className="size-3 mr-1" />
+                          Delete Selected
+                        </Button>
+                      </div>
+                    )}
                     <Table>
                       <TableHeader>
                         <TableRow>
+                          <TableHead className="w-10">
+                            <input
+                              type="checkbox"
+                              checked={appointments.length > 0 && selectedIds.size === appointments.length}
+                              onChange={toggleSelectAll}
+                              className="size-4 accent-amber-500 cursor-pointer"
+                            />
+                          </TableHead>
                           <TableHead>Name</TableHead>
                           <TableHead>Phone</TableHead>
                           <TableHead>Email</TableHead>
@@ -641,7 +691,15 @@ export function AdminDashboardPage() {
                       </TableHeader>
                       <TableBody>
                         {appointments.map((appt) => (
-                          <TableRow key={appt.id}>
+                          <TableRow key={appt.id} className={selectedIds.has(appt.id!) ? "bg-amber-50/50" : ""}>
+                            <TableCell>
+                              <input
+                                type="checkbox"
+                                checked={selectedIds.has(appt.id!)}
+                                onChange={() => toggleSelect(appt.id!)}
+                                className="size-4 accent-amber-500 cursor-pointer"
+                              />
+                            </TableCell>
                             <TableCell className="font-medium">{appt.name}</TableCell>
                             <TableCell>{appt.phone}</TableCell>
                             <TableCell>{appt.email || "—"}</TableCell>
