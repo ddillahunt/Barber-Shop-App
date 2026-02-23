@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc, query, orderBy, where, Timestamp } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc, query, orderBy, where, Timestamp, onSnapshot, type Unsubscribe } from "firebase/firestore";
 import { db } from "./firebase";
 
 export interface Appointment {
@@ -33,10 +33,42 @@ export async function updateAppointment(id: string, data: Partial<Omit<Appointme
   return updateDoc(doc(db, "appointments", id), data);
 }
 
-export async function getBookedTimes(date: string): Promise<string[]> {
+export async function getBookedTimes(date: string, barber?: string): Promise<string[]> {
   const q = query(appointmentsRef, where("date", "==", date));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => doc.data().time).filter(Boolean);
+  const docs = snapshot.docs.map((doc) => doc.data());
+  if (barber) {
+    return docs.filter((d) => d.barber === barber).map((d) => d.time).filter(Boolean);
+  }
+  return docs.map((d) => d.time).filter(Boolean);
+}
+
+export async function isTimeSlotAvailable(date: string, time: string, barber: string): Promise<boolean> {
+  const q = query(appointmentsRef, where("date", "==", date));
+  const snapshot = await getDocs(q);
+  return !snapshot.docs.some((doc) => {
+    const d = doc.data();
+    return d.time === time && d.barber === barber;
+  });
+}
+
+export function subscribeToBookedTimes(
+  date: string,
+  barber: string | undefined,
+  callback: (times: string[]) => void
+): Unsubscribe {
+  const q = query(appointmentsRef, where("date", "==", date));
+  return onSnapshot(q, (snapshot) => {
+    const docs = snapshot.docs.map((d) => d.data());
+    if (barber) {
+      callback(docs.filter((d) => d.barber === barber).map((d) => d.time as string).filter(Boolean));
+    } else {
+      callback(docs.map((d) => d.time as string).filter(Boolean));
+    }
+  }, (error) => {
+    console.error("Booked times listener error:", error);
+    callback([]);
+  });
 }
 
 export async function getAppointments(): Promise<Appointment[]> {
@@ -46,6 +78,13 @@ export async function getAppointments(): Promise<Appointment[]> {
     id: doc.id,
     ...doc.data(),
   })) as Appointment[];
+}
+
+export function subscribeToAppointments(callback: (appointments: Appointment[]) => void): Unsubscribe {
+  const q = query(appointmentsRef, orderBy("createdAt", "desc"));
+  return onSnapshot(q, (snapshot) => {
+    callback(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as Appointment[]);
+  });
 }
 
 // Messages
@@ -79,4 +118,11 @@ export async function getMessages(): Promise<Message[]> {
     id: doc.id,
     ...doc.data(),
   })) as Message[];
+}
+
+export function subscribeToMessages(callback: (messages: Message[]) => void): Unsubscribe {
+  const q = query(messagesRef, orderBy("createdAt", "desc"));
+  return onSnapshot(q, (snapshot) => {
+    callback(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as Message[]);
+  });
 }

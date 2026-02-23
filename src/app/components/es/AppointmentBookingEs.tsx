@@ -5,10 +5,10 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Textarea } from "../ui/textarea";
-import { Calendar, UserCheck } from "lucide-react";
+import { Calendar, UserCheck, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import emailjs from "@emailjs/browser";
-import { saveAppointment, getBookedTimes } from "../../lib/appointments";
+import { saveAppointment, subscribeToBookedTimes, isTimeSlotAvailable } from "../../lib/appointments";
 
 const barbers = [
   { id: "1", name: "Yorki", phone: "(774) 244-2984" },
@@ -19,6 +19,7 @@ const barbers = [
   { id: "6", name: "Montro", phone: "(508) 371-5827" },
   { id: "7", name: "Jairo", phone: "(347) 374-9866" },
   { id: "8", name: "Jose", phone: "(774) 279-2881" },
+  { id: "9", name: "Darrell Dillahunt", phone: "(774) 279-4008" },
 ];
 
 const timeSlots = [
@@ -58,11 +59,14 @@ export function AppointmentBookingEs() {
 
   useEffect(() => {
     if (formData.date) {
-      getBookedTimes(formData.date).then(setBookedTimes).catch(() => setBookedTimes([]));
+      const selectedBarber = barbers.find(b => b.id === formData.barber);
+      const barberLabel = selectedBarber ? `${selectedBarber.name} - ${selectedBarber.phone}` : undefined;
+      const unsubscribe = subscribeToBookedTimes(formData.date, barberLabel, setBookedTimes);
+      return () => unsubscribe();
     } else {
       setBookedTimes([]);
     }
-  }, [formData.date]);
+  }, [formData.date, formData.barber]);
 
   const availableTimeSlots = timeSlots.filter((t) => !bookedTimes.includes(t));
 
@@ -77,62 +81,85 @@ export function AppointmentBookingEs() {
     setSubmitting(true);
 
     const selectedBarber = barbers.find(b => b.id === formData.barber);
+    const barberLabel = selectedBarber ? `${selectedBarber.name} - ${selectedBarber.phone}` : formData.barber;
+
+    // Verificar doble reserva
+    if (selectedBarber) {
+      try {
+        const available = await isTimeSlotAvailable(formData.date, formData.time, barberLabel);
+        if (!available) {
+          toast.error("Este horario ya está reservado para este barbero. Elige otro horario.");
+          setSubmitting(false);
+          return;
+        }
+      } catch (err) {
+        console.error("Availability check failed:", err);
+      }
+    }
 
     try {
+      const barberField = selectedBarber ? `${selectedBarber.name} - ${selectedBarber.phone}` : formData.barber;
+
+      // Guardar en Firestore PRIMERO para bloquear el horario
+      await saveAppointment({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        barber: barberField,
+        service: formData.service,
+        date: formData.date,
+        time: formData.time,
+        notes: formData.notes,
+        source: "es",
+      });
+
       // Enviar notificación a la barbería
-      await emailjs.send(
-        "service_grandesligas",
-        "template_s4xq8bl",
-        {
-          to_email: "ddillahunt59@gmail.com",
-          from_name: formData.name,
-          from_email: formData.email,
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.phone}` : formData.barber,
-          service: formData.service,
-          date: formData.date,
-          time: formData.time,
-          notes: formData.notes,
-        },
-        "byZkVrNvtLJutxIt5"
-      );
-
-      // Enviar confirmación al cliente
-      await emailjs.send(
-        "service_grandesligas",
-        "template_yqpkz9e",
-        {
-          to_email: formData.email,
-          to_name: formData.name,
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.phone}` : formData.barber,
-          service: formData.service,
-          date: formData.date,
-          time: formData.time,
-          notes: formData.notes,
-        },
-        "byZkVrNvtLJutxIt5"
-      );
-
-      // Guardar en Firestore
       try {
-        await saveAppointment({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          barber: selectedBarber ? `${selectedBarber.name} - ${selectedBarber.phone}` : formData.barber,
-          service: formData.service,
-          date: formData.date,
-          time: formData.time,
-          notes: formData.notes,
-          source: "es",
-        });
-      } catch (firestoreError) {
-        console.error("Firestore save failed:", firestoreError);
+        await emailjs.send(
+          "service_grandesligas",
+          "template_s4xq8bl",
+          {
+            to_email: "ddillahunt59@gmail.com",
+            from_name: formData.name,
+            from_email: formData.email,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            barber: barberField,
+            service: formData.service,
+            date: formData.date,
+            time: formData.time,
+            notes: formData.notes,
+          },
+          "byZkVrNvtLJutxIt5"
+        );
+      } catch (emailError) {
+        console.error("Shop email failed:", emailError);
+      }
+
+      // Enviar confirmación al cliente (solo si hay correo)
+      if (formData.email) {
+        try {
+          await emailjs.send(
+            "service_grandesligas",
+            "template_yqpkz9e",
+            {
+              to_email: formData.email,
+              to_name: formData.name,
+              name: formData.name,
+              email: formData.email,
+              phone: formData.phone,
+              barber: barberField,
+              service: formData.service,
+              date: formData.date,
+              time: formData.time,
+              notes: formData.notes,
+            },
+            "byZkVrNvtLJutxIt5"
+          );
+        } catch (emailError) {
+          console.error("Customer email failed:", emailError);
+        }
       }
 
       toast.success("¡Cita reservada con éxito! Te enviaremos un correo de confirmación.");
@@ -217,7 +244,7 @@ export function AppointmentBookingEs() {
 
                 <div className="space-y-2">
                   <Label htmlFor="barber" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Elige Tu Barbero</Label>
-                  <Select value={formData.barber} onValueChange={(value) => setFormData({ ...formData, barber: value })}>
+                  <Select value={formData.barber} onValueChange={(value) => setFormData({ ...formData, barber: value, time: "" })}>
                     <SelectTrigger id="barber">
                       <SelectValue placeholder="Selecciona un barbero" />
                     </SelectTrigger>
@@ -257,7 +284,7 @@ export function AppointmentBookingEs() {
                   />
                 </div>
 
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-2">
                   <Label htmlFor="time" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Hora Preferida *</Label>
                   <Select value={formData.time} onValueChange={(value) => setFormData({ ...formData, time: value })}>
                     <SelectTrigger id="time">
@@ -273,7 +300,7 @@ export function AppointmentBookingEs() {
                   </Select>
                 </div>
 
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-2">
                   <Label htmlFor="notes" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Notas</Label>
                   <Textarea
                     id="notes"
@@ -285,9 +312,21 @@ export function AppointmentBookingEs() {
                 </div>
               </div>
 
-              <Button type="submit" disabled={submitting} className="mx-auto block h-10 px-6 text-sm bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50">
-                {submitting ? "Enviando..." : "Reservar Cita"}
-              </Button>
+              <div className="flex items-center justify-center gap-3">
+                <Button type="submit" disabled={submitting} className="h-10 px-6 text-sm bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50">
+                  {submitting ? "Enviando..." : "Reservar Cita"}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setFormData({ name: "", email: "", phone: "", barber: "", service: "", date: "", time: "", notes: "" })}
+                  className="h-10 px-4 text-sm bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50"
+                >
+                  <RotateCcw className="size-4 mr-1" />
+                  Limpiar
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>

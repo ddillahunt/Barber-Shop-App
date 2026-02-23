@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
-import { getAppointments, deleteAppointment, saveAppointment, updateAppointment, getMessages, deleteMessage, type Appointment, type Message } from "../lib/appointments";
+import { deleteAppointment, saveAppointment, updateAppointment, deleteMessage, subscribeToAppointments, subscribeToMessages, type Appointment, type Message } from "../lib/appointments";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -34,6 +34,7 @@ const barbers = [
   { id: "6", name: "Montro", specialty: "(508) 371-5827" },
   { id: "7", name: "Jairo", specialty: "(347) 374-9866" },
   { id: "8", name: "Jose", specialty: "(774) 279-2881" },
+  { id: "9", name: "Darrell Dillahunt", specialty: "(774) 279-4008" },
 ];
 
 const timeSlots = [
@@ -77,34 +78,32 @@ export function AdminDashboardPage() {
   const [expandedBarbers, setExpandedBarbers] = useState<string[]>([]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    let unsubAppts: (() => void) | undefined;
+    let unsubMsgs: (() => void) | undefined;
+
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         setAuthenticated(true);
-        fetchAppointments();
-        fetchMessages();
+        unsubAppts = subscribeToAppointments((data) => {
+          setAppointments(data);
+          setLoading(false);
+        });
+        unsubMsgs = subscribeToMessages(setMessages);
       } else {
         navigate("/admin/login");
       }
     });
-    return unsubscribe;
-  }, [navigate]);
 
-  const fetchAppointments = async () => {
-    setLoading(true);
-    try {
-      const data = await getAppointments();
-      setAppointments(data);
-    } catch {
-      toast.error("Failed to load appointments");
-    } finally {
-      setLoading(false);
-    }
-  };
+    return () => {
+      unsubAuth();
+      unsubAppts?.();
+      unsubMsgs?.();
+    };
+  }, [navigate]);
 
   const fetchMessages = async () => {
     try {
-      const data = await getMessages();
-      setMessages(data);
+      // Data refreshes automatically via real-time listeners
     } catch {
       toast.error("Failed to load messages");
     }
@@ -285,10 +284,10 @@ export function AdminDashboardPage() {
         }
       }
 
-      toast.success("Appointment created & emails sent");
+
+      toast.success("Appointment created & notifications sent");
       setNewAppt({ name: "", email: "", phone: "", barber: "", service: "", date: "", time: "", notes: "" });
       setShowCreateForm(false);
-      fetchAppointments();
     } catch {
       toast.error("Failed to create appointment");
     } finally {
@@ -339,7 +338,7 @@ export function AdminDashboardPage() {
           <div className="flex items-center gap-3">
             <Button
               size="sm"
-              onClick={() => { fetchAppointments(); fetchMessages(); }}
+              onClick={() => { toast.info("Dashboard updates automatically in real-time"); }}
               className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700"
             >
               <RefreshCw className="size-4 mr-1" />
