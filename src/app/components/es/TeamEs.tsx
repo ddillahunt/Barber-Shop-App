@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "../ui/card";
-import { Phone, User } from "lucide-react";
+import { Phone, MessageSquare, User } from "lucide-react";
 import { subscribeToBarbers, type Barber } from "../../lib/appointments";
 
 export function TeamEs() {
@@ -44,13 +44,23 @@ export function TeamEs() {
                 <div>
                   <h3 style={{ color: "#fbbf24", fontSize: "1.25rem", fontWeight: 700 }}>{barber.name}</h3>
                 </div>
-                <a
-                  href={`tel:${barber.phone.replace(/\D/g, "")}`}
-                  className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm px-4 py-2 rounded-full hover:bg-amber-500/20 transition-colors"
-                >
-                  <Phone className="size-4" />
-                  {barber.phone}
-                </a>
+                <p className="text-amber-400 text-sm font-medium">{barber.phone}</p>
+                <div className="flex gap-2">
+                  <a
+                    href={`tel:${barber.phone.replace(/\D/g, "")}`}
+                    className="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm px-4 py-2 rounded-full hover:bg-amber-500/20 transition-colors"
+                  >
+                    <Phone className="size-4" />
+                    Llamar
+                  </a>
+                  <a
+                    href={`sms:${barber.phone.replace(/\D/g, "")}`}
+                    className="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm px-4 py-2 rounded-full hover:bg-amber-500/20 transition-colors"
+                  >
+                    <MessageSquare className="size-4" />
+                    Texto
+                  </a>
+                </div>
               </CardContent>
             </Card>
           ))}
