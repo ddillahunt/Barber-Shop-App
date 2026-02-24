@@ -46,6 +46,9 @@ export function Hero() {
             <div className="absolute bottom-0 left-0 right-0 h-3 bg-gradient-to-br from-amber-500 to-yellow-600 border-t-2 border-amber-500" />
           </div>
         </div>
+        <a href="https://www.grandes-ligas.net" target="_blank" rel="noopener noreferrer" className="inline-block text-amber-400 hover:text-amber-300 text-lg font-medium tracking-wide transition-colors mb-4">
+          Grandes-Ligas.net
+        </a>
         <p className="text-xl md:text-2xl text-amber-100 max-w-2xl mx-auto leading-relaxed">
           Premium barber shop experience for the modern gentleman. Classic cuts, contemporary styles.
         </p>
