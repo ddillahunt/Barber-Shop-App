@@ -1,5 +1,6 @@
 import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc, query, orderBy, where, Timestamp, onSnapshot, type Unsubscribe } from "firebase/firestore";
-import { db } from "./firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db, storage } from "./firebase";
 
 export interface Appointment {
   id?: string;
@@ -84,6 +85,41 @@ export function subscribeToAppointments(callback: (appointments: Appointment[]) 
   const q = query(appointmentsRef, orderBy("createdAt", "desc"));
   return onSnapshot(q, (snapshot) => {
     callback(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as Appointment[]);
+  });
+}
+
+// Barbers
+export interface Barber {
+  id?: string;
+  name: string;
+  phone: string;
+  imageUrl?: string;
+}
+
+const barbersRef = collection(db, "barbers");
+
+export async function saveBarber(data: Omit<Barber, "id">) {
+  return addDoc(barbersRef, data);
+}
+
+export async function updateBarber(id: string, data: Partial<Omit<Barber, "id">>) {
+  return updateDoc(doc(db, "barbers", id), data);
+}
+
+export async function deleteBarber(id: string) {
+  return deleteDoc(doc(db, "barbers", id));
+}
+
+export async function uploadBarberImage(file: File, barberId: string): Promise<string> {
+  const storageRef = ref(storage, `barbers/${barberId}_${Date.now()}`);
+  await uploadBytes(storageRef, file);
+  return getDownloadURL(storageRef);
+}
+
+export function subscribeToBarbers(callback: (barbers: Barber[]) => void): Unsubscribe {
+  const q = query(barbersRef, orderBy("name"));
+  return onSnapshot(q, (snapshot) => {
+    callback(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as Barber[]);
   });
 }
 

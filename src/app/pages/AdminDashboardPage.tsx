@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
-import { deleteAppointment, saveAppointment, updateAppointment, deleteMessage, subscribeToAppointments, subscribeToMessages, type Appointment, type Message } from "../lib/appointments";
+import { deleteAppointment, saveAppointment, updateAppointment, deleteMessage, subscribeToAppointments, subscribeToMessages, saveBarber, updateBarber, deleteBarber, subscribeToBarbers, uploadBarberImage, type Appointment, type Message, type Barber } from "../lib/appointments";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -18,23 +18,23 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Scissors, LogOut, CalendarDays, Users, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell } from "lucide-react";
+import { Scissors, LogOut, CalendarDays, Users, User, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell } from "lucide-react";
 import { toast } from "sonner";
-import emailjs from "@emailjs/browser";
+import { sendEmail, sendSMS } from "../lib/email";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths, isSameMonth, isSameDay, isToday } from "date-fns";
 
-const barbers = [
-  { id: "1", name: "Yorki", specialty: "(774) 244-2984" },
-  { id: "2", name: "Maestro", specialty: "(774) 204-1098" },
-  { id: "3", name: "El Menor", specialty: "(774) 219-1098" },
-  { id: "4", name: "Yefri", specialty: "(774) 303-8891" },
-  { id: "5", name: "Joel", specialty: "(774) 522-9135" },
-  { id: "6", name: "Montro", specialty: "(508) 371-5827" },
-  { id: "7", name: "Jairo", specialty: "(347) 374-9866" },
-  { id: "8", name: "Jose", specialty: "(774) 279-2881" },
-  { id: "9", name: "Darrell Dillahunt", specialty: "(774) 279-4008" },
+const defaultBarbers = [
+  { id: "1", name: "Yorki", phone: "(774) 244-2984" },
+  { id: "2", name: "Maestro", phone: "(774) 204-1098" },
+  { id: "3", name: "El Menor", phone: "(774) 219-1098" },
+  { id: "4", name: "Yefri", phone: "(774) 303-8891" },
+  { id: "5", name: "Joel", phone: "(774) 522-9135" },
+  { id: "6", name: "Montro", phone: "(508) 371-5827" },
+  { id: "7", name: "Jairo", phone: "(347) 374-9866" },
+  { id: "8", name: "Jose", phone: "(774) 279-2881" },
+  { id: "9", name: "Darrell Dillahunt", phone: "(774) 279-4008" },
 ];
 
 const timeSlots = [
@@ -77,10 +77,19 @@ export function AdminDashboardPage() {
   const [saving, setSaving] = useState(false);
   const [expandedBarbers, setExpandedBarbers] = useState<string[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [barbers, setBarbers] = useState<Barber[]>([]);
+  const [barbersSeeded, setBarbersSeeded] = useState(false);
+  const [showAddBarber, setShowAddBarber] = useState(false);
+  const [newBarber, setNewBarber] = useState({ name: "", phone: "", imageUrl: "" });
+  const [editingBarber, setEditingBarber] = useState<Barber | null>(null);
+  const [editBarberForm, setEditBarberForm] = useState({ name: "", phone: "", imageUrl: "" });
+  const [newBarberImage, setNewBarberImage] = useState<File | null>(null);
+  const [editBarberImage, setEditBarberImage] = useState<File | null>(null);
 
   useEffect(() => {
     let unsubAppts: (() => void) | undefined;
     let unsubMsgs: (() => void) | undefined;
+    let unsubBarbers: (() => void) | undefined;
 
     const unsubAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -90,6 +99,14 @@ export function AdminDashboardPage() {
           setLoading(false);
         });
         unsubMsgs = subscribeToMessages(setMessages);
+        unsubBarbers = subscribeToBarbers((data) => {
+          setBarbers(data);
+          // Seed default barbers into Firestore on first load if collection is empty
+          if (data.length === 0 && !barbersSeeded) {
+            setBarbersSeeded(true);
+            defaultBarbers.forEach((b) => saveBarber({ name: b.name, phone: b.phone }));
+          }
+        });
       } else {
         navigate("/admin/login");
       }
@@ -99,14 +116,63 @@ export function AdminDashboardPage() {
       unsubAuth();
       unsubAppts?.();
       unsubMsgs?.();
+      unsubBarbers?.();
     };
-  }, [navigate]);
+  }, [navigate, barbersSeeded]);
 
-  const fetchMessages = async () => {
+  const handleAddBarber = async () => {
+    if (!newBarber.name || !newBarber.phone) {
+      toast.error("Name and phone are required");
+      return;
+    }
     try {
-      // Data refreshes automatically via real-time listeners
+      const docRef = await saveBarber({ name: newBarber.name, phone: newBarber.phone });
+      if (newBarberImage) {
+        const imageUrl = await uploadBarberImage(newBarberImage, docRef.id);
+        await updateBarber(docRef.id, { imageUrl });
+      }
+      toast.success(`${newBarber.name} added`);
+      setNewBarber({ name: "", phone: "", imageUrl: "" });
+      setNewBarberImage(null);
+      setShowAddBarber(false);
     } catch {
-      toast.error("Failed to load messages");
+      toast.error("Failed to add barber");
+    }
+  };
+
+  const handleEditBarberOpen = (barber: Barber) => {
+    setEditingBarber(barber);
+    setEditBarberForm({ name: barber.name, phone: barber.phone, imageUrl: barber.imageUrl || "" });
+  };
+
+  const handleEditBarberSave = async () => {
+    if (!editingBarber?.id) return;
+    if (!editBarberForm.name || !editBarberForm.phone) {
+      toast.error("Name and phone are required");
+      return;
+    }
+    try {
+      let imageUrl = editBarberForm.imageUrl || "";
+      if (editBarberImage) {
+        imageUrl = await uploadBarberImage(editBarberImage, editingBarber.id);
+      }
+      await updateBarber(editingBarber.id, { name: editBarberForm.name, phone: editBarberForm.phone, imageUrl });
+      toast.success(`${editBarberForm.name} updated`);
+      setEditBarberImage(null);
+      setEditingBarber(null);
+    } catch (err) {
+      console.error("Failed to update barber:", err);
+      toast.error("Failed to update barber");
+    }
+  };
+
+  const handleDeleteBarber = async (id: string, name: string) => {
+    if (!confirm(`Remove ${name} from barbers?`)) return;
+    try {
+      await deleteBarber(id);
+      toast.success(`${name} removed`);
+    } catch {
+      toast.error("Failed to remove barber");
     }
   };
 
@@ -175,17 +241,14 @@ export function AdminDashboardPage() {
   };
 
   const handleSendReminder = async (appt: Appointment) => {
-    if (!appt.email) {
-      toast.error("No email on file for " + appt.name);
+    if (!appt.email && !appt.phone) {
+      toast.error("No email or phone on file for " + appt.name);
       return;
     }
+    const reminderMsg = `This is a reminder for your upcoming appointment on ${appt.date}${appt.time ? ` at ${appt.time}` : ""}${appt.barber ? ` with ${appt.barber.split(" - ")[0]}` : ""}. We look forward to seeing you!`;
     try {
-      await emailjs.send(
-        "service_grandesligas",
-        "template_yqpkz9e",
-        {
-          to_email: appt.email,
-          to_name: appt.name,
+      if (appt.email) {
+        await sendEmail("reminder", {
           name: appt.name,
           email: appt.email,
           phone: appt.phone,
@@ -193,11 +256,13 @@ export function AdminDashboardPage() {
           service: appt.service,
           date: appt.date,
           time: appt.time,
-          message: `This is a reminder for your upcoming appointment on ${appt.date}${appt.time ? ` at ${appt.time}` : ""}${appt.barber ? ` with ${appt.barber.split(" - ")[0]}` : ""}. We look forward to seeing you!`,
-        },
-        "byZkVrNvtLJutxIt5"
-      );
-      toast.success("Reminder sent to " + appt.email);
+          message: reminderMsg,
+        });
+      }
+      if (appt.phone) {
+        await sendSMS(appt.phone, `Hi ${appt.name}, ${reminderMsg} - Grandes Ligas Barber`);
+      }
+      toast.success("Reminder sent to " + (appt.email || appt.phone));
     } catch (err) {
       toast.error("Failed to send reminder: " + (err instanceof Error ? err.message : String(err)));
     }
@@ -268,12 +333,24 @@ export function AdminDashboardPage() {
 
       // Send notification email to owner
       try {
-        await emailjs.send(
-          "service_grandesligas",
-          "template_s4xq8bl",
-          {
-            to_email: "ddillahunt59@gmail.com",
-            from_name: newAppt.name,
+        await sendEmail("shop_notification", {
+          name: newAppt.name,
+          email: newAppt.email,
+          phone: newAppt.phone,
+          barber: newAppt.barber,
+          service: newAppt.service,
+          date: newAppt.date,
+          time: newAppt.time,
+          notes: newAppt.notes,
+        });
+      } catch {
+        console.error("Owner email failed");
+      }
+
+      // Send confirmation email to customer if email provided
+      if (newAppt.email) {
+        try {
+          await sendEmail("customer_confirmation", {
             name: newAppt.name,
             email: newAppt.email,
             phone: newAppt.phone,
@@ -282,38 +359,23 @@ export function AdminDashboardPage() {
             date: newAppt.date,
             time: newAppt.time,
             notes: newAppt.notes,
-          },
-          "byZkVrNvtLJutxIt5"
-        );
-      } catch {
-        console.error("Owner email failed");
-      }
-
-      // Send confirmation email to customer if email provided
-      if (newAppt.email) {
-        try {
-          await emailjs.send(
-            "service_grandesligas",
-            "template_yqpkz9e",
-            {
-              to_email: newAppt.email,
-              to_name: newAppt.name,
-              name: newAppt.name,
-              email: newAppt.email,
-              phone: newAppt.phone,
-              barber: newAppt.barber,
-              service: newAppt.service,
-              date: newAppt.date,
-              time: newAppt.time,
-              notes: newAppt.notes,
-            },
-            "byZkVrNvtLJutxIt5"
-          );
+          });
         } catch {
           console.error("Customer email failed");
         }
       }
 
+      // Send SMS confirmation to customer
+      if (newAppt.phone) {
+        try {
+          await sendSMS(
+            newAppt.phone,
+            `Hi ${newAppt.name}, your appointment at Grandes Ligas Barber is confirmed for ${newAppt.date} at ${newAppt.time}${newAppt.barber ? ` with ${newAppt.barber.split(" - ")[0]}` : ""}. See you then!`
+          );
+        } catch {
+          console.error("SMS failed");
+        }
+      }
 
       toast.success("Appointment created & notifications sent");
       setNewAppt({ name: "", email: "", phone: "", barber: "", service: "", date: "", time: "", notes: "" });
@@ -440,7 +502,83 @@ export function AdminDashboardPage() {
         </div>
 
         {/* Appointments by Barber */}
-        <h2 className="text-xl font-bold text-slate-900 mb-4 text-center">Individual Barber Appointments</h2>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <h2 className="text-xl font-bold text-slate-900">Individual Barber Appointments</h2>
+          <Button
+            size="sm"
+            onClick={() => setShowAddBarber(true)}
+            className="h-8 px-3 text-xs bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700"
+          >
+            <Plus className="size-3 mr-1" />
+            Add Barber
+          </Button>
+        </div>
+
+        {/* Add Barber Dialog */}
+        <Dialog open={showAddBarber} onOpenChange={setShowAddBarber}>
+          <DialogContent className="sm:max-w-sm">
+            <DialogHeader>
+              <DialogTitle>Add Barber</DialogTitle>
+              <DialogDescription>Select from the list or enter a new barber.</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-1">
+                <Label htmlFor="barber-name">Name *</Label>
+                <Input id="barber-name" value={newBarber.name} onChange={(e) => setNewBarber({ ...newBarber, name: e.target.value })} placeholder="Barber name" />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="barber-phone">Phone *</Label>
+                <Input id="barber-phone" type="tel" value={newBarber.phone} onChange={(e) => setNewBarber({ ...newBarber, phone: formatPhone(e.target.value) })} placeholder="(508) 555-1234" maxLength={14} />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="barber-image">Photo</Label>
+                <Input id="barber-image" type="file" accept="image/*" onChange={(e) => setNewBarberImage(e.target.files?.[0] || null)} />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowAddBarber(false)}>Cancel</Button>
+              <Button onClick={handleAddBarber} className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
+                Add Barber
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Barber Dialog */}
+        <Dialog open={!!editingBarber} onOpenChange={(open) => { if (!open) setEditingBarber(null); }}>
+          <DialogContent className="sm:max-w-sm">
+            <DialogHeader>
+              <DialogTitle>Edit Barber</DialogTitle>
+              <DialogDescription>Update barber information.</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-1">
+                <Label htmlFor="edit-barber-name">Name *</Label>
+                <Input id="edit-barber-name" value={editBarberForm.name} onChange={(e) => setEditBarberForm({ ...editBarberForm, name: e.target.value })} placeholder="Barber name" />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="edit-barber-phone">Phone *</Label>
+                <Input id="edit-barber-phone" type="tel" value={editBarberForm.phone} onChange={(e) => setEditBarberForm({ ...editBarberForm, phone: formatPhone(e.target.value) })} placeholder="(508) 555-1234" maxLength={14} />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="edit-barber-image">Photo</Label>
+                <Input id="edit-barber-image" type="file" accept="image/*" onChange={(e) => setEditBarberImage(e.target.files?.[0] || null)} />
+                {editBarberForm.imageUrl && !editBarberImage && (
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs text-green-600">Current photo set</p>
+                    <button type="button" onClick={() => setEditBarberForm({ ...editBarberForm, imageUrl: "" })} className="text-xs text-red-500 hover:text-red-700 underline">Remove photo</button>
+                  </div>
+                )}
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditingBarber(null)}>Cancel</Button>
+              <Button onClick={handleEditBarberSave} className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
+                Save Changes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-2">
           {barbers.map((barber) => {
             const count = appointments.filter((a) => a.barber?.startsWith(barber.name)).length;
@@ -452,9 +590,32 @@ export function AdminDashboardPage() {
               <Card
                 key={barber.id}
                 onClick={() => setExpandedBarbers(isExpanded ? expandedBarbers.filter((b) => b !== barber.name) : [...expandedBarbers, barber.name])}
-                className={`border-amber-500/30 bg-white cursor-pointer transition-all hover:shadow-lg hover:border-amber-500/60 ${isExpanded ? "ring-2 ring-amber-500" : ""}`}
+                className={`border-amber-500/30 bg-white cursor-pointer transition-all hover:shadow-lg hover:border-amber-500/60 ${isExpanded ? "ring-2 ring-amber-500" : ""} relative`}
               >
-                <CardContent className="p-4 text-center">
+                <div className="absolute top-1 right-1 flex items-center gap-0.5">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleEditBarberOpen(barber); }}
+                    className="p-0.5 rounded-full text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                    title={`Edit ${barber.name}`}
+                  >
+                    <Pencil className="size-3" />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleDeleteBarber(barber.id!, barber.name); }}
+                    className="p-0.5 rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                    title={`Remove ${barber.name}`}
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                </div>
+                <CardContent className="p-4 text-center flex flex-col items-center">
+                  {barber.imageUrl ? (
+                    <img src={barber.imageUrl} alt={barber.name} className="w-12 h-12 rounded-full object-cover border-2 border-amber-500/50 mb-2" />
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center mb-2">
+                      <User className="size-6 text-black" />
+                    </div>
+                  )}
                   <div className="font-bold text-slate-900 text-sm mb-1">{barber.name}</div>
                   <div className="text-2xl font-bold text-amber-600">{count}</div>
                   <div className="text-xs text-slate-500 mt-1">
@@ -584,7 +745,7 @@ export function AdminDashboardPage() {
                     <SelectTrigger id="new-barber"><SelectValue placeholder="Select a barber" /></SelectTrigger>
                     <SelectContent>
                       {barbers.map((b) => (
-                        <SelectItem key={b.id} value={`${b.name} - ${b.specialty}`}>{b.name} - {b.specialty}</SelectItem>
+                        <SelectItem key={b.id} value={`${b.name} - ${b.phone}`}>{b.name} - {b.phone}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -937,7 +1098,7 @@ export function AdminDashboardPage() {
                 <SelectTrigger id="edit-barber"><SelectValue placeholder="Select a barber" /></SelectTrigger>
                 <SelectContent>
                   {barbers.map((b) => (
-                    <SelectItem key={b.id} value={`${b.name} - ${b.specialty}`}>{b.name} - {b.specialty}</SelectItem>
+                    <SelectItem key={b.id} value={`${b.name} - ${b.phone}`}>{b.name} - {b.phone}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

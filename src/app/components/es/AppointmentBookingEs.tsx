@@ -7,25 +7,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Textarea } from "../ui/textarea";
 import { Calendar, UserCheck, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
-import emailjs from "@emailjs/browser";
-import { saveAppointment, subscribeToBookedTimes, isTimeSlotAvailable } from "../../lib/appointments";
-
-const barbers = [
-  { id: "1", name: "Yorki", phone: "(774) 244-2984" },
-  { id: "2", name: "Maestro", phone: "(774) 204-1098" },
-  { id: "3", name: "El Menor", phone: "(774) 219-1098" },
-  { id: "4", name: "Yefri", phone: "(774) 303-8891" },
-  { id: "5", name: "Joel", phone: "(774) 522-9135" },
-  { id: "6", name: "Montro", phone: "(508) 371-5827" },
-  { id: "7", name: "Jairo", phone: "(347) 374-9866" },
-  { id: "8", name: "Jose", phone: "(774) 279-2881" },
-  { id: "9", name: "Darrell Dillahunt", phone: "(774) 279-4008" },
-];
+import { sendEmail, sendSMS } from "../../lib/email";
+import { saveAppointment, subscribeToBookedTimes, isTimeSlotAvailable, subscribeToBarbers, type Barber } from "../../lib/appointments";
 
 const timeSlots = [
-  "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
-  "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM",
-  "5:00 PM", "6:00 PM", "7:00 PM"
+  "9:00 AM", "9:15 AM", "9:30 AM", "9:45 AM",
+  "10:00 AM", "10:15 AM", "10:30 AM", "10:45 AM",
+  "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM",
+  "12:00 PM", "12:15 PM", "12:30 PM", "12:45 PM",
+  "1:00 PM", "1:15 PM", "1:30 PM", "1:45 PM",
+  "2:00 PM", "2:15 PM", "2:30 PM", "2:45 PM",
+  "3:00 PM", "3:15 PM", "3:30 PM", "3:45 PM",
+  "4:00 PM", "4:15 PM", "4:30 PM", "4:45 PM",
+  "5:00 PM", "5:15 PM", "5:30 PM", "5:45 PM",
+  "6:00 PM", "6:15 PM", "6:30 PM", "6:45 PM",
+  "7:00 PM"
 ];
 
 const services = [
@@ -56,6 +52,12 @@ export function AppointmentBookingEs() {
 
   const [submitting, setSubmitting] = useState(false);
   const [bookedTimes, setBookedTimes] = useState<string[]>([]);
+  const [barbers, setBarbers] = useState<Barber[]>([]);
+
+  useEffect(() => {
+    const unsub = subscribeToBarbers(setBarbers);
+    return () => unsub();
+  }, []);
 
   useEffect(() => {
     if (formData.date) {
@@ -115,13 +117,24 @@ export function AppointmentBookingEs() {
 
       // Enviar notificación a la barbería
       try {
-        await emailjs.send(
-          "service_grandesligas",
-          "template_s4xq8bl",
-          {
-            to_email: "ddillahunt59@gmail.com",
-            from_name: formData.name,
-            from_email: formData.email,
+        await sendEmail("shop_notification", {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          barber: barberField,
+          service: formData.service,
+          date: formData.date,
+          time: formData.time,
+          notes: formData.notes,
+        });
+      } catch (emailError) {
+        console.error("Shop email failed:", emailError);
+      }
+
+      // Enviar confirmación al cliente (solo si hay correo)
+      if (formData.email) {
+        try {
+          await sendEmail("customer_confirmation", {
             name: formData.name,
             email: formData.email,
             phone: formData.phone,
@@ -130,35 +143,23 @@ export function AppointmentBookingEs() {
             date: formData.date,
             time: formData.time,
             notes: formData.notes,
-          },
-          "byZkVrNvtLJutxIt5"
-        );
-      } catch (emailError) {
-        console.error("Shop email failed:", emailError);
-      }
-
-      // Enviar confirmación al cliente (solo si hay correo)
-      if (formData.email) {
-        try {
-          await emailjs.send(
-            "service_grandesligas",
-            "template_yqpkz9e",
-            {
-              to_email: formData.email,
-              to_name: formData.name,
-              name: formData.name,
-              email: formData.email,
-              phone: formData.phone,
-              barber: barberField,
-              service: formData.service,
-              date: formData.date,
-              time: formData.time,
-              notes: formData.notes,
-            },
-            "byZkVrNvtLJutxIt5"
-          );
+            message: `Su cita ha sido confirmada para ${formData.date} a las ${formData.time}${barberField ? ` con ${barberField.split(" - ")[0]}` : ""}. ¡Esperamos verle pronto!`,
+          });
         } catch (emailError) {
           console.error("Customer email failed:", emailError);
+          toast.error("No se pudo enviar el correo de confirmación, pero su cita está reservada.");
+        }
+      }
+
+      // Enviar SMS de confirmación al cliente
+      if (formData.phone) {
+        try {
+          await sendSMS(
+            formData.phone,
+            `Hola ${formData.name}, su cita en Grandes Ligas Barber está confirmada para ${formData.date} a las ${formData.time}${barberField ? ` con ${barberField.split(" - ")[0]}` : ""}. ¡Le esperamos!`
+          );
+        } catch (smsError) {
+          console.error("SMS failed:", smsError);
         }
       }
 

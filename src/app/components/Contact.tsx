@@ -7,7 +7,7 @@ import { Textarea } from "./ui/textarea";
 import { MapPin, Phone, Mail, Globe } from "lucide-react";
 import { toast } from "sonner";
 import { saveMessage } from "../lib/appointments";
-import emailjs from "@emailjs/browser";
+import { sendEmail } from "../lib/email";
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -45,35 +45,22 @@ export function Contact() {
       });
 
       try {
-        await emailjs.send(
-          "service_grandesligas",
-          "template_s4xq8bl",
-          {
-            to_email: "ddillahunt59@gmail.com",
-            from_name: formData.name,
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            message: formData.message,
-          },
-          "byZkVrNvtLJutxIt5"
-        );
+        await sendEmail("contact_notification", {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+        });
       } catch {
         console.error("Owner email failed");
       }
 
       try {
-        await emailjs.send(
-          "service_grandesligas",
-          "template_yqpkz9e",
-          {
-            to_email: formData.email,
-            to_name: formData.name,
-            name: formData.name,
-            message: "Thank you for your message. We'll get back to you shortly!",
-          },
-          "byZkVrNvtLJutxIt5"
-        );
+        await sendEmail("contact_reply", {
+          name: formData.name,
+          email: formData.email,
+          message: "Thank you for your message. We'll get back to you shortly!",
+        });
       } catch {
         console.error("Auto-reply email failed");
       }
