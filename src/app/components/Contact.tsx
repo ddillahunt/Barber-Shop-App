@@ -132,12 +132,12 @@ export function Contact() {
                 <div>
                   <h3 className="font-semibold mb-2 text-lg text-amber-400">Website</h3>
                   <a
-                    href="https://www.grandesligas.com"
+                    href="https://www.grandes-ligas.net"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-slate-300 hover:text-amber-400 transition-colors underline underline-offset-4"
                   >
-                    GrandesLigas.com
+                    Grandes-Ligas.net
                   </a>
                 </div>
               </div>
