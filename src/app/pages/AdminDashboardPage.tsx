@@ -81,9 +81,9 @@ export function AdminDashboardPage() {
   const [barbers, setBarbers] = useState<Barber[]>([]);
   const [barbersSeeded, setBarbersSeeded] = useState(false);
   const [showAddBarber, setShowAddBarber] = useState(false);
-  const [newBarber, setNewBarber] = useState({ name: "", phone: "", imageUrl: "" });
+  const [newBarber, setNewBarber] = useState({ name: "", phone: "", email: "", imageUrl: "" });
   const [editingBarber, setEditingBarber] = useState<Barber | null>(null);
-  const [editBarberForm, setEditBarberForm] = useState({ name: "", phone: "", imageUrl: "" });
+  const [editBarberForm, setEditBarberForm] = useState({ name: "", phone: "", email: "", imageUrl: "" });
   const [newBarberImage, setNewBarberImage] = useState<File | null>(null);
   const [editBarberImage, setEditBarberImage] = useState<File | null>(null);
 
@@ -132,13 +132,13 @@ export function AdminDashboardPage() {
       return;
     }
     try {
-      const docRef = await saveBarber({ name: newBarber.name, phone: newBarber.phone });
+      const docRef = await saveBarber({ name: newBarber.name, phone: newBarber.phone, email: newBarber.email || undefined });
       if (newBarberImage) {
         const imageUrl = await uploadBarberImage(newBarberImage, docRef.id);
         await updateBarber(docRef.id, { imageUrl });
       }
       toast.success(`${newBarber.name} added`);
-      setNewBarber({ name: "", phone: "", imageUrl: "" });
+      setNewBarber({ name: "", phone: "", email: "", imageUrl: "" });
       setNewBarberImage(null);
       setShowAddBarber(false);
     } catch {
@@ -148,7 +148,7 @@ export function AdminDashboardPage() {
 
   const handleEditBarberOpen = (barber: Barber) => {
     setEditingBarber(barber);
-    setEditBarberForm({ name: barber.name, phone: barber.phone, imageUrl: barber.imageUrl || "" });
+    setEditBarberForm({ name: barber.name, phone: barber.phone, email: barber.email || "", imageUrl: barber.imageUrl || "" });
   };
 
   const handleEditBarberSave = async () => {
@@ -162,7 +162,7 @@ export function AdminDashboardPage() {
       if (editBarberImage) {
         imageUrl = await uploadBarberImage(editBarberImage, editingBarber.id);
       }
-      await updateBarber(editingBarber.id, { name: editBarberForm.name, phone: editBarberForm.phone, imageUrl });
+      await updateBarber(editingBarber.id, { name: editBarberForm.name, phone: editBarberForm.phone, email: editBarberForm.email || undefined, imageUrl });
       toast.success(`${editBarberForm.name} updated`);
       setEditBarberImage(null);
       setEditingBarber(null);
@@ -541,6 +541,10 @@ export function AdminDashboardPage() {
                 <Input id="barber-phone" type="tel" value={newBarber.phone} onChange={(e) => setNewBarber({ ...newBarber, phone: formatPhone(e.target.value) })} placeholder="(508) 555-1234" maxLength={14} />
               </div>
               <div className="space-y-1">
+                <Label htmlFor="barber-email">Email</Label>
+                <Input id="barber-email" type="email" value={newBarber.email} onChange={(e) => setNewBarber({ ...newBarber, email: e.target.value })} placeholder="barber@email.com" />
+              </div>
+              <div className="space-y-1">
                 <Label htmlFor="barber-image">Photo</Label>
                 <Input id="barber-image" type="file" accept="image/*" onChange={(e) => setNewBarberImage(e.target.files?.[0] || null)} />
               </div>
@@ -569,6 +573,10 @@ export function AdminDashboardPage() {
               <div className="space-y-1">
                 <Label htmlFor="edit-barber-phone">Phone *</Label>
                 <Input id="edit-barber-phone" type="tel" value={editBarberForm.phone} onChange={(e) => setEditBarberForm({ ...editBarberForm, phone: formatPhone(e.target.value) })} placeholder="(508) 555-1234" maxLength={14} />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="edit-barber-email">Email</Label>
+                <Input id="edit-barber-email" type="email" value={editBarberForm.email} onChange={(e) => setEditBarberForm({ ...editBarberForm, email: e.target.value })} placeholder="barber@email.com" />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="edit-barber-image">Photo</Label>
