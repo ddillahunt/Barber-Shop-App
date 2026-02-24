@@ -503,7 +503,7 @@ export function AdminDashboardPage() {
 
         {/* Appointments by Barber */}
         <div className="flex items-center justify-center gap-3 mb-4">
-          <h2 className="text-xl font-bold text-slate-900">Individual Barber Appointments</h2>
+          <h2 className="text-xl font-bold text-slate-900">Barber Appointments</h2>
           <Button
             size="sm"
             onClick={() => setShowAddBarber(true)}
