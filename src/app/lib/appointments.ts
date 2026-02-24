@@ -14,6 +14,7 @@ export interface Appointment {
   notes?: string;
   completed?: boolean;
   createdAt: Timestamp;
+  reminderSentAt?: Timestamp;
   source: "en" | "es";
 }
 

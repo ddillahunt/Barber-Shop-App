@@ -1,6 +1,12 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
+import { onSchedule } from "firebase-functions/v2/scheduler";
 import { defineSecret } from "firebase-functions/params";
 import { logger } from "firebase-functions";
+import { initializeApp } from "firebase-admin/app";
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
+
+initializeApp();
+const db = getFirestore();
 
 const brevoApiKey = defineSecret("BREVO_API_KEY");
 
@@ -242,3 +248,126 @@ export const sendSMS = onCall({ secrets: [brevoApiKey] }, async (request) => {
   logger.info("SMS sent successfully", { to: recipient });
   return { success: true };
 });
+
+// Automated appointment reminders — runs every 15 minutes
+function parseAppointmentDateTime(dateStr: string, timeStr: string): Date {
+  // dateStr: "2026-02-24", timeStr: "2:00 PM"
+  const [hourMin, period] = timeStr.split(" ");
+  const [hourStr, minStr] = hourMin.split(":");
+  let hour = parseInt(hourStr, 10);
+  const min = parseInt(minStr, 10);
+  if (period === "PM" && hour !== 12) hour += 12;
+  if (period === "AM" && hour === 12) hour = 0;
+
+  // Build date string in EST/EDT (America/New_York)
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  const isoStr = `${dateStr}T${pad(hour)}:${pad(min)}:00`;
+
+  // Convert local NY time to UTC
+  const utcDate = new Date(isoStr + "Z");
+  const nyOffset = new Date(utcDate.toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const diff = utcDate.getTime() - nyOffset.getTime();
+  return new Date(utcDate.getTime() + diff);
+}
+
+function getTodayInEST(): string {
+  const now = new Date();
+  const estStr = now.toLocaleDateString("en-CA", { timeZone: "America/New_York" }); // YYYY-MM-DD
+  return estStr;
+}
+
+async function sendBrevoEmail(apiKey: string, to: { email: string; name?: string }, subject: string, htmlContent: string) {
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "accept": "application/json",
+      "content-type": "application/json",
+      "api-key": apiKey,
+    },
+    body: JSON.stringify({
+      sender: SENDER,
+      to: [to],
+      subject,
+      htmlContent,
+    }),
+  });
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`Brevo error ${response.status}: ${errorBody}`);
+  }
+}
+
+export const sendAppointmentReminders = onSchedule(
+  {
+    schedule: "every 15 minutes",
+    secrets: [brevoApiKey],
+    timeZone: "America/New_York",
+  },
+  async () => {
+    const today = getTodayInEST();
+    const now = new Date();
+    const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+
+    logger.info("Checking for appointments to remind", { today, now: now.toISOString(), oneHourFromNow: oneHourFromNow.toISOString() });
+
+    const snapshot = await db.collection("appointments")
+      .where("date", "==", today)
+      .get();
+
+    if (snapshot.empty) {
+      logger.info("No appointments today");
+      return;
+    }
+
+    let sentCount = 0;
+
+    for (const doc of snapshot.docs) {
+      const appt = doc.data();
+
+      // Skip if reminder already sent
+      if (appt.reminderSentAt) continue;
+
+      // Skip if no email
+      if (!appt.email) continue;
+
+      // Parse appointment time and check if it's within the next hour
+      try {
+        const apptTime = parseAppointmentDateTime(appt.date, appt.time);
+        if (apptTime <= now || apptTime > oneHourFromNow) continue;
+
+        // Build and send reminder email
+        const emailData: EmailData = {
+          type: "reminder",
+          name: appt.name,
+          email: appt.email,
+          phone: appt.phone,
+          barber: appt.barber,
+          service: appt.service,
+          date: appt.date,
+          time: appt.time,
+          message: `Hi ${appt.name}, this is a friendly reminder that your appointment is coming up today at ${appt.time}${appt.barber ? ` with ${appt.barber.split(" - ")[0]}` : ""}. We look forward to seeing you!`,
+        };
+
+        const subject = buildSubject(emailData);
+        const html = buildHtml(emailData);
+
+        await sendBrevoEmail(
+          brevoApiKey.value(),
+          { email: appt.email, name: appt.name },
+          subject,
+          html
+        );
+
+        // Mark reminder as sent
+        await doc.ref.update({ reminderSentAt: Timestamp.now() });
+        sentCount++;
+
+        logger.info("Reminder sent", { name: appt.name, email: appt.email, time: appt.time });
+      } catch (err) {
+        logger.error("Failed to send reminder", { name: appt.name, error: String(err) });
+      }
+    }
+
+    logger.info(`Reminder check complete. Sent ${sentCount} reminders.`);
+  }
+);
