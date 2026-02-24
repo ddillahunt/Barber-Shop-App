@@ -59,6 +59,7 @@ function formatPhone(value: string) {
 
 export function AdminDashboardPage() {
   const navigate = useNavigate();
+  const [currentTime, setCurrentTime] = useState(new Date());
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
@@ -85,6 +86,11 @@ export function AdminDashboardPage() {
   const [editBarberForm, setEditBarberForm] = useState({ name: "", phone: "", imageUrl: "" });
   const [newBarberImage, setNewBarberImage] = useState<File | null>(null);
   const [editBarberImage, setEditBarberImage] = useState<File | null>(null);
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     let unsubAppts: (() => void) | undefined;
@@ -426,6 +432,10 @@ export function AdminDashboardPage() {
             <span className="font-bold italic text-lg bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
               Grandes Ligas Admin Dashboard
             </span>
+          </div>
+          <div className="font-mono text-2xl font-bold text-amber-400 tracking-wider">
+            {currentTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true })}
+            <span className="text-sm text-amber-400/60 ml-2">{currentTime.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}</span>
           </div>
           <div className="flex items-center gap-3">
             <Button
