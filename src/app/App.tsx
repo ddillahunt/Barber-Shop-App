@@ -18,6 +18,7 @@ import { AboutPageEs } from "./pages/AboutPageEs";
 import { AdminLoginPage } from "./pages/AdminLoginPage";
 import { AdminDashboardPage } from "./pages/AdminDashboardPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
+import { PrivacyPageEs } from "./pages/PrivacyPageEs";
 import { CookieBanner } from "./components/CookieBanner";
 
 function ScrollToHash() {
@@ -50,6 +51,7 @@ export default function App() {
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route path="/admin" element={<AdminDashboardPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/es/privacidad" element={<PrivacyPageEs />} />
       </Routes>
       <CookieBanner />
     </BrowserRouter>

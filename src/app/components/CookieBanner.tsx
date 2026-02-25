@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Cookie, X } from "lucide-react";
 
 export function CookieBanner() {
   const [visible, setVisible] = useState(false);
+  const { pathname } = useLocation();
+  const isSpanish = pathname.startsWith("/es");
 
   useEffect(() => {
     if (!localStorage.getItem("cookieConsent")) {
@@ -31,14 +33,29 @@ export function CookieBanner() {
             <Cookie className="size-5 text-black" />
           </div>
           <div className="flex-1">
-            <h3 className="text-amber-400 font-bold text-lg mb-1">We Use Cookies</h3>
+            <h3 className="text-amber-400 font-bold text-lg mb-1">
+              {isSpanish ? "Usamos Cookies" : "We Use Cookies"}
+            </h3>
             <p className="text-slate-300 text-sm leading-relaxed">
-              We use cookies to enhance your browsing experience and remember your preferences.
-              By clicking "Accept", you consent to our use of cookies. Read our{" "}
-              <Link to="/privacy" className="text-amber-400 hover:text-yellow-500 underline transition-colors">
-                Privacy Policy
-              </Link>{" "}
-              to learn more.
+              {isSpanish ? (
+                <>
+                  Usamos cookies para mejorar tu experiencia de navegación y recordar tus preferencias.
+                  Al hacer clic en "Aceptar", consientes el uso de cookies. Lee nuestra{" "}
+                  <Link to="/es/privacidad" className="text-amber-400 hover:text-yellow-500 underline transition-colors">
+                    Política de Privacidad
+                  </Link>{" "}
+                  para más información.
+                </>
+              ) : (
+                <>
+                  We use cookies to enhance your browsing experience and remember your preferences.
+                  By clicking "Accept", you consent to our use of cookies. Read our{" "}
+                  <Link to="/privacy" className="text-amber-400 hover:text-yellow-500 underline transition-colors">
+                    Privacy Policy
+                  </Link>{" "}
+                  to learn more.
+                </>
+              )}
             </p>
           </div>
           <button onClick={handleDecline} className="text-slate-500 hover:text-slate-300 transition-colors shrink-0">
@@ -50,13 +67,13 @@ export function CookieBanner() {
             onClick={handleDecline}
             className="px-5 py-2 text-sm font-medium text-slate-300 border border-slate-600 rounded-lg hover:bg-slate-800 transition-colors"
           >
-            Decline
+            {isSpanish ? "Rechazar" : "Decline"}
           </button>
           <button
             onClick={handleAccept}
             className="px-5 py-2 text-sm font-bold text-black bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 rounded-lg shadow-lg shadow-amber-500/30 transition-all"
           >
-            Accept
+            {isSpanish ? "Aceptar" : "Accept"}
           </button>
         </div>
       </div>

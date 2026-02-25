@@ -128,6 +128,7 @@ export function AboutPageEs() {
             <Link to="/es#schedule" className="text-slate-300 hover:text-amber-400 transition-colors">Horario</Link>
             <Link to="/es#booking" className="text-slate-300 hover:text-amber-400 transition-colors">Reservar</Link>
             <Link to="/es#contact" className="text-slate-300 hover:text-amber-400 transition-colors">Contacto</Link>
+            <Link to="/es/privacidad" className="text-slate-300 hover:text-amber-400 transition-colors">Política de Privacidad</Link>
           </nav>
           <p className="text-amber-200">
             &copy; 2026 Grandes Ligas Barber Shop. Todos los derechos reservados.

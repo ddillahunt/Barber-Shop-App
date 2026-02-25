@@ -37,6 +37,7 @@ export function HomePageEs() {
             <a href="#booking" className="text-slate-300 hover:text-amber-400 transition-colors">Reservar</a>
             <a href="#contact" className="text-slate-300 hover:text-amber-400 transition-colors">Contacto</a>
             <Link to="/es/acerca-de" className="text-slate-300 hover:text-amber-400 transition-colors">Acerca De</Link>
+            <Link to="/es/privacidad" className="text-slate-300 hover:text-amber-400 transition-colors">Política de Privacidad</Link>
           </nav>
           <p className="text-amber-200">
             &copy; 2026 Grandes Ligas Barbería. Todos los derechos reservados.
