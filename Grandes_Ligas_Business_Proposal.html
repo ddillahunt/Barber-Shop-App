@@ -1,0 +1,521 @@
+<!DOCTYPE html><html><head><title></title><meta charset="utf-8"><style>* {
+	box-sizing: border-box;
+}
+
+html {
+	font-size: 100%;
+}
+
+body {
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+		'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+	line-height: 1.6;
+	font-size: 0.6875em; /* 11 pt */
+	color: #111;
+	margin: 0;
+}
+
+body > :first-child {
+	padding-top: 0;
+	margin-top: 0;
+}
+
+body > :last-child {
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0;
+	padding: 0.5em 0 0.25em;
+}
+
+h5,
+h6 {
+	padding: 0;
+}
+
+h5 {
+	font-size: 1em;
+}
+
+h6 {
+	font-size: 0.875em;
+	text-transform: uppercase;
+}
+
+p {
+	margin: 0.25em 0 1em;
+}
+
+blockquote {
+	margin: 0.5em 0 1em;
+	padding-left: 0.5em;
+	padding-right: 1em;
+	border-left: 4px solid gainsboro;
+	font-style: italic;
+}
+
+ul,
+ol {
+	margin: 0;
+	margin-left: 1em;
+	padding: 0 1.5em 0.5em;
+}
+
+pre {
+	white-space: pre-wrap;
+}
+
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code,
+p code,
+li code,
+pre code {
+	background-color: #f8f8f8;
+	padding: 0.1em 0.375em;
+	border: 1px solid #f8f8f8;
+	border-radius: 0.25em;
+	font-family: monospace;
+	font-size: 1.2em;
+}
+
+pre code {
+	display: block;
+	padding: 0.5em;
+}
+
+.page-break {
+	page-break-after: always;
+}
+
+img {
+	max-width: 100%;
+	margin: 1em 0;
+}
+
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+	display: block;
+	margin: 0 0 1em;
+	width: 100%;
+	overflow: auto;
+}
+
+table th,
+table td {
+	padding: 0.5em 1em;
+	border: 1px solid gainsboro;
+}
+
+table th {
+	font-weight: 600;
+}
+
+table tr {
+	background-color: white;
+	border-top: 1px solid gainsboro;
+}
+
+table tr:nth-child(2n) {
+	background-color: whitesmoke;
+}
+/*# sourceURL=C:\Users\ddill\AppData\Local\npm-cache\_npx\55158e48eb5c59f7\node_modules\md-to-pdf\markdown.css*/</style><style>pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em
+}
+code.hljs {
+  padding: 3px 5px
+}
+/*!
+  Theme: GitHub
+  Description: Light theme as seen on github.com
+  Author: github.com
+  Maintainer: @Hirse
+  Updated: 2021-05-15
+
+  Outdated base version: https://github.com/primer/github-syntax-light
+  Current colors taken from GitHub's CSS
+*/
+.hljs {
+  color: #24292e;
+  background: #ffffff
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  /* prettylights-syntax-keyword */
+  color: #d73a49
+}
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  /* prettylights-syntax-entity */
+  color: #6f42c1
+}
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-variable,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id {
+  /* prettylights-syntax-constant */
+  color: #005cc5
+}
+.hljs-regexp,
+.hljs-string,
+.hljs-meta .hljs-string {
+  /* prettylights-syntax-string */
+  color: #032f62
+}
+.hljs-built_in,
+.hljs-symbol {
+  /* prettylights-syntax-variable */
+  color: #e36209
+}
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+  /* prettylights-syntax-comment */
+  color: #6a737d
+}
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+  /* prettylights-syntax-entity-tag */
+  color: #22863a
+}
+.hljs-subst {
+  /* prettylights-syntax-storage-modifier-import */
+  color: #24292e
+}
+.hljs-section {
+  /* prettylights-syntax-markup-heading */
+  color: #005cc5;
+  font-weight: bold
+}
+.hljs-bullet {
+  /* prettylights-syntax-markup-list */
+  color: #735c0f
+}
+.hljs-emphasis {
+  /* prettylights-syntax-markup-italic */
+  color: #24292e;
+  font-style: italic
+}
+.hljs-strong {
+  /* prettylights-syntax-markup-bold */
+  color: #24292e;
+  font-weight: bold
+}
+.hljs-addition {
+  /* prettylights-syntax-markup-inserted */
+  color: #22863a;
+  background-color: #f0fff4
+}
+.hljs-deletion {
+  /* prettylights-syntax-markup-deleted */
+  color: #b31d28;
+  background-color: #ffeef0
+}
+.hljs-char.escape_,
+.hljs-link,
+.hljs-params,
+.hljs-property,
+.hljs-punctuation,
+.hljs-tag {
+  /* purposely ignored */
+  
+}/*# sourceURL=C:\Users\ddill\AppData\Local\npm-cache\_npx\55158e48eb5c59f7\node_modules\highlight.js\styles\github.css*/</style></head>
+	<body class="">
+		<h1 id="grandes-ligas-barber-shop">Grandes Ligas Barber Shop</h1>
+<h2 id="business-proposal">Business Proposal</h2>
+<hr>
+<p><strong>Prepared by:</strong> Grandes Ligas Management Team
+<strong>Date:</strong> February 2026
+<strong>Location:</strong> 3-A 2nd St, Framingham, MA 01702</p>
+<hr>
+<h2 id="1-executive-summary">1. Executive Summary</h2>
+<p>Grandes Ligas is a premium barber shop located in Framingham, Massachusetts, delivering expert grooming services for the modern gentleman. With a team of four highly experienced barbers and a combined 45+ years of expertise, Grandes Ligas offers classic cuts, contemporary styles, and full grooming transformations in a welcoming, bilingual (English/Spanish) environment.</p>
+<p>Our mission is to provide an exceptional grooming experience that blends traditional barbering craftsmanship with modern styling techniques, creating a destination where every client leaves looking sharp and feeling confident.</p>
+<hr>
+<h2 id="2-business-overview">2. Business Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Detail</th>
+<th>Information</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Business Name</strong></td>
+<td>Grandes Ligas Barber Shop</td>
+</tr>
+<tr>
+<td><strong>Address</strong></td>
+<td>3-A 2nd St, Framingham, MA 01702</td>
+</tr>
+<tr>
+<td><strong>Phone</strong></td>
+<td>(508) 872-5556</td>
+</tr>
+<tr>
+<td><strong>Email</strong></td>
+<td><a href="mailto:info@grandesligas.com">info@grandesligas.com</a></td>
+</tr>
+<tr>
+<td><strong>Website</strong></td>
+<td><a href="https://www.grandesligas.com">https://www.grandesligas.com</a></td>
+</tr>
+<tr>
+<td><strong>Industry</strong></td>
+<td>Men's Grooming &amp; Barbering</td>
+</tr>
+<tr>
+<td><strong>Languages</strong></td>
+<td>English &amp; Spanish</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="3-hours-of-operation">3. Hours of Operation</h2>
+<table>
+<thead>
+<tr>
+<th>Day</th>
+<th>Hours</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Monday - Friday</td>
+<td>9:00 AM - 8:00 PM</td>
+</tr>
+<tr>
+<td>Saturday</td>
+<td>9:00 AM - 6:00 PM</td>
+</tr>
+<tr>
+<td>Sunday</td>
+<td>Closed</td>
+</tr>
+</tbody></table>
+<p>Walk-in clients are welcome at all times during business hours. Appointments can also be booked online through the website or by phone.</p>
+<hr>
+<h2 id="4-services--pricing">4. Services &amp; Pricing</h2>
+<h3 id="classic-haircut---30">Classic Haircut - $30</h3>
+<p><strong>Duration:</strong> 30-45 minutes</p>
+<p>Traditional cuts with precision and style. Includes:</p>
+<ul>
+<li>Personal consultation with your barber</li>
+<li>Professional shampoo and conditioning</li>
+<li>Precision scissor and/or clipper cutting</li>
+<li>Detailed edge work and line-up</li>
+<li>Premium styling products</li>
+<li>Complimentary beverage during service</li>
+</ul>
+<p>Our Classic Haircut is the foundation of traditional barbering excellence. Whether you're looking for a timeless business cut, a clean fade, or a stylish taper, our expert barbers will craft a look that suits your personality and lifestyle.</p>
+<h3 id="premium-cut--style---45">Premium Cut &amp; Style - $45</h3>
+<p><strong>Duration:</strong> 45-60 minutes</p>
+<p>Complete styling with premium products. Includes:</p>
+<ul>
+<li>In-depth style consultation</li>
+<li>Luxury shampoo and deep conditioning treatment</li>
+<li>Expert precision cutting</li>
+<li>Professional blow-dry and styling</li>
+<li>High-end styling products application</li>
+<li>Scalp massage</li>
+<li>Hot towel treatment</li>
+</ul>
+<p>This comprehensive package combines expert cutting with advanced styling techniques to create a sophisticated, polished look. Every step is designed to exceed expectations.</p>
+<h3 id="beard-trim--shape---25">Beard Trim &amp; Shape - $25</h3>
+<p><strong>Duration:</strong> 20-30 minutes</p>
+<p>Expert beard grooming and maintenance. Includes:</p>
+<ul>
+<li>Beard consultation and design</li>
+<li>Precise trimming and shaping</li>
+<li>Edge definition and cleanup</li>
+<li>Beard oil or balm application</li>
+<li>Styling and grooming tips</li>
+<li>Hot towel finish</li>
+</ul>
+<p>Our skilled barbers understand the art of beard sculpting, working with natural growth patterns and facial structure to create a shape that enhances your features.</p>
+<h3 id="full-grooming-package---65">Full Grooming Package - $65</h3>
+<p><strong>Duration:</strong> 60-75 minutes</p>
+<p>The ultimate men's grooming experience. Includes:</p>
+<ul>
+<li>Complete style consultation</li>
+<li>Premium haircut with styling</li>
+<li>Professional beard trim and shaping</li>
+<li>Luxury hot towel treatment</li>
+<li>Scalp and facial massage</li>
+<li>Premium product application</li>
+<li>Complimentary beverage</li>
+<li>Grooming recommendations</li>
+</ul>
+<p>This is more than just a haircut and beard trim - it's a full grooming transformation designed for special occasions or when you want to treat yourself to the best.</p>
+<hr>
+<h2 id="5-our-team">5. Our Team</h2>
+<h3 id="carlos-martinez---classic-cuts-specialist">Carlos Martinez - Classic Cuts Specialist</h3>
+<p><strong>Experience:</strong> 12 years</p>
+<p>A master of timeless styles, Carlos brings precision and artistry to every classic cut. His attention to detail is unmatched, making him the go-to barber for clients seeking traditional, clean looks.</p>
+<h3 id="miguel-rodriguez---modern-styles-expert">Miguel Rodriguez - Modern Styles Expert</h3>
+<p><strong>Experience:</strong> 8 years</p>
+<p>Miguel stays ahead of the latest trends, delivering fresh and innovative looks that turn heads everywhere you go. He specializes in contemporary fades, textured crops, and trending styles.</p>
+<h3 id="juan-hernandez---beard-specialist">Juan Hernandez - Beard Specialist</h3>
+<p><strong>Experience:</strong> 10 years</p>
+<p>Juan is the go-to expert for beard grooming. From sharp lineups to full beard sculpting, he crafts the perfect look for every client's facial structure and style preference.</p>
+<h3 id="diego-santos---all-around-master">Diego Santos - All-Around Master</h3>
+<p><strong>Experience:</strong> 15 years</p>
+<p>With over a decade of experience, Diego excels at everything from classic fades to full grooming transformations. His versatility and depth of knowledge make him a trusted barber for any style request.</p>
+<hr>
+<h2 id="6-market-opportunity">6. Market Opportunity</h2>
+<h3 id="target-market">Target Market</h3>
+<ul>
+<li>Men aged 18-55 in the Framingham, MA metropolitan area</li>
+<li>Professionals seeking premium grooming services</li>
+<li>Spanish-speaking community members (bilingual service is a key differentiator)</li>
+<li>Walk-in and appointment-based clients</li>
+</ul>
+<h3 id="competitive-advantages">Competitive Advantages</h3>
+<ol>
+<li><strong>Bilingual Service:</strong> Full English and Spanish support creates an inclusive, welcoming environment for the diverse Framingham community</li>
+<li><strong>Experienced Team:</strong> 45+ combined years of barbering experience across four specialists</li>
+<li><strong>Extended Hours:</strong> Open until 8:00 PM on weekdays, accommodating working professionals</li>
+<li><strong>Walk-In Friendly:</strong> No appointment required, reducing barriers to service</li>
+<li><strong>Specialized Expertise:</strong> Each barber has a distinct specialty, ensuring clients receive expert service for their specific needs</li>
+<li><strong>Premium Experience:</strong> Complimentary beverages, hot towel treatments, and scalp massages elevate the grooming experience beyond a standard haircut</li>
+<li><strong>Modern Digital Presence:</strong> Professional website with online booking, service details, and team profiles</li>
+</ol>
+<h3 id="location-advantage">Location Advantage</h3>
+<p>Framingham, MA is a diverse, growing community with a significant Hispanic/Latino population. Grandes Ligas is strategically positioned to serve this community with culturally relevant, bilingual services while also appealing to the broader market seeking premium grooming.</p>
+<hr>
+<h2 id="7-revenue-projections">7. Revenue Projections</h2>
+<h3 id="service-price-summary">Service Price Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Price</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Classic Haircut</td>
+<td>$30</td>
+<td>30-45 min</td>
+</tr>
+<tr>
+<td>Premium Cut &amp; Style</td>
+<td>$45</td>
+<td>45-60 min</td>
+</tr>
+<tr>
+<td>Beard Trim &amp; Shape</td>
+<td>$25</td>
+<td>20-30 min</td>
+</tr>
+<tr>
+<td>Full Grooming Package</td>
+<td>$65</td>
+<td>60-75 min</td>
+</tr>
+</tbody></table>
+<h3 id="revenue-model-assumptions">Revenue Model Assumptions</h3>
+<ul>
+<li>4 barbers operating simultaneously</li>
+<li>Average service price: ~$41 (weighted average)</li>
+<li>Average services per barber per day: 8-10</li>
+<li>Operating days per year: ~305 (Mon-Sat)</li>
+</ul>
+<h3 id="conservative-annual-revenue-estimate">Conservative Annual Revenue Estimate</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Daily Revenue (4 barbers)</th>
+<th>Annual Revenue</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Conservative (8 clients/barber/day)</td>
+<td>$1,312</td>
+<td>~$400,000</td>
+</tr>
+<tr>
+<td>Moderate (10 clients/barber/day)</td>
+<td>$1,640</td>
+<td>~$500,000</td>
+</tr>
+<tr>
+<td>Optimistic (12 clients/barber/day)</td>
+<td>$1,968</td>
+<td>~$600,000</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="8-digital-presence--technology">8. Digital Presence &amp; Technology</h2>
+<h3 id="website-features">Website Features</h3>
+<ul>
+<li><strong>Responsive Design:</strong> Mobile-first, works on all devices</li>
+<li><strong>Bilingual:</strong> Full English and Spanish versions</li>
+<li><strong>Online Booking:</strong> Appointment scheduling with email confirmations via EmailJS</li>
+<li><strong>Service Details:</strong> Comprehensive service pages with pricing and descriptions</li>
+<li><strong>Team Profiles:</strong> Individual barber showcases with photos and specialties</li>
+<li><strong>Photo Gallery:</strong> Showcase of work and shop atmosphere</li>
+<li><strong>Google Maps Integration:</strong> Easy location finding for new clients</li>
+<li><strong>Contact Form:</strong> Direct messaging capability</li>
+</ul>
+<h3 id="technology-stack">Technology Stack</h3>
+<ul>
+<li>React 18 with TypeScript</li>
+<li>Vite build system</li>
+<li>Tailwind CSS for styling</li>
+<li>Hosted on GitHub Pages</li>
+<li>EmailJS for booking notifications</li>
+</ul>
+<hr>
+<h2 id="9-growth-opportunities">9. Growth Opportunities</h2>
+<ol>
+<li><strong>Online Booking Expansion:</strong> Integrate with scheduling platforms (Square, Booksy) for automated appointment management</li>
+<li><strong>Loyalty Program:</strong> Implement a rewards system to increase client retention</li>
+<li><strong>Product Sales:</strong> Retail premium grooming products (pomades, beard oils, shampoos) for additional revenue</li>
+<li><strong>Social Media Marketing:</strong> Leverage Instagram and TikTok with before/after transformations</li>
+<li><strong>Community Events:</strong> Host barbering workshops or community grooming events</li>
+<li><strong>Additional Locations:</strong> Expand to nearby towns with similar demographics</li>
+<li><strong>Mobile App:</strong> Develop a dedicated app for booking, loyalty points, and push notifications</li>
+</ol>
+<hr>
+<h2 id="10-contact-information">10. Contact Information</h2>
+<p>For inquiries regarding this proposal or partnership opportunities:</p>
+<ul>
+<li><strong>Phone:</strong> (508) 872-5556</li>
+<li><strong>Email:</strong> <a href="mailto:info@grandesligas.com">info@grandesligas.com</a></li>
+<li><strong>Website:</strong> <a href="https://www.grandesligas.com">https://www.grandesligas.com</a></li>
+<li><strong>Address:</strong> 3-A 2nd St, Framingham, MA 01702</li>
+</ul>
+<hr>
+<p><em>Grandes Ligas - Premium barber shop experience for the modern gentleman. Classic cuts, contemporary styles.</em></p>
+
+	
+
+</body></html>
