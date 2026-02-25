@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../lib/firebase";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -11,21 +9,20 @@ import { toast } from "sonner";
 
 export function AdminLoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
+    if (username === "admin" && password === "admin123") {
+      sessionStorage.setItem("adminAuth", "true");
       navigate("/admin");
-    } catch {
-      toast.error("Invalid email or password");
-    } finally {
-      setLoading(false);
+    } else {
+      toast.error("Invalid username or password");
     }
+    setLoading(false);
   };
 
   return (
@@ -47,13 +44,13 @@ export function AdminLoginPage() {
         <CardContent className="p-8 bg-gradient-to-br from-slate-900 to-black rounded-b-xl">
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="admin-email" className="text-slate-300">Email</Label>
+              <Label htmlFor="admin-username" className="text-slate-300">Username</Label>
               <Input
-                id="admin-email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@grandesligas.com"
+                id="admin-username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter username"
                 required
                 className="bg-slate-800 border-slate-700 text-white"
               />
@@ -84,6 +81,11 @@ export function AdminLoginPage() {
           >
             Back to website
           </button>
+          <div className="mt-6 p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-center">
+            <p className="text-slate-400 text-xs mb-2 uppercase tracking-wider">Demo Credentials</p>
+            <p className="text-slate-300 text-sm">User: <span className="text-amber-400 font-semibold">admin</span></p>
+            <p className="text-slate-300 text-sm">Password: <span className="text-amber-400 font-semibold">admin123</span></p>
+          </div>
           <p className="text-slate-500 text-xs text-center mt-4">Powered by GDI Digital Solutions</p>
         </CardContent>
       </Card>

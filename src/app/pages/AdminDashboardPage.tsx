@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { signOut, onAuthStateChanged } from "firebase/auth";
-import { auth } from "../lib/firebase";
 import { deleteAppointment, saveAppointment, updateAppointment, deleteMessage, subscribeToAppointments, subscribeToMessages, saveBarber, updateBarber, deleteBarber, subscribeToBarbers, uploadBarberImage, type Appointment, type Message, type Barber } from "../lib/appointments";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
@@ -97,29 +95,27 @@ export function AdminDashboardPage() {
     let unsubMsgs: (() => void) | undefined;
     let unsubBarbers: (() => void) | undefined;
 
-    const unsubAuth = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setAuthenticated(true);
-        unsubAppts = subscribeToAppointments((data) => {
-          setAppointments(data);
-          setLoading(false);
-        });
-        unsubMsgs = subscribeToMessages(setMessages);
-        unsubBarbers = subscribeToBarbers((data) => {
-          setBarbers(data);
-          // Seed default barbers into Firestore on first load if collection is empty
-          if (data.length === 0 && !barbersSeeded) {
-            setBarbersSeeded(true);
-            defaultBarbers.forEach((b) => saveBarber({ name: b.name, phone: b.phone }));
-          }
-        });
-      } else {
-        navigate("/admin/login");
+    if (sessionStorage.getItem("adminAuth") !== "true") {
+      navigate("/admin/login");
+      return;
+    }
+
+    setAuthenticated(true);
+    unsubAppts = subscribeToAppointments((data) => {
+      setAppointments(data);
+      setLoading(false);
+    });
+    unsubMsgs = subscribeToMessages(setMessages);
+    unsubBarbers = subscribeToBarbers((data) => {
+      setBarbers(data);
+      // Seed default barbers into Firestore on first load if collection is empty
+      if (data.length === 0 && !barbersSeeded) {
+        setBarbersSeeded(true);
+        defaultBarbers.forEach((b) => saveBarber({ name: b.name, phone: b.phone }));
       }
     });
 
     return () => {
-      unsubAuth();
       unsubAppts?.();
       unsubMsgs?.();
       unsubBarbers?.();
@@ -393,8 +389,8 @@ export function AdminDashboardPage() {
     }
   };
 
-  const handleSignOut = async () => {
-    await signOut(auth);
+  const handleSignOut = () => {
+    sessionStorage.removeItem("adminAuth");
     navigate("/admin/login");
   };
 
