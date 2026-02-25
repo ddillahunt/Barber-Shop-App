@@ -12,16 +12,51 @@ const db = (0, firestore_1.getFirestore)();
 const brevoApiKey = (0, params_1.defineSecret)("BREVO_API_KEY");
 const OWNER_EMAIL = "ddillahunt59@gmail.com";
 const SENDER = { name: "Grandes Ligas Barber", email: OWNER_EMAIL };
+// --- Security helpers ---
+function escapeHtml(text) {
+    const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
+    return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+function sanitize(text, maxLength = 500) {
+    if (!text)
+        return "";
+    return escapeHtml(text.slice(0, maxLength).trim());
+}
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 254;
+}
+function isValidPhone(phone) {
+    const digits = phone.replace(/\D/g, "");
+    return digits.length >= 10 && digits.length <= 15;
+}
+// Simple in-memory rate limiter (resets on cold start)
+const rateLimitMap = new Map();
+const RATE_LIMIT = 10; // max requests per window
+const RATE_WINDOW_MS = 60 * 1000; // 1 minute
+function checkRateLimit(key) {
+    const now = Date.now();
+    const entry = rateLimitMap.get(key);
+    if (!entry || now > entry.resetAt) {
+        rateLimitMap.set(key, { count: 1, resetAt: now + RATE_WINDOW_MS });
+        return;
+    }
+    entry.count++;
+    if (entry.count > RATE_LIMIT) {
+        throw new https_1.HttpsError("resource-exhausted", "Too many requests. Please try again later.");
+    }
+}
 function buildSubject(data) {
+    const name = sanitize(data.name, 100);
+    const date = sanitize(data.date, 20);
     switch (data.type) {
         case "shop_notification":
-            return `New Appointment: ${data.name} - ${data.date || "No date"}`;
+            return `New Appointment: ${name} - ${date || "No date"}`;
         case "customer_confirmation":
             return `Appointment Confirmed - Grandes Ligas Barber`;
         case "reminder":
             return `Appointment Reminder - Grandes Ligas Barber`;
         case "contact_notification":
-            return `New Message from ${data.name}`;
+            return `New Message from ${name}`;
         case "contact_reply":
             return `Thank you for contacting Grandes Ligas Barber`;
         default:
@@ -29,6 +64,16 @@ function buildSubject(data) {
     }
 }
 function buildHtml(data) {
+    // Sanitize all user inputs before embedding in HTML
+    const name = sanitize(data.name, 100);
+    const email = sanitize(data.email, 254);
+    const phone = sanitize(data.phone, 20);
+    const barber = sanitize(data.barber, 100);
+    const service = sanitize(data.service, 100);
+    const date = sanitize(data.date, 20);
+    const time = sanitize(data.time, 20);
+    const notes = sanitize(data.notes, 1000);
+    const message = sanitize(data.message, 2000);
     const header = `
     <div style="background: linear-gradient(to right, #f59e0b, #eab308, #f59e0b); padding: 24px; text-align: center;">
       <h1 style="margin: 0; color: #000; font-size: 24px; font-weight: bold;">Grandes Ligas Barber Shop</h1>
@@ -45,14 +90,14 @@ function buildHtml(data) {
           <div style="padding: 24px;">
             <h2 style="color: #333;">New Appointment Booked</h2>
             <table style="width: 100%; border-collapse: collapse;">
-              <tr><td style="padding: 8px; font-weight: bold; color: #555;">Name:</td><td style="padding: 8px;">${data.name}</td></tr>
-              ${data.email ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Email:</td><td style="padding: 8px;">${data.email}</td></tr>` : ""}
-              ${data.phone ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Phone:</td><td style="padding: 8px;">${data.phone}</td></tr>` : ""}
-              ${data.barber ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Barber:</td><td style="padding: 8px;">${data.barber}</td></tr>` : ""}
-              ${data.service ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Service:</td><td style="padding: 8px;">${data.service}</td></tr>` : ""}
-              ${data.date ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Date:</td><td style="padding: 8px;">${data.date}</td></tr>` : ""}
-              ${data.time ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Time:</td><td style="padding: 8px;">${data.time}</td></tr>` : ""}
-              ${data.notes ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Notes:</td><td style="padding: 8px;">${data.notes}</td></tr>` : ""}
+              <tr><td style="padding: 8px; font-weight: bold; color: #555;">Name:</td><td style="padding: 8px;">${name}</td></tr>
+              ${email ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Email:</td><td style="padding: 8px;">${email}</td></tr>` : ""}
+              ${phone ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Phone:</td><td style="padding: 8px;">${phone}</td></tr>` : ""}
+              ${barber ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Barber:</td><td style="padding: 8px;">${barber}</td></tr>` : ""}
+              ${service ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Service:</td><td style="padding: 8px;">${service}</td></tr>` : ""}
+              ${date ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Date:</td><td style="padding: 8px;">${date}</td></tr>` : ""}
+              ${time ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Time:</td><td style="padding: 8px;">${time}</td></tr>` : ""}
+              ${notes ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Notes:</td><td style="padding: 8px;">${notes}</td></tr>` : ""}
             </table>
           </div>
           ${footer}
@@ -63,12 +108,12 @@ function buildHtml(data) {
           ${header}
           <div style="padding: 24px;">
             <h2 style="color: #333;">Your Appointment is Confirmed!</h2>
-            <p style="color: #555; font-size: 16px;">${data.message || `Hi ${data.name}, your appointment has been confirmed.`}</p>
+            <p style="color: #555; font-size: 16px;">${message || `Hi ${name}, your appointment has been confirmed.`}</p>
             <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-              ${data.date ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Date:</td><td style="padding: 8px;">${data.date}</td></tr>` : ""}
-              ${data.time ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Time:</td><td style="padding: 8px;">${data.time}</td></tr>` : ""}
-              ${data.barber ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Barber:</td><td style="padding: 8px;">${data.barber}</td></tr>` : ""}
-              ${data.service ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Service:</td><td style="padding: 8px;">${data.service}</td></tr>` : ""}
+              ${date ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Date:</td><td style="padding: 8px;">${date}</td></tr>` : ""}
+              ${time ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Time:</td><td style="padding: 8px;">${time}</td></tr>` : ""}
+              ${barber ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Barber:</td><td style="padding: 8px;">${barber}</td></tr>` : ""}
+              ${service ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Service:</td><td style="padding: 8px;">${service}</td></tr>` : ""}
             </table>
             <p style="color: #555; margin-top: 16px;">We look forward to seeing you!</p>
           </div>
@@ -80,12 +125,12 @@ function buildHtml(data) {
           ${header}
           <div style="padding: 24px;">
             <h2 style="color: #333;">Appointment Reminder</h2>
-            <p style="color: #555; font-size: 16px;">${data.message || `Hi ${data.name}, this is a reminder about your upcoming appointment.`}</p>
+            <p style="color: #555; font-size: 16px;">${message || `Hi ${name}, this is a reminder about your upcoming appointment.`}</p>
             <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-              ${data.date ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Date:</td><td style="padding: 8px;">${data.date}</td></tr>` : ""}
-              ${data.time ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Time:</td><td style="padding: 8px;">${data.time}</td></tr>` : ""}
-              ${data.barber ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Barber:</td><td style="padding: 8px;">${data.barber}</td></tr>` : ""}
-              ${data.service ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Service:</td><td style="padding: 8px;">${data.service}</td></tr>` : ""}
+              ${date ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Date:</td><td style="padding: 8px;">${date}</td></tr>` : ""}
+              ${time ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Time:</td><td style="padding: 8px;">${time}</td></tr>` : ""}
+              ${barber ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Barber:</td><td style="padding: 8px;">${barber}</td></tr>` : ""}
+              ${service ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Service:</td><td style="padding: 8px;">${service}</td></tr>` : ""}
             </table>
           </div>
           ${footer}
@@ -97,11 +142,11 @@ function buildHtml(data) {
           <div style="padding: 24px;">
             <h2 style="color: #333;">New Contact Message</h2>
             <table style="width: 100%; border-collapse: collapse;">
-              <tr><td style="padding: 8px; font-weight: bold; color: #555;">Name:</td><td style="padding: 8px;">${data.name}</td></tr>
-              ${data.email ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Email:</td><td style="padding: 8px;">${data.email}</td></tr>` : ""}
-              ${data.phone ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Phone:</td><td style="padding: 8px;">${data.phone}</td></tr>` : ""}
+              <tr><td style="padding: 8px; font-weight: bold; color: #555;">Name:</td><td style="padding: 8px;">${name}</td></tr>
+              ${email ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Email:</td><td style="padding: 8px;">${email}</td></tr>` : ""}
+              ${phone ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">Phone:</td><td style="padding: 8px;">${phone}</td></tr>` : ""}
             </table>
-            ${data.message ? `<div style="margin-top: 16px; padding: 16px; background: #f5f5f5; border-radius: 8px;"><p style="color: #333; margin: 0;">${data.message}</p></div>` : ""}
+            ${message ? `<div style="margin-top: 16px; padding: 16px; background: #f5f5f5; border-radius: 8px;"><p style="color: #333; margin: 0;">${message}</p></div>` : ""}
           </div>
           ${footer}
         </div>`;
@@ -111,13 +156,13 @@ function buildHtml(data) {
           ${header}
           <div style="padding: 24px;">
             <h2 style="color: #333;">Thank You for Reaching Out!</h2>
-            <p style="color: #555; font-size: 16px;">${data.message || "Thank you for your message. We'll get back to you shortly!"}</p>
+            <p style="color: #555; font-size: 16px;">${message || "Thank you for your message. We&#039;ll get back to you shortly!"}</p>
             <p style="color: #555;">- The Grandes Ligas Barber Shop Team</p>
           </div>
           ${footer}
         </div>`;
         default:
-            return `<p>${data.message || ""}</p>`;
+            return `<p>${message || ""}</p>`;
     }
 }
 function getRecipient(data) {
@@ -128,18 +173,36 @@ function getRecipient(data) {
         case "customer_confirmation":
         case "reminder":
         case "contact_reply":
-            if (!data.email)
-                throw new https_1.HttpsError("invalid-argument", "Customer email is required");
-            return { email: data.email, name: data.name };
+            if (!data.email || !isValidEmail(data.email)) {
+                throw new https_1.HttpsError("invalid-argument", "Valid customer email is required");
+            }
+            return { email: data.email, name: sanitize(data.name, 100) };
         default:
             throw new https_1.HttpsError("invalid-argument", "Invalid email type");
     }
 }
 exports.sendEmail = (0, https_1.onCall)({ secrets: [brevoApiKey] }, async (request) => {
     const data = request.data;
-    if (!data.type || !data.name) {
+    // Validate required fields
+    if (!data.type || !data.name || typeof data.name !== "string") {
         throw new https_1.HttpsError("invalid-argument", "Missing required fields: type, name");
     }
+    // Validate email type
+    const validTypes = ["shop_notification", "customer_confirmation", "reminder", "contact_notification", "contact_reply"];
+    if (!validTypes.includes(data.type)) {
+        throw new https_1.HttpsError("invalid-argument", "Invalid email type");
+    }
+    // Validate email format if provided
+    if (data.email && !isValidEmail(data.email)) {
+        throw new https_1.HttpsError("invalid-argument", "Invalid email address");
+    }
+    // Validate phone format if provided
+    if (data.phone && !isValidPhone(data.phone)) {
+        throw new https_1.HttpsError("invalid-argument", "Invalid phone number");
+    }
+    // Rate limit by caller IP or auth UID
+    const rateLimitKey = request.auth?.uid || request.rawRequest?.ip || "anonymous";
+    checkRateLimit(`email:${rateLimitKey}`);
     const recipient = getRecipient(data);
     const subject = buildSubject(data);
     const htmlContent = buildHtml(data);
@@ -149,7 +212,7 @@ exports.sendEmail = (0, https_1.onCall)({ secrets: [brevoApiKey] }, async (reque
         subject,
         htmlContent,
     };
-    firebase_functions_1.logger.info("Sending email via Brevo", { type: data.type, to: recipient.email });
+    firebase_functions_1.logger.info("Sending email", { type: data.type });
     const response = await fetch("https://api.brevo.com/v3/smtp/email", {
         method: "POST",
         headers: {
@@ -164,7 +227,7 @@ exports.sendEmail = (0, https_1.onCall)({ secrets: [brevoApiKey] }, async (reque
         firebase_functions_1.logger.error("Brevo API error", { status: response.status, body: errorBody });
         throw new https_1.HttpsError("internal", "Failed to send email");
     }
-    firebase_functions_1.logger.info("Email sent successfully", { type: data.type, to: recipient.email });
+    firebase_functions_1.logger.info("Email sent successfully", { type: data.type });
     return { success: true };
 });
 function formatPhoneForSms(phone) {
@@ -177,17 +240,29 @@ function formatPhoneForSms(phone) {
 }
 exports.sendSMS = (0, https_1.onCall)({ secrets: [brevoApiKey] }, async (request) => {
     const data = request.data;
-    if (!data.phone || !data.message) {
+    if (!data.phone || !data.message || typeof data.message !== "string") {
         throw new https_1.HttpsError("invalid-argument", "Missing required fields: phone, message");
     }
+    // Validate phone
+    if (!isValidPhone(data.phone)) {
+        throw new https_1.HttpsError("invalid-argument", "Invalid phone number");
+    }
+    // Truncate message to prevent abuse
+    const cleanMessage = data.message.slice(0, 320).trim();
+    if (!cleanMessage) {
+        throw new https_1.HttpsError("invalid-argument", "Message cannot be empty");
+    }
+    // Rate limit
+    const rateLimitKey = request.auth?.uid || request.rawRequest?.ip || "anonymous";
+    checkRateLimit(`sms:${rateLimitKey}`);
     const recipient = formatPhoneForSms(data.phone);
     const payload = {
         type: "transactional",
         sender: "GrandsLigas",
         recipient,
-        content: data.message,
+        content: cleanMessage,
     };
-    firebase_functions_1.logger.info("Sending SMS via Brevo", { to: recipient });
+    firebase_functions_1.logger.info("Sending SMS");
     const response = await fetch("https://api.brevo.com/v3/transactionalSMS/sms", {
         method: "POST",
         headers: {
@@ -202,7 +277,7 @@ exports.sendSMS = (0, https_1.onCall)({ secrets: [brevoApiKey] }, async (request
         firebase_functions_1.logger.error("Brevo SMS error", { status: response.status, body: errorBody });
         throw new https_1.HttpsError("internal", "Failed to send SMS");
     }
-    firebase_functions_1.logger.info("SMS sent successfully", { to: recipient });
+    firebase_functions_1.logger.info("SMS sent successfully");
     return { success: true };
 });
 // Automated appointment reminders — runs every 15 minutes
@@ -258,7 +333,7 @@ exports.sendAppointmentReminders = (0, scheduler_1.onSchedule)({
     const today = getTodayInEST();
     const now = new Date();
     const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
-    firebase_functions_1.logger.info("Checking for appointments to remind", { today, now: now.toISOString(), oneHourFromNow: oneHourFromNow.toISOString() });
+    firebase_functions_1.logger.info("Checking for appointment reminders", { today });
     const snapshot = await db.collection("appointments")
         .where("date", "==", today)
         .get();
@@ -280,7 +355,7 @@ exports.sendAppointmentReminders = (0, scheduler_1.onSchedule)({
             const apptTime = parseAppointmentDateTime(appt.date, appt.time);
             if (apptTime <= now || apptTime > oneHourFromNow)
                 continue;
-            // Build and send reminder email
+            // Build and send reminder email (data from DB is sanitized in buildHtml)
             const emailData = {
                 type: "reminder",
                 name: appt.name,
@@ -290,7 +365,7 @@ exports.sendAppointmentReminders = (0, scheduler_1.onSchedule)({
                 service: appt.service,
                 date: appt.date,
                 time: appt.time,
-                message: `Hi ${appt.name}, this is a friendly reminder that your appointment is coming up today at ${appt.time}${appt.barber ? ` with ${appt.barber.split(" - ")[0]}` : ""}. We look forward to seeing you!`,
+                message: `Hi ${escapeHtml(appt.name)}, this is a friendly reminder that your appointment is coming up today at ${escapeHtml(appt.time)}${appt.barber ? ` with ${escapeHtml(appt.barber.split(" - ")[0])}` : ""}. We look forward to seeing you!`,
             };
             const subject = buildSubject(emailData);
             const html = buildHtml(emailData);
@@ -298,10 +373,10 @@ exports.sendAppointmentReminders = (0, scheduler_1.onSchedule)({
             // Mark reminder as sent
             await doc.ref.update({ reminderSentAt: firestore_1.Timestamp.now() });
             sentCount++;
-            firebase_functions_1.logger.info("Reminder sent", { name: appt.name, email: appt.email, time: appt.time });
+            firebase_functions_1.logger.info("Reminder sent", { appointmentId: doc.id });
         }
         catch (err) {
-            firebase_functions_1.logger.error("Failed to send reminder", { name: appt.name, error: String(err) });
+            firebase_functions_1.logger.error("Failed to send reminder", { appointmentId: doc.id, error: String(err) });
         }
     }
     firebase_functions_1.logger.info(`Reminder check complete. Sent ${sentCount} reminders.`);

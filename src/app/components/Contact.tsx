@@ -29,8 +29,24 @@ export function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.message) {
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const message = formData.message.trim();
+
+    if (!name || !email || !message) {
       toast.error("Please fill in all fields");
+      return;
+    }
+    if (name.length < 2 || name.length > 100) {
+      toast.error("Name must be between 2 and 100 characters");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    if (message.length < 10 || message.length > 1000) {
+      toast.error("Message must be between 10 and 1000 characters");
       return;
     }
 
@@ -179,8 +195,9 @@ export function Contact() {
                   <Input
                     id="contact-name"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value.slice(0, 100) })}
                     placeholder="Your name"
+                    maxLength={100}
                   />
                 </div>
 
@@ -212,9 +229,10 @@ export function Contact() {
                   <Textarea
                     id="message"
                     value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value.slice(0, 1000) })}
                     placeholder="How can we help you?"
                     rows={5}
+                    maxLength={1000}
                   />
                 </div>
 

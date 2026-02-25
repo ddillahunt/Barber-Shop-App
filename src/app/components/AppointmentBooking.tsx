@@ -75,8 +75,29 @@ export function AppointmentBooking() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.phone || !formData.date || !formData.time) {
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const phone = formData.phone.trim();
+    const notes = formData.notes.trim();
+
+    if (!name || !phone || !formData.date || !formData.time) {
       toast.error("Please fill in name, phone number, date, and time");
+      return;
+    }
+    if (name.length < 2 || name.length > 100) {
+      toast.error("Name must be between 2 and 100 characters");
+      return;
+    }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    if (phone.replace(/\D/g, "").length < 10) {
+      toast.error("Please enter a valid 10-digit phone number");
+      return;
+    }
+    if (notes.length > 500) {
+      toast.error("Notes must be under 500 characters");
       return;
     }
 
@@ -215,8 +236,9 @@ export function AppointmentBooking() {
                   <Input
                     id="name"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value.slice(0, 100) })}
                     placeholder="John Doe"
+                    maxLength={100}
                   />
                 </div>
 
@@ -306,9 +328,10 @@ export function AppointmentBooking() {
                   <Textarea
                     id="notes"
                     value={formData.notes}
-                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value.slice(0, 500) })}
                     placeholder="Any special requests or additional information"
                     rows={3}
+                    maxLength={500}
                   />
                 </div>
               </div>

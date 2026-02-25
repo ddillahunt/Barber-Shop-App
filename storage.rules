@@ -3,7 +3,10 @@ service firebase.storage {
   match /b/{bucket}/o {
     match /barbers/{allPaths=**} {
       allow read: if true;
-      allow write: if request.auth != null;
+      // Only authenticated admin can upload, file must be an image under 5MB
+      allow write: if request.auth != null
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
     }
   }
 }

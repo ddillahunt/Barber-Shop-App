@@ -75,8 +75,29 @@ export function AppointmentBookingEs() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.phone || !formData.date || !formData.time) {
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const phone = formData.phone.trim();
+    const notes = formData.notes.trim();
+
+    if (!name || !phone || !formData.date || !formData.time) {
       toast.error("Por favor complete nombre, teléfono, fecha y hora");
+      return;
+    }
+    if (name.length < 2 || name.length > 100) {
+      toast.error("El nombre debe tener entre 2 y 100 caracteres");
+      return;
+    }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Por favor ingrese un correo electrónico válido");
+      return;
+    }
+    if (phone.replace(/\D/g, "").length < 10) {
+      toast.error("Por favor ingrese un número de teléfono válido de 10 dígitos");
+      return;
+    }
+    if (notes.length > 500) {
+      toast.error("Las notas deben tener menos de 500 caracteres");
       return;
     }
 
@@ -215,8 +236,9 @@ export function AppointmentBookingEs() {
                   <Input
                     id="name"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value.slice(0, 100) })}
                     placeholder="Juan Pérez"
+                    maxLength={100}
                   />
                 </div>
 
@@ -306,9 +328,10 @@ export function AppointmentBookingEs() {
                   <Textarea
                     id="notes"
                     value={formData.notes}
-                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value.slice(0, 500) })}
                     placeholder="Cualquier solicitud especial o información adicional"
                     rows={3}
+                    maxLength={500}
                   />
                 </div>
               </div>

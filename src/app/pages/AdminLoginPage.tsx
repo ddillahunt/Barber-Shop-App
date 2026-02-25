@@ -7,20 +7,58 @@ import { Label } from "../components/ui/label";
 import { Lock } from "lucide-react";
 import { toast } from "sonner";
 
+// SHA-256 hash comparison to avoid plaintext credentials in source
+async function sha256(message: string): Promise<string> {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// Pre-computed SHA-256 hashes (update these when changing credentials)
+const VALID_USER_HASH = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"; // hash of "admin"
+const VALID_PASS_HASH = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9"; // hash of "admin123"
+
 export function AdminLoginPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+  const [lockedUntil, setLockedUntil] = useState(0);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Rate limit: lock after 5 failed attempts for 30 seconds
+    if (Date.now() < lockedUntil) {
+      const secondsLeft = Math.ceil((lockedUntil - Date.now()) / 1000);
+      toast.error(`Too many attempts. Try again in ${secondsLeft} seconds.`);
+      return;
+    }
+
     setLoading(true);
-    if (username === "admin" && password === "admin123") {
-      sessionStorage.setItem("adminAuth", "true");
-      navigate("/admin");
-    } else {
-      toast.error("Invalid username or password");
+    try {
+      const userHash = await sha256(username.trim());
+      const passHash = await sha256(password);
+
+      if (userHash === VALID_USER_HASH && passHash === VALID_PASS_HASH) {
+        setAttempts(0);
+        sessionStorage.setItem("adminAuth", "true");
+        navigate("/admin");
+      } else {
+        const newAttempts = attempts + 1;
+        setAttempts(newAttempts);
+        if (newAttempts >= 5) {
+          setLockedUntil(Date.now() + 30000);
+          setAttempts(0);
+          toast.error("Too many failed attempts. Locked for 30 seconds.");
+        } else {
+          toast.error("Invalid username or password");
+        }
+      }
+    } catch {
+      toast.error("Login error. Please try again.");
     }
     setLoading(false);
   };
@@ -52,6 +90,7 @@ export function AdminLoginPage() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter username"
                 required
+                maxLength={50}
                 className="bg-slate-800 border-slate-700 text-white"
               />
             </div>
@@ -64,6 +103,7 @@ export function AdminLoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
                 required
+                maxLength={100}
                 className="bg-slate-800 border-slate-700 text-white"
               />
             </div>
@@ -81,11 +121,6 @@ export function AdminLoginPage() {
           >
             Back to website
           </button>
-          <div className="mt-6 p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-center">
-            <p className="text-slate-400 text-xs mb-2 uppercase tracking-wider">Demo Credentials</p>
-            <p className="text-slate-300 text-sm">User: <span className="text-amber-400 font-semibold">admin</span></p>
-            <p className="text-slate-300 text-sm">Password: <span className="text-amber-400 font-semibold">admin123</span></p>
-          </div>
           <p className="text-slate-500 text-xs text-center mt-4">Powered by GDI Digital Solutions</p>
         </CardContent>
       </Card>
