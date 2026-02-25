@@ -152,6 +152,7 @@ export function ServiceDetailPage() {
             <Link to="/#booking" className="text-slate-300 hover:text-amber-400 transition-colors">Book Now</Link>
             <Link to="/#contact" className="text-slate-300 hover:text-amber-400 transition-colors">Contact</Link>
             <Link to="/about" className="text-slate-300 hover:text-amber-400 transition-colors">About</Link>
+            <Link to="/privacy" className="text-slate-300 hover:text-amber-400 transition-colors">Privacy Policy</Link>
           </nav>
           <p className="text-amber-200">
             &copy; 2026 Grandes Ligas Barber Shop. All rights reserved.

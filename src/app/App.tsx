@@ -17,6 +17,8 @@ import { AboutPage } from "./pages/AboutPage";
 import { AboutPageEs } from "./pages/AboutPageEs";
 import { AdminLoginPage } from "./pages/AdminLoginPage";
 import { AdminDashboardPage } from "./pages/AdminDashboardPage";
+import { PrivacyPage } from "./pages/PrivacyPage";
+import { CookieBanner } from "./components/CookieBanner";
 
 function ScrollToHash() {
   const { pathname, hash } = useLocation();
@@ -47,7 +49,9 @@ export default function App() {
         <Route path="/es/acerca-de" element={<AboutPageEs />} />
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route path="/admin" element={<AdminDashboardPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
       </Routes>
+      <CookieBanner />
     </BrowserRouter>
   );
 }
