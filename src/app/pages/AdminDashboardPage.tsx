@@ -22,6 +22,15 @@ import { sendEmail, sendSMS } from "../lib/email";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths, isSameMonth, isSameDay, isToday } from "date-fns";
+import yefriImg from "../../assets/images/barber-yefri.jpg";
+import joseImg from "../../assets/images/barber-Jose.jpg";
+import maestroImg from "../../assets/images/barber-Maestro.png";
+
+const barberImages: Record<string, string> = {
+  "Yefri": yefriImg,
+  "Jose": joseImg,
+  "Maestro": maestroImg,
+};
 
 const defaultBarbers = [
   { id: "1", name: "Yorki", phone: "(774) 244-2984" },
@@ -623,8 +632,8 @@ export function AdminDashboardPage() {
                   </button>
                 </div>
                 <CardContent className="p-4 text-center flex flex-col items-center">
-                  {barber.imageUrl ? (
-                    <img src={barber.imageUrl} alt={barber.name} className="w-12 h-12 rounded-full object-cover border-2 border-amber-500/50 mb-2" />
+                  {(barber.imageUrl || barberImages[barber.name]) ? (
+                    <img src={barber.imageUrl || barberImages[barber.name]} alt={barber.name} className="w-12 h-12 rounded-full object-cover border-2 border-amber-500/50 mb-2" />
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center mb-2">
                       <User className="size-6 text-black" />
