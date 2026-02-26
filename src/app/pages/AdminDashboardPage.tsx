@@ -43,9 +43,9 @@ const timeSlots = [
 
 const services = [
   "Classic Haircut",
-  "Premium Cut & Style",
-  "Beard Trim & Shape",
-  "Full Grooming Package",
+  "Haircut & Shave",
+  "Beard Trim & Lineup",
+  "Children's Haircut (11 & Under)",
 ];
 
 function formatPhone(value: string) {

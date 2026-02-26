@@ -21,7 +21,7 @@ const galleryItems = [
   },
   {
     id: 5,
-    label: "Recorte de Barba",
+    label: "Recorte de Barba y Alineado",
     image: "https://plus.unsplash.com/premium_photo-1661382196658-9f835c21d6e9?w=600&h=600&fit=crop",
   },
   {

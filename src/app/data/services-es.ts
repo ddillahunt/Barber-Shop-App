@@ -19,7 +19,7 @@ export const servicesEs: Service[] = [
     icon: Scissors,
     title: "Corte Clásico",
     description: "Cortes tradicionales con precisión y estilo",
-    price: "$30",
+    price: "$40",
     gradient: "from-amber-500 to-yellow-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "30-45 minutos",
@@ -39,9 +39,9 @@ export const servicesEs: Service[] = [
   {
     id: "premium-cut-style",
     icon: Sparkles,
-    title: "Corte y Estilo Premium",
+    title: "Corte y Afeitado",
     description: "Peinado completo con productos premium",
-    price: "$45",
+    price: "$50",
     gradient: "from-yellow-500 to-amber-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "45-60 minutos",
@@ -62,9 +62,9 @@ export const servicesEs: Service[] = [
   {
     id: "beard-trim-shape",
     icon: Waves,
-    title: "Recorte y Diseño de Barba",
+    title: "Recorte de Barba y Alineado",
     description: "Cuidado y mantenimiento experto de la barba",
-    price: "$25",
+    price: "$30",
     gradient: "from-amber-600 to-yellow-500",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "20-30 minutos",
@@ -84,25 +84,22 @@ export const servicesEs: Service[] = [
   {
     id: "full-grooming-package",
     icon: User,
-    title: "Paquete de Cuidado Completo",
-    description: "Corte de cabello, recorte de barba y tratamiento con toalla caliente",
-    price: "$65",
+    title: "Corte de Niños (11 Años y Menores)",
+    description: "Cortes de calidad para niños de 11 años y menores",
+    price: "$35",
     gradient: "from-yellow-600 to-amber-500",
     bgGradient: "from-slate-900 to-slate-800",
-    duration: "60-75 minutos",
+    duration: "20-30 minutos",
     included: [
-      "Consulta de estilo completa",
-      "Corte de cabello premium con peinado",
-      "Recorte y moldeado profesional de barba",
-      "Tratamiento de lujo con toalla caliente",
-      "Masaje de cuero cabelludo y facial",
-      "Aplicación de productos premium",
-      "Bebida de cortesía",
-      "Recomendaciones de cuidado personal"
+      "Consulta con el barbero",
+      "Corte profesional adaptado para niños",
+      "Champú suave",
+      "Peinado y toques finales",
+      "Experiencia divertida y cómoda"
     ],
     detailedDescription: [
-      "Experimenta lo último en cuidado masculino con nuestro Paquete de Cuidado Completo. Este servicio integral combina nuestras mejores ofertas en una experiencia completa que te dejará luciendo y sintiéndote como un hombre nuevo.",
-      "Esto es más que solo un corte de cabello y recorte de barba: es una transformación completa de cuidado personal. Desde el relajante tratamiento con toalla caliente hasta el vigorizante masaje de cuero cabelludo, cada elemento está diseñado para proporcionar tanto estilo como relajación. Perfecto para ocasiones especiales o cuando simplemente quieres darte un capricho con lo mejor."
+      "Nuestro servicio de Corte de Niños está diseñado para que la visita de tu hijo a la barbería sea divertida y cómoda. Nuestros barberos experimentados son excelentes con los niños y saben cómo mantenerlos relajados mientras les dan un corte elegante y limpio.",
+      "Ya sea su primer corte o un recorte regular, nos tomamos el tiempo para asegurarnos de que cada niño salga luciendo genial y sintiéndose seguro. Para niños de 11 años y menores."
     ]
   }
 ];

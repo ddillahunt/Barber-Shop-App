@@ -17,7 +17,7 @@ const testimonials = [
     name: "David Thompson",
     rating: 5,
     text: "Miguel is a true artist. He understood exactly what I wanted and delivered a modern style that gets me compliments everywhere I go. The shop has a great vibe too.",
-    service: "Premium Cut & Style",
+    service: "Haircut & Shave",
     barber: "Miguel Rodriguez",
   },
   {
@@ -25,15 +25,15 @@ const testimonials = [
     name: "James Rivera",
     rating: 5,
     text: "Juan transformed my beard from a mess into a masterpiece. His sculpting skills are incredible. I now get my beard done here every two weeks — wouldn't trust anyone else.",
-    service: "Beard Trim & Shape",
+    service: "Beard Trim & Lineup",
     barber: "Juan Hernandez",
   },
   {
     id: 4,
     name: "Anthony Garcia",
     rating: 4,
-    text: "Got the full grooming package with Diego and it was worth every penny. Haircut, beard trim, hot towel — the whole experience was premium. Felt like a new man walking out.",
-    service: "Full Grooming Package",
+    text: "Brought my son here and Diego was amazing with him. Patient, skilled, and made the whole experience fun. My kid actually asked to come back! Great with children.",
+    service: "Children's Haircut (11 & Under)",
     barber: "Diego Santos",
   },
   {
@@ -49,7 +49,7 @@ const testimonials = [
     name: "Chris Martinez",
     rating: 5,
     text: "Brought my son here for his first real haircut and Miguel was so patient and skilled. My kid actually enjoyed it! We're both regulars now. Highly recommend for all ages.",
-    service: "Premium Cut & Style",
+    service: "Haircut & Shave",
     barber: "Miguel Rodriguez",
   },
 ];

@@ -26,9 +26,9 @@ const timeSlots = [
 
 const services = [
   "Corte Clásico",
-  "Corte y Estilo Premium",
-  "Recorte y Diseño de Barba",
-  "Paquete de Cuidado Completo"
+  "Corte y Afeitado",
+  "Recorte de Barba y Alineado",
+  "Corte de Niños (11 Años y Menores)"
 ];
 
 function formatPhone(value: string) {

@@ -19,7 +19,7 @@ export const services: Service[] = [
     icon: Scissors,
     title: "Classic Haircut",
     description: "Traditional cuts with precision and style",
-    price: "$30",
+    price: "$40",
     gradient: "from-amber-500 to-yellow-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "30-45 minutes",
@@ -39,9 +39,9 @@ export const services: Service[] = [
   {
     id: "premium-cut-style",
     icon: Sparkles,
-    title: "Premium Cut & Style",
+    title: "Haircut & Shave",
     description: "Complete styling with premium products",
-    price: "$45",
+    price: "$50",
     gradient: "from-yellow-500 to-amber-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "45-60 minutes",
@@ -55,16 +55,16 @@ export const services: Service[] = [
       "Hot towel treatment"
     ],
     detailedDescription: [
-      "Elevate your grooming experience with our Premium Cut & Style service. This comprehensive package combines expert cutting with advanced styling techniques to create a sophisticated, polished look.",
+      "Elevate your grooming experience with our Haircut & Shave service. This comprehensive package combines expert cutting with a professional shave to create a sophisticated, polished look.",
       "Our barbers use premium products and tools to deliver a transformative experience. From the initial consultation to the final styling touches, every step is designed to exceed your expectations and leave you looking your absolute best."
     ]
   },
   {
     id: "beard-trim-shape",
     icon: Waves,
-    title: "Beard Trim & Shape",
+    title: "Beard Trim & Lineup",
     description: "Expert beard grooming and maintenance",
-    price: "$25",
+    price: "$30",
     gradient: "from-amber-600 to-yellow-500",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "20-30 minutes",
@@ -77,32 +77,29 @@ export const services: Service[] = [
       "Hot towel finish"
     ],
     detailedDescription: [
-      "A well-maintained beard is a statement of style and sophistication. Our Beard Trim & Shape service is designed to keep your facial hair looking sharp, clean, and perfectly groomed.",
+      "A well-maintained beard is a statement of style and sophistication. Our Beard Trim & Lineup service is designed to keep your facial hair looking sharp, clean, and perfectly groomed.",
       "Our skilled barbers understand the art of beard sculpting. We'll work with your natural growth patterns and facial structure to create a shape that enhances your features. Whether you prefer a full beard, goatee, or any style in between, we'll deliver precision results."
     ]
   },
   {
     id: "full-grooming-package",
     icon: User,
-    title: "Full Grooming Package",
-    description: "Haircut, beard trim, and hot towel treatment",
-    price: "$65",
+    title: "Children's Haircut (11 & Under)",
+    description: "Quality haircuts for kids 11 and under",
+    price: "$35",
     gradient: "from-yellow-600 to-amber-500",
     bgGradient: "from-slate-900 to-slate-800",
-    duration: "60-75 minutes",
+    duration: "20-30 minutes",
     included: [
-      "Complete style consultation",
-      "Premium haircut with styling",
-      "Professional beard trim and shaping",
-      "Luxury hot towel treatment",
-      "Scalp and facial massage",
-      "Premium product application",
-      "Complimentary beverage",
-      "Grooming recommendations"
+      "Consultation with barber",
+      "Professional haircut tailored for kids",
+      "Gentle shampoo",
+      "Styling and finishing touches",
+      "Fun and comfortable experience"
     ],
     detailedDescription: [
-      "Experience the ultimate in men's grooming with our Full Grooming Package. This comprehensive service combines our best offerings into one complete experience that will leave you looking and feeling like a new man.",
-      "This is more than just a haircut and beard trim - it's a full grooming transformation. From the relaxing hot towel treatment to the invigorating scalp massage, every element is designed to provide both style and relaxation. Perfect for special occasions or when you simply want to treat yourself to the best."
+      "Our Children's Haircut service is designed to make your child's barbershop visit fun and comfortable. Our experienced barbers are great with kids and know how to keep them relaxed while delivering a sharp, stylish cut.",
+      "Whether it's a first haircut or a regular trim, we take the time to make sure every child leaves looking great and feeling confident. For kids 11 and under."
     ]
   }
 ];

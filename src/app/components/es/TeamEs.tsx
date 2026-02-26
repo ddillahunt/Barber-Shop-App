@@ -2,6 +2,15 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "../ui/card";
 import { Phone, MessageSquare, Mail, User } from "lucide-react";
 import { subscribeToBarbers, type Barber } from "../../lib/appointments";
+import yefriImg from "../../../assets/images/barber-yefri.jpg";
+import joseImg from "../../../assets/images/barber-Jose.jpg";
+import maestroImg from "../../../assets/images/barber-Maestro.png";
+
+const barberImages: Record<string, string> = {
+  "Yefri": yefriImg,
+  "Jose": joseImg,
+  "Maestro": maestroImg,
+};
 
 export function TeamEs() {
   const [barbers, setBarbers] = useState<Barber[]>([]);
@@ -30,9 +39,9 @@ export function TeamEs() {
               className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] border-2 border-amber-500/20 bg-gradient-to-br from-slate-900 to-slate-800 overflow-hidden hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-300 hover:-translate-y-2"
             >
               <CardContent className="p-6 flex flex-col items-center text-center gap-4">
-                {barber.imageUrl ? (
+                {(barber.imageUrl || barberImages[barber.name]) ? (
                   <img
-                    src={barber.imageUrl}
+                    src={barber.imageUrl || barberImages[barber.name]}
                     alt={barber.name}
                     className="w-20 h-20 rounded-full object-cover shadow-lg shadow-amber-500/30 border-2 border-amber-500/50"
                   />
