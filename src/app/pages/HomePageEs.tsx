@@ -7,8 +7,8 @@ import { ScheduleEs } from "../components/es/ScheduleEs";
 import { AppointmentBookingEs } from "../components/es/AppointmentBookingEs";
 import { ContactEs } from "../components/es/ContactEs";
 import { ScrollToTop } from "../components/ScrollToTop";
-import { Scissors } from "lucide-react";
 import { Link } from "react-router-dom";
+import logoImg from "../../assets/images/barber-Grandes Ligas logo.png";
 
 export function HomePageEs() {
   return (
@@ -26,7 +26,7 @@ export function HomePageEs() {
       <footer className="bg-gradient-to-r from-black via-slate-900 to-black text-white py-12 border-t-2 border-amber-500/50">
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 mb-4">
-            <Scissors className="size-6 text-amber-400" />
+            <img src={logoImg} alt="Grandes Ligas" className="h-6 w-auto object-contain" />
             <span className="font-bold italic text-xl bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Grandes Ligas</span>
           </div>
           <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Enlaces Rápidos</h3>

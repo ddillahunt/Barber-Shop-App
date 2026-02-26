@@ -16,7 +16,7 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Scissors, LogOut, CalendarDays, Users, User, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell } from "lucide-react";
+import { LogOut, CalendarDays, Users, User, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell } from "lucide-react";
 import { toast } from "sonner";
 import { sendEmail, sendSMS } from "../lib/email";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
@@ -25,6 +25,7 @@ import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addM
 import yefriImg from "../../assets/images/barber-yefri.jpg";
 import joseImg from "../../assets/images/barber-Jose.jpg";
 import maestroImg from "../../assets/images/barber-Maestro.png";
+import logoImg from "../../assets/images/barber-Grandes Ligas logo.png";
 
 const barberImages: Record<string, string> = {
   "Yefri": yefriImg,
@@ -431,9 +432,7 @@ export function AdminDashboardPage() {
       <header className="bg-gradient-to-r from-black via-slate-900 to-black border-b-2 border-amber-500/50 px-4 py-4">
         <div className="container mx-auto flex flex-col items-center gap-3">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-lg">
-              <Scissors className="size-5 text-black" />
-            </div>
+            <img src={logoImg} alt="Grandes Ligas" className="h-10 w-auto object-contain" />
             <span className="font-bold italic text-lg bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
               Grandes Ligas Admin Dashboard
             </span>

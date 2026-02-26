@@ -8,6 +8,7 @@ import {
 } from "../ui/dropdown-menu";
 import { servicesEs } from "../../data/services-es";
 import { useState } from "react";
+import logoImg from "../../../assets/images/barber-Grandes Ligas logo.png";
 
 export function NavigationEs() {
   const navigate = useNavigate();
@@ -51,9 +52,7 @@ export function NavigationEs() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/es")}>
-            <div className="p-2 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-lg shadow-lg shadow-amber-500/50">
-              <Scissors className="size-6 text-black" />
-            </div>
+            <img src={logoImg} alt="Grandes Ligas" className="h-14 w-auto object-contain" />
             <span className="font-bold italic text-xl bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Grandes Ligas</span>
           </div>
           

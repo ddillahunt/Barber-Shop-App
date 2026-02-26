@@ -1,6 +1,7 @@
 import { NavigationEs } from "../components/es/NavigationEs";
 import { ScrollToTop } from "../components/ScrollToTop";
-import { Scissors, MapPin, Star, Clock, ArrowRight } from "lucide-react";
+import { MapPin, Star, Clock, ArrowRight } from "lucide-react";
+import logoImg from "../../assets/images/barber-Grandes Ligas logo.png";
 import { useNavigate, Link } from "react-router-dom";
 
 export function AboutPageEs() {
@@ -15,7 +16,7 @@ export function AboutPageEs() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(245,158,11,0.1),transparent_60%)]" />
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full">
-            <Scissors className="size-4 text-amber-400" />
+            <img src={logoImg} alt="Grandes Ligas" className="h-4 w-auto object-contain" />
             <span className="text-amber-400 text-sm font-medium italic">Grandes Ligas Barber Shop</span>
           </div>
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
@@ -117,7 +118,7 @@ export function AboutPageEs() {
       <footer className="bg-gradient-to-r from-black via-slate-900 to-black text-white py-12 border-t-2 border-amber-500/50">
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 mb-4">
-            <Scissors className="size-6 text-amber-400" />
+            <img src={logoImg} alt="Grandes Ligas" className="h-6 w-auto object-contain" />
             <span className="font-bold italic text-xl bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Grandes Ligas</span>
           </div>
           <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Enlaces Rápidos</h3>

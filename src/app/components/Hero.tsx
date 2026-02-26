@@ -1,4 +1,4 @@
-import { Scissors } from "lucide-react";
+import logoImg from "../../assets/images/barber-Grandes Ligas logo.png";
 
 export function Hero() {
   return (
@@ -19,7 +19,7 @@ export function Hero() {
       
       <div className="container mx-auto px-4 text-center relative z-10">
         <div className="inline-flex items-center justify-center p-4 mb-6 bg-gradient-to-br from-amber-500 to-yellow-600 backdrop-blur-sm rounded-2xl border border-amber-400/30 shadow-2xl shadow-amber-500/50">
-          <Scissors className="size-16 text-black" />
+          <img src={logoImg} alt="Grandes Ligas" className="h-16 w-auto object-contain" />
         </div>
         <div className="flex items-center justify-center gap-8 mb-6">
           {/* Left Barber Pole */}
