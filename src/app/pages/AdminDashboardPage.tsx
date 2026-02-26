@@ -429,23 +429,23 @@ export function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100">
       {/* Header */}
-      <header className="bg-gradient-to-r from-black via-slate-900 to-black border-b-2 border-amber-500/50 px-4 py-4">
+      <header className="bg-gradient-to-r from-black via-slate-900 to-black border-b-2 border-blue-500/50 px-4 py-4">
         <div className="container mx-auto flex flex-col items-center gap-3">
           <div className="flex items-center gap-3">
             <img src={logoImg} alt="Grandes Ligas" className="h-10 w-auto object-contain" />
-            <span className="font-bold italic text-lg bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
+            <span className="font-bold italic text-lg bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent">
               Grandes Ligas Admin Dashboard
             </span>
           </div>
-          <div className="font-mono text-2xl font-bold text-amber-400 tracking-wider">
+          <div className="font-mono text-2xl font-bold text-sky-300 tracking-wider">
             {currentTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true })}
-            <span className="text-sm text-amber-400/60 ml-2">{currentTime.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}</span>
+            <span className="text-sm text-sky-300/60 ml-2">{currentTime.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}</span>
           </div>
           <div className="flex items-center gap-3">
             <Button
               size="sm"
               onClick={() => { toast.info("Dashboard updates automatically in real-time"); }}
-              className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700"
+              className="bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700"
             >
               <RefreshCw className="size-4 mr-1" />
               Refresh
@@ -453,7 +453,7 @@ export function AdminDashboardPage() {
             <Button
               size="sm"
               onClick={handleSignOut}
-              className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700"
+              className="bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700"
             >
               <LogOut className="size-4 mr-1" />
               Sign Out
@@ -465,29 +465,29 @@ export function AdminDashboardPage() {
       <main className="container mx-auto px-4 py-8">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="border-amber-500/30 bg-white">
+          <Card className="border-blue-500/30 bg-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm text-slate-500">Total Appointments</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-2">
-                <CalendarDays className="size-5 text-amber-500" />
+                <CalendarDays className="size-5 text-blue-500" />
                 <span className="text-3xl font-bold text-slate-900">{appointments.length}</span>
               </div>
             </CardContent>
           </Card>
-          <Card className="border-amber-500/30 bg-white">
+          <Card className="border-blue-500/30 bg-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm text-slate-500">Today's Appointments</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-2">
-                <Users className="size-5 text-amber-500" />
+                <Users className="size-5 text-blue-500" />
                 <span className="text-3xl font-bold text-slate-900">{todayCount}</span>
               </div>
             </CardContent>
           </Card>
-          <Card className="border-amber-500/30 bg-white">
+          <Card className="border-blue-500/30 bg-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm text-slate-500">Booking Source</CardTitle>
             </CardHeader>
@@ -502,13 +502,13 @@ export function AdminDashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-amber-500/30 bg-white">
+          <Card className="border-blue-500/30 bg-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm text-slate-500">Messages</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-2">
-                <MessageSquare className="size-5 text-amber-500" />
+                <MessageSquare className="size-5 text-blue-500" />
                 <span className="text-3xl font-bold text-slate-900">{messages.length}</span>
               </div>
             </CardContent>
@@ -521,7 +521,7 @@ export function AdminDashboardPage() {
           <Button
             size="sm"
             onClick={() => setShowAddBarber(true)}
-            className="h-8 px-3 text-xs bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700"
+            className="h-8 px-3 text-xs bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700"
           >
             <Plus className="size-3 mr-1" />
             Add Barber
@@ -555,7 +555,7 @@ export function AdminDashboardPage() {
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setShowAddBarber(false)}>Cancel</Button>
-              <Button onClick={handleAddBarber} className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
+              <Button onClick={handleAddBarber} className="bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
                 Add Barber
               </Button>
             </DialogFooter>
@@ -595,7 +595,7 @@ export function AdminDashboardPage() {
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setEditingBarber(null)}>Cancel</Button>
-              <Button onClick={handleEditBarberSave} className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
+              <Button onClick={handleEditBarberSave} className="bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
                 Save Changes
               </Button>
             </DialogFooter>
@@ -612,12 +612,12 @@ export function AdminDashboardPage() {
               <Card
                 key={barber.id}
                 onClick={() => setExpandedBarbers(isExpanded ? expandedBarbers.filter((b) => b !== barber.name) : [...expandedBarbers, barber.name])}
-                className={`border-amber-500/30 bg-white cursor-pointer transition-all hover:shadow-lg hover:border-amber-500/60 ${isExpanded ? "ring-2 ring-amber-500" : ""} relative`}
+                className={`border-blue-500/30 bg-white cursor-pointer transition-all hover:shadow-lg hover:border-blue-500/60 ${isExpanded ? "ring-2 ring-blue-500" : ""} relative`}
               >
                 <div className="absolute top-1 right-1 flex items-center gap-0.5">
                   <button
                     onClick={(e) => { e.stopPropagation(); handleEditBarberOpen(barber); }}
-                    className="p-0.5 rounded-full text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                    className="p-0.5 rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
                     title={`Edit ${barber.name}`}
                   >
                     <Pencil className="size-3" />
@@ -632,14 +632,14 @@ export function AdminDashboardPage() {
                 </div>
                 <CardContent className="p-4 text-center flex flex-col items-center">
                   {(barber.imageUrl || barberImages[barber.name]) ? (
-                    <img src={barber.imageUrl || barberImages[barber.name]} alt={barber.name} className="w-12 h-12 rounded-full object-cover border-2 border-amber-500/50 mb-2" />
+                    <img src={barber.imageUrl || barberImages[barber.name]} alt={barber.name} className="w-12 h-12 rounded-full object-cover border-2 border-blue-500/50 mb-2" />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center mb-2">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-700 to-red-600 flex items-center justify-center mb-2">
                       <User className="size-6 text-black" />
                     </div>
                   )}
                   <div className="font-bold text-slate-900 text-sm mb-1">{barber.name}</div>
-                  <div className="text-2xl font-bold text-amber-600">{count}</div>
+                  <div className="text-2xl font-bold text-blue-600">{count}</div>
                   <div className="text-xs text-slate-500 mt-1">
                     {todayBarberCount} today
                   </div>
@@ -654,7 +654,7 @@ export function AdminDashboardPage() {
         {expandedBarbers.map((barberName) => {
           const barberAppts = appointments.filter((a) => a.barber?.startsWith(barberName));
           return (
-            <Card key={barberName} className="border-amber-500/30 bg-white">
+            <Card key={barberName} className="border-blue-500/30 bg-white">
               <CardHeader className="flex flex-row items-center justify-between pb-3">
                 <CardTitle className="text-lg text-slate-900">{barberName}'s Appointments ({barberAppts.length})</CardTitle>
                 <Button variant="ghost" size="sm" onClick={() => setExpandedBarbers(expandedBarbers.filter((b) => b !== barberName))}>
@@ -669,13 +669,13 @@ export function AdminDashboardPage() {
                     {barberAppts.map((appt) => (
                       <div
                         key={appt.id}
-                        className={`p-4 rounded-lg border transition-colors ${appt.completed ? "border-green-300 bg-green-50/50" : "border-slate-200 hover:border-amber-500/50 hover:bg-amber-50/50"}`}
+                        className={`p-4 rounded-lg border transition-colors ${appt.completed ? "border-green-300 bg-green-50/50" : "border-slate-200 hover:border-blue-500/50 hover:bg-blue-50/50"}`}
                       >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => handleToggleCompleted(appt)}
-                              className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${appt.completed ? "bg-green-500 border-green-500 text-white" : "border-slate-300 hover:border-amber-500"}`}
+                              className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${appt.completed ? "bg-green-500 border-green-500 text-white" : "border-slate-300 hover:border-blue-500"}`}
                             >
                               {appt.completed && <Check className="size-3" />}
                             </button>
@@ -696,7 +696,7 @@ export function AdminDashboardPage() {
                               variant="ghost"
                               size="sm"
                               onClick={() => handleEditOpen(appt)}
-                              className="text-amber-600 hover:text-amber-800 hover:bg-amber-50 h-7 w-7 p-0"
+                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 h-7 w-7 p-0"
                             >
                               <Pencil className="size-3.5" />
                             </Button>
@@ -740,7 +740,7 @@ export function AdminDashboardPage() {
 
         {/* Create Appointment */}
         {showCreateForm && (
-          <Card className="border-amber-500/30 bg-white mb-8">
+          <Card className="border-blue-500/30 bg-white mb-8">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-xl text-slate-900">New Appointment</CardTitle>
               <Button variant="ghost" size="sm" onClick={() => setShowCreateForm(false)}>
@@ -803,7 +803,7 @@ export function AdminDashboardPage() {
                   <Textarea id="new-notes" value={newAppt.notes} onChange={(e) => setNewAppt({ ...newAppt, notes: e.target.value })} placeholder="Any special requests or additional information" rows={2} />
                 </div>
                 <div className="flex items-end md:col-span-2">
-                  <Button type="submit" disabled={creating} className="h-9 px-4 text-sm bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
+                  <Button type="submit" disabled={creating} className="h-9 px-4 text-sm bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
                     {creating ? "Creating..." : "Create Appointment"}
                   </Button>
                 </div>
@@ -813,11 +813,11 @@ export function AdminDashboardPage() {
         )}
 
         {/* Appointments Section with Tabs */}
-        <Card className="border-amber-500/30 bg-white">
+        <Card className="border-blue-500/30 bg-white">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-xl text-slate-900">All Appointments</CardTitle>
             {!showCreateForm && (
-              <Button size="sm" onClick={() => setShowCreateForm(true)} className="h-8 px-3 text-xs bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
+              <Button size="sm" onClick={() => setShowCreateForm(true)} className="h-8 px-3 text-xs bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
                 <Plus className="size-3 mr-1" />
                 New Appointment
               </Button>
@@ -838,7 +838,7 @@ export function AdminDashboardPage() {
                 ) : (
                   <div className="overflow-x-auto">
                     {selectedIds.size > 0 && (
-                      <div className="flex items-center gap-3 mb-3 p-2 bg-amber-50 border border-amber-200 rounded-lg">
+                      <div className="flex items-center gap-3 mb-3 p-2 bg-blue-50 border border-blue-200 rounded-lg">
                         <span className="text-sm font-medium text-slate-700">{selectedIds.size} selected</span>
                         <Button size="sm" variant="outline" onClick={() => setSelectedIds(new Set())} className="h-7 px-2 text-xs">
                           Clear
@@ -857,7 +857,7 @@ export function AdminDashboardPage() {
                               type="checkbox"
                               checked={appointments.length > 0 && selectedIds.size === appointments.length}
                               onChange={toggleSelectAll}
-                              className="size-4 accent-amber-500 cursor-pointer"
+                              className="size-4 accent-red-600 cursor-pointer"
                             />
                           </TableHead>
                           <TableHead>Name</TableHead>
@@ -874,13 +874,13 @@ export function AdminDashboardPage() {
                       </TableHeader>
                       <TableBody>
                         {appointments.map((appt) => (
-                          <TableRow key={appt.id} className={selectedIds.has(appt.id!) ? "bg-amber-50/50" : ""}>
+                          <TableRow key={appt.id} className={selectedIds.has(appt.id!) ? "bg-blue-50/50" : ""}>
                             <TableCell>
                               <input
                                 type="checkbox"
                                 checked={selectedIds.has(appt.id!)}
                                 onChange={() => toggleSelect(appt.id!)}
-                                className="size-4 accent-amber-500 cursor-pointer"
+                                className="size-4 accent-red-600 cursor-pointer"
                               />
                             </TableCell>
                             <TableCell className="font-medium">{appt.name}</TableCell>
@@ -896,7 +896,7 @@ export function AdminDashboardPage() {
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-1">
-                                <Button variant="ghost" size="sm" onClick={() => handleEditOpen(appt)} className="text-amber-600 hover:text-amber-800 hover:bg-amber-50">
+                                <Button variant="ghost" size="sm" onClick={() => handleEditOpen(appt)} className="text-blue-600 hover:text-blue-800 hover:bg-blue-50">
                                   <Pencil className="size-4" />
                                 </Button>
                                 <Button variant="ghost" size="sm" onClick={() => handleDelete(appt.id!)} className="text-red-500 hover:text-red-700 hover:bg-red-50">
@@ -959,11 +959,11 @@ export function AdminDashboardPage() {
                           key={dateStr}
                           onClick={() => setSelectedDate(day)}
                           className={`min-h-[120px] border-r border-b border-slate-200 p-1.5 cursor-pointer transition-colors ${
-                            !inMonth ? "bg-slate-50/50" : "bg-white hover:bg-amber-50/30"
-                          } ${selected ? "ring-2 ring-amber-500 ring-inset" : ""}`}
+                            !inMonth ? "bg-slate-50/50" : "bg-white hover:bg-blue-50/30"
+                          } ${selected ? "ring-2 ring-blue-500 ring-inset" : ""}`}
                         >
                           <div className={`text-xs font-medium mb-1 ${
-                            today ? "bg-amber-500 text-white rounded-full w-6 h-6 flex items-center justify-center" :
+                            today ? "bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center" :
                             !inMonth ? "text-slate-300" : "text-slate-700"
                           }`}>
                             {format(day, "d")}
@@ -973,7 +973,7 @@ export function AdminDashboardPage() {
                               <div
                                 key={appt.id}
                                 onClick={(e) => { e.stopPropagation(); handleEditOpen(appt); }}
-                                className="text-xs p-1 rounded bg-amber-100 border border-amber-200 hover:bg-amber-200 cursor-pointer truncate transition-colors"
+                                className="text-xs p-1 rounded bg-blue-100 border border-blue-200 hover:bg-blue-200 cursor-pointer truncate transition-colors"
                                 title={`${appt.time || ""} ${appt.name} - ${appt.barber || ""} - ${appt.service || ""} - ${appt.phone || ""}`}
                               >
                                 <span className="font-semibold">{appt.time || "—"}</span>{" "}
@@ -981,7 +981,7 @@ export function AdminDashboardPage() {
                               </div>
                             ))}
                             {dayAppts.length > 3 && (
-                              <div className="text-xs text-amber-600 font-medium pl-1">
+                              <div className="text-xs text-blue-600 font-medium pl-1">
                                 +{dayAppts.length - 3} more
                               </div>
                             )}
@@ -1009,13 +1009,13 @@ export function AdminDashboardPage() {
                           <div
                             key={appt.id}
                             onClick={() => handleEditOpen(appt)}
-                            className="p-4 rounded-lg border border-slate-200 hover:border-amber-500/50 hover:bg-amber-50/50 cursor-pointer transition-colors"
+                            className="p-4 rounded-lg border border-slate-200 hover:border-blue-500/50 hover:bg-blue-50/50 cursor-pointer transition-colors"
                           >
                             <div className="flex items-center justify-between mb-2">
                               <div className="font-semibold text-slate-900 text-base">{appt.name}</div>
                               <div className="flex items-center gap-2 flex-shrink-0">
                                 <Badge variant="outline">{appt.source?.toUpperCase() || "EN"}</Badge>
-                                <Pencil className="size-4 text-amber-500" />
+                                <Pencil className="size-4 text-blue-500" />
                               </div>
                             </div>
                             <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
@@ -1043,7 +1043,7 @@ export function AdminDashboardPage() {
           </CardContent>
         </Card>
         {/* Messages Table */}
-        <Card className="border-amber-500/30 bg-white mt-8">
+        <Card className="border-blue-500/30 bg-white mt-8">
           <CardHeader>
             <CardTitle className="text-xl text-slate-900">Messages</CardTitle>
           </CardHeader>
@@ -1160,7 +1160,7 @@ export function AdminDashboardPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingAppt(null)}>Cancel</Button>
-            <Button onClick={handleEditSave} disabled={saving} className="bg-gradient-to-br from-amber-500 to-yellow-600 text-black font-bold hover:from-amber-600 hover:to-yellow-700">
+            <Button onClick={handleEditSave} disabled={saving} className="bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
               {saving ? "Saving..." : "Save Changes"}
             </Button>
           </DialogFooter>

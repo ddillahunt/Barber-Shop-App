@@ -36,35 +36,35 @@ export function Team() {
           {barbers.map((barber) => (
             <Card
               key={barber.id}
-              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] border-2 border-amber-500/20 bg-gradient-to-br from-slate-900 to-slate-800 overflow-hidden hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-300 hover:-translate-y-2"
+              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] border-2 border-blue-500/20 bg-gradient-to-br from-slate-900 to-slate-800 overflow-hidden hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-2"
             >
               <CardContent className="p-6 flex flex-col items-center text-center gap-4">
                 {(barber.imageUrl || barberImages[barber.name]) ? (
                   <img
                     src={barber.imageUrl || barberImages[barber.name]}
                     alt={barber.name}
-                    className="w-20 h-20 rounded-full object-cover shadow-lg shadow-amber-500/30 border-2 border-amber-500/50"
+                    className="w-20 h-20 rounded-full object-cover shadow-lg shadow-blue-500/30 border-2 border-blue-500/50"
                   />
                 ) : (
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
-                    <User className="size-10 text-black" />
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-red-700 to-red-600 flex items-center justify-center shadow-lg shadow-red-500/30">
+                    <User className="size-10 text-white" />
                   </div>
                 )}
                 <div>
-                  <h3 style={{ color: "#fbbf24", fontSize: "1.25rem", fontWeight: 700 }}>{barber.name}</h3>
+                  <h3 style={{ color: "#7CB9E8", fontSize: "1.25rem", fontWeight: 700 }}>{barber.name}</h3>
                 </div>
-                <p className="text-amber-400 text-sm font-medium">{barber.phone}</p>
+                <p className="text-sky-300 text-sm font-medium">{barber.phone}</p>
                 <div className="flex flex-wrap justify-center gap-2">
                   <a
                     href={`tel:${barber.phone.replace(/\D/g, "")}`}
-                    className="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm px-3 py-1.5 rounded-full hover:bg-amber-500/20 transition-colors"
+                    className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 text-sky-300 text-sm px-3 py-1.5 rounded-full hover:bg-blue-500/20 transition-colors"
                   >
                     <Phone className="size-4" />
                     Call
                   </a>
                   <a
                     href={`sms:${barber.phone.replace(/\D/g, "")}`}
-                    className="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm px-3 py-1.5 rounded-full hover:bg-amber-500/20 transition-colors"
+                    className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 text-sky-300 text-sm px-3 py-1.5 rounded-full hover:bg-blue-500/20 transition-colors"
                   >
                     <MessageSquare className="size-4" />
                     Text
@@ -72,7 +72,7 @@ export function Team() {
                   {barber.email && (
                     <a
                       href={`mailto:${barber.email}`}
-                      className="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm px-3 py-1.5 rounded-full hover:bg-amber-500/20 transition-colors"
+                      className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 text-sky-300 text-sm px-3 py-1.5 rounded-full hover:bg-blue-500/20 transition-colors"
                     >
                       <Mail className="size-4" />
                       Email

@@ -20,7 +20,7 @@ export const servicesEs: Service[] = [
     title: "Corte Clásico",
     description: "Cortes tradicionales con precisión y estilo",
     price: "$40",
-    gradient: "from-amber-500 to-yellow-600",
+    gradient: "from-red-700 to-red-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "30-45 minutos",
     included: [
@@ -42,7 +42,7 @@ export const servicesEs: Service[] = [
     title: "Corte y Afeitado",
     description: "Peinado completo con productos premium",
     price: "$50",
-    gradient: "from-yellow-500 to-amber-600",
+    gradient: "from-red-600 to-red-700",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "45-60 minutos",
     included: [
@@ -65,7 +65,7 @@ export const servicesEs: Service[] = [
     title: "Recorte de Barba y Alineado",
     description: "Cuidado y mantenimiento experto de la barba",
     price: "$30",
-    gradient: "from-amber-600 to-yellow-500",
+    gradient: "from-red-700 to-red-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "20-30 minutos",
     included: [
@@ -87,7 +87,7 @@ export const servicesEs: Service[] = [
     title: "Corte de Niños (11 Años y Menores)",
     description: "Cortes de calidad para niños de 11 años y menores",
     price: "$35",
-    gradient: "from-yellow-600 to-amber-500",
+    gradient: "from-red-700 to-red-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "20-30 minutos",
     included: [

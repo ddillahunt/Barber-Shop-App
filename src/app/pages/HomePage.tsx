@@ -24,26 +24,26 @@ export function HomePage() {
       <Contact />
       
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-black via-slate-900 to-black text-white py-12 border-t-2 border-amber-500/50">
+      <footer className="bg-gradient-to-r from-black via-slate-900 to-black text-white py-12 border-t-2 border-blue-500/50">
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 mb-4">
             <img src={logoImg} alt="Grandes Ligas" className="h-6 w-auto object-contain" />
-            <span className="font-bold italic text-xl bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Grandes Ligas</span>
+            <span className="font-bold italic text-xl bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent">Grandes Ligas</span>
           </div>
-          <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Quick Links</h3>
+          <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent">Quick Links</h3>
           <nav className="flex flex-wrap justify-center gap-6 mb-6">
-            <a href="#services" className="text-slate-300 hover:text-amber-400 transition-colors">Services</a>
-            <a href="#team" className="text-slate-300 hover:text-amber-400 transition-colors">Meet Our Team</a>
-            <a href="#schedule" className="text-slate-300 hover:text-amber-400 transition-colors">Schedule</a>
-            <a href="#booking" className="text-slate-300 hover:text-amber-400 transition-colors">Book Now</a>
-            <a href="#contact" className="text-slate-300 hover:text-amber-400 transition-colors">Contact</a>
-            <Link to="/about" className="text-slate-300 hover:text-amber-400 transition-colors">About</Link>
-            <Link to="/privacy" className="text-slate-300 hover:text-amber-400 transition-colors">Privacy Policy</Link>
+            <a href="#services" className="text-slate-300 hover:text-sky-300 transition-colors">Services</a>
+            <a href="#team" className="text-slate-300 hover:text-sky-300 transition-colors">Meet Our Team</a>
+            <a href="#schedule" className="text-slate-300 hover:text-sky-300 transition-colors">Schedule</a>
+            <a href="#booking" className="text-slate-300 hover:text-sky-300 transition-colors">Book Now</a>
+            <a href="#contact" className="text-slate-300 hover:text-sky-300 transition-colors">Contact</a>
+            <Link to="/about" className="text-slate-300 hover:text-sky-300 transition-colors">About</Link>
+            <Link to="/privacy" className="text-slate-300 hover:text-sky-300 transition-colors">Privacy Policy</Link>
           </nav>
-          <p className="text-amber-200">
+          <p className="text-sky-200">
             &copy; 2026 Grandes Ligas Barber Shop. All rights reserved.
           </p>
-          <Link to="/admin/login" className="text-slate-600 hover:text-amber-400 transition-colors text-xs mt-2 inline-block">
+          <Link to="/admin/login" className="text-slate-600 hover:text-sky-300 transition-colors text-xs mt-2 inline-block">
             Admin
           </Link>
           <p className="text-slate-400 text-sm mt-3">Powered by GDI Digital Solutions</p>

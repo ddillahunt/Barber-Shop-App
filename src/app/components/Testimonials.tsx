@@ -60,7 +60,7 @@ function StarRating({ rating }: { rating: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={`size-4 ${i < rating ? "text-amber-400 fill-amber-400" : "text-slate-600"}`}
+          className={`size-4 ${i < rating ? "text-sky-300 fill-sky-300" : "text-slate-600"}`}
         />
       ))}
     </div>
@@ -116,7 +116,7 @@ export function Testimonials() {
     <section className="py-20 bg-gradient-to-b from-slate-100 via-slate-200 to-slate-100">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-5xl mb-4 font-bold bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 bg-clip-text text-transparent">
+          <h2 className="text-5xl mb-4 font-bold bg-gradient-to-r from-red-600 via-red-700 to-red-600 bg-clip-text text-transparent">
             What Our Clients Say
           </h2>
           <p className="text-slate-700 text-lg max-w-2xl mx-auto">
@@ -129,7 +129,7 @@ export function Testimonials() {
             variant="outline"
             size="icon"
             onClick={prev}
-            className="absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-10 rounded-full bg-slate-900 border-amber-500/30 text-amber-400 hover:bg-amber-500 hover:text-black shadow-lg"
+            className="absolute -left-4 md:-left-6 top-1/2 -translate-y-1/2 z-10 rounded-full bg-slate-900 border-blue-500/30 text-sky-300 hover:bg-blue-500 hover:text-black shadow-lg"
           >
             <ChevronLeft className="size-5" />
           </Button>
@@ -137,7 +137,7 @@ export function Testimonials() {
             variant="outline"
             size="icon"
             onClick={next}
-            className="absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-10 rounded-full bg-slate-900 border-amber-500/30 text-amber-400 hover:bg-amber-500 hover:text-black shadow-lg"
+            className="absolute -right-4 md:-right-6 top-1/2 -translate-y-1/2 z-10 rounded-full bg-slate-900 border-blue-500/30 text-sky-300 hover:bg-blue-500 hover:text-black shadow-lg"
           >
             <ChevronRight className="size-5" />
           </Button>
@@ -146,16 +146,16 @@ export function Testimonials() {
             {displayed.map((review) => (
               <Card
                 key={review.id}
-                className="border-2 border-amber-500/20 bg-gradient-to-br from-slate-900 to-slate-800 overflow-hidden"
+                className="border-2 border-blue-500/20 bg-gradient-to-br from-slate-900 to-slate-800 overflow-hidden"
               >
                 <CardContent className="p-6 space-y-4">
-                  <Quote className="size-8 text-amber-500/30" />
+                  <Quote className="size-8 text-blue-500/30" />
                   <p className="text-slate-300 leading-relaxed text-sm italic">
                     "{review.text}"
                   </p>
-                  <div className="pt-4 border-t border-amber-500/20">
+                  <div className="pt-4 border-t border-blue-500/20">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="font-bold text-amber-400">{review.name}</span>
+                      <span className="font-bold text-sky-300">{review.name}</span>
                       <StarRating rating={review.rating} />
                     </div>
                     <div className="flex items-center justify-between text-xs text-slate-400">
@@ -178,7 +178,7 @@ export function Testimonials() {
                 }}
                 className={`rounded-full transition-all ${
                   i === current
-                    ? "w-8 h-2.5 bg-amber-500"
+                    ? "w-8 h-2.5 bg-red-600"
                     : "w-2.5 h-2.5 bg-slate-400/30 hover:bg-slate-400/50"
                 }`}
               />

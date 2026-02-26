@@ -20,7 +20,7 @@ export const services: Service[] = [
     title: "Classic Haircut",
     description: "Traditional cuts with precision and style",
     price: "$40",
-    gradient: "from-amber-500 to-yellow-600",
+    gradient: "from-red-700 to-red-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "30-45 minutes",
     included: [
@@ -42,7 +42,7 @@ export const services: Service[] = [
     title: "Haircut & Shave",
     description: "Complete styling with premium products",
     price: "$50",
-    gradient: "from-yellow-500 to-amber-600",
+    gradient: "from-red-600 to-red-700",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "45-60 minutes",
     included: [
@@ -65,7 +65,7 @@ export const services: Service[] = [
     title: "Beard Trim & Lineup",
     description: "Expert beard grooming and maintenance",
     price: "$30",
-    gradient: "from-amber-600 to-yellow-500",
+    gradient: "from-red-700 to-red-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "20-30 minutes",
     included: [
@@ -87,7 +87,7 @@ export const services: Service[] = [
     title: "Children's Haircut (11 & Under)",
     description: "Quality haircuts for kids 11 and under",
     price: "$35",
-    gradient: "from-yellow-600 to-amber-500",
+    gradient: "from-red-700 to-red-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "20-30 minutes",
     included: [

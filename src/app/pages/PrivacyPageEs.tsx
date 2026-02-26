@@ -13,11 +13,11 @@ export function PrivacyPageEs() {
       <section className="py-20 bg-gradient-to-br from-black via-slate-900 to-black relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(245,158,11,0.1),transparent_60%)]" />
         <div className="container mx-auto px-4 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full">
-            <Shield className="size-4 text-amber-400" />
-            <span className="text-amber-400 text-sm font-medium italic">Tu Privacidad Importa</span>
+          <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full">
+            <Shield className="size-4 text-sky-300" />
+            <span className="text-sky-300 text-sm font-medium italic">Tu Privacidad Importa</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent">
             Política de Privacidad
           </h1>
           <p className="text-slate-300 text-lg max-w-2xl mx-auto">
@@ -31,7 +31,7 @@ export function PrivacyPageEs() {
         <div className="container mx-auto px-4 max-w-3xl">
 
           <div className="mb-10">
-            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
               Información que Recopilamos
             </h2>
             <p className="text-slate-700 leading-relaxed mb-4">
@@ -47,7 +47,7 @@ export function PrivacyPageEs() {
           </div>
 
           <div className="mb-10">
-            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
               Cómo Usamos Tu Información
             </h2>
             <p className="text-slate-700 leading-relaxed mb-4">
@@ -62,7 +62,7 @@ export function PrivacyPageEs() {
           </div>
 
           <div className="mb-10">
-            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
               Protección de Datos
             </h2>
             <p className="text-slate-700 leading-relaxed">
@@ -73,7 +73,7 @@ export function PrivacyPageEs() {
           </div>
 
           <div className="mb-10">
-            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
               Compartir con Terceros
             </h2>
             <p className="text-slate-700 leading-relaxed">
@@ -83,7 +83,7 @@ export function PrivacyPageEs() {
           </div>
 
           <div className="mb-10">
-            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
               Tus Derechos
             </h2>
             <p className="text-slate-700 leading-relaxed">
@@ -93,7 +93,7 @@ export function PrivacyPageEs() {
           </div>
 
           <div className="mb-10">
-            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
               Cambios a Esta Política
             </h2>
             <p className="text-slate-700 leading-relaxed">
@@ -107,23 +107,23 @@ export function PrivacyPageEs() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-black via-slate-900 to-black text-white py-12 border-t-2 border-amber-500/50">
+      <footer className="bg-gradient-to-r from-black via-slate-900 to-black text-white py-12 border-t-2 border-blue-500/50">
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 mb-4">
             <img src={logoImg} alt="Grandes Ligas" className="h-6 w-auto object-contain" />
-            <span className="font-bold italic text-xl bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Grandes Ligas</span>
+            <span className="font-bold italic text-xl bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent">Grandes Ligas</span>
           </div>
-          <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Enlaces Rápidos</h3>
+          <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent">Enlaces Rápidos</h3>
           <nav className="flex flex-wrap justify-center gap-6 mb-6">
-            <Link to="/es" className="text-slate-300 hover:text-amber-400 transition-colors">Inicio</Link>
-            <Link to="/es#services" className="text-slate-300 hover:text-amber-400 transition-colors">Servicios</Link>
-            <Link to="/es#team" className="text-slate-300 hover:text-amber-400 transition-colors">Equipo</Link>
-            <Link to="/es#schedule" className="text-slate-300 hover:text-amber-400 transition-colors">Horario</Link>
-            <Link to="/es#booking" className="text-slate-300 hover:text-amber-400 transition-colors">Reservar</Link>
-            <Link to="/es#contact" className="text-slate-300 hover:text-amber-400 transition-colors">Contacto</Link>
-            <Link to="/es/acerca-de" className="text-slate-300 hover:text-amber-400 transition-colors">Acerca De</Link>
+            <Link to="/es" className="text-slate-300 hover:text-sky-300 transition-colors">Inicio</Link>
+            <Link to="/es#services" className="text-slate-300 hover:text-sky-300 transition-colors">Servicios</Link>
+            <Link to="/es#team" className="text-slate-300 hover:text-sky-300 transition-colors">Equipo</Link>
+            <Link to="/es#schedule" className="text-slate-300 hover:text-sky-300 transition-colors">Horario</Link>
+            <Link to="/es#booking" className="text-slate-300 hover:text-sky-300 transition-colors">Reservar</Link>
+            <Link to="/es#contact" className="text-slate-300 hover:text-sky-300 transition-colors">Contacto</Link>
+            <Link to="/es/acerca-de" className="text-slate-300 hover:text-sky-300 transition-colors">Acerca De</Link>
           </nav>
-          <p className="text-amber-200">
+          <p className="text-sky-200">
             &copy; 2026 Grandes Ligas Barbería. Todos los derechos reservados.
           </p>
           <p className="text-slate-400 text-sm mt-3">Powered by GDI Digital Solutions</p>

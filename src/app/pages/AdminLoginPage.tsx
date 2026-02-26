@@ -65,8 +65,8 @@ export function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-black flex items-center justify-center px-4">
-      <Card className="w-full max-w-md border-2 border-amber-500/30 shadow-2xl bg-slate-900">
-        <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 p-6">
+      <Card className="w-full max-w-md border-2 border-blue-500/30 shadow-2xl bg-slate-900">
+        <div className="bg-gradient-to-r from-red-700 via-red-600 to-red-600 p-6">
           <CardHeader className="p-0">
             <div className="flex items-center gap-3 text-black">
               <div className="p-2 bg-black/20 backdrop-blur-sm rounded-xl">
@@ -110,14 +110,14 @@ export function AdminLoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-12 text-lg bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50"
+              className="w-full h-12 text-lg bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white font-bold shadow-lg shadow-red-500/50 disabled:opacity-50"
             >
               {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
           <button
             onClick={() => navigate("/")}
-            className="mt-4 w-full text-center text-sm text-amber-400 hover:text-yellow-500 transition-colors"
+            className="mt-4 w-full text-center text-sm text-sky-300 hover:text-sky-100 transition-colors"
           >
             Back to website
           </button>

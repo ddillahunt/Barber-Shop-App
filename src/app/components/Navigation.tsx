@@ -48,19 +48,19 @@ export function Navigation() {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-black via-slate-900 to-black backdrop-blur-md shadow-lg sticky top-0 z-50 border-b-2 border-amber-500/50">
+    <nav className="bg-gradient-to-r from-black via-slate-900 to-black backdrop-blur-md shadow-lg sticky top-0 z-50 border-b-2 border-blue-500/50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/")}>
             <img src={logoImg} alt="Grandes Ligas" className="h-14 w-auto object-contain" />
-            <span className="font-bold italic text-xl bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Grandes Ligas</span>
+            <span className="font-bold italic text-xl bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent">Grandes Ligas</span>
           </div>
           
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
             <DropdownMenu open={isServicesOpen} onOpenChange={setIsServicesOpen}>
               <DropdownMenuTrigger 
-                className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 outline-none group"
+                className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 outline-none group"
                 onMouseEnter={() => setIsServicesOpen(true)}
                 onMouseLeave={() => setIsServicesOpen(false)}
               >
@@ -69,7 +69,7 @@ export function Navigation() {
                 <ChevronDown className="size-4 group-hover:translate-y-0.5 transition-transform" />
               </DropdownMenuTrigger>
               <DropdownMenuContent 
-                className="bg-gradient-to-br from-slate-900 to-slate-800 border-amber-500/30 border-2"
+                className="bg-gradient-to-br from-slate-900 to-slate-800 border-blue-500/30 border-2"
                 onMouseEnter={() => setIsServicesOpen(true)}
                 onMouseLeave={() => setIsServicesOpen(false)}
               >
@@ -77,42 +77,42 @@ export function Navigation() {
                   <DropdownMenuItem
                     key={service.id}
                     onClick={() => navigate(`/services/${service.id}`)}
-                    className="text-amber-400 hover:text-yellow-500 hover:bg-amber-500/10 cursor-pointer transition-all hover:translate-x-1"
+                    className="text-sky-300 hover:text-sky-100 hover:bg-blue-500/10 cursor-pointer transition-all hover:translate-x-1"
                   >
                     <div className="flex items-center gap-3 py-1">
                       <service.icon className="size-5" />
                       <div>
                         <div className="font-semibold">{service.title}</div>
-                        <div className="text-sm text-amber-300">{service.price}</div>
+                        <div className="text-sm text-sky-200">{service.price}</div>
                       </div>
                     </div>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-<button onClick={() => scrollToSection('team')} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
+<button onClick={() => scrollToSection('team')} className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5">
               <Users className="size-4" />
               Meet Our Team
             </button>
-            <button onClick={() => scrollToSection('schedule')} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
+            <button onClick={() => scrollToSection('schedule')} className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5">
               <Clock className="size-4" />
               Business Hours
             </button>
-            <button onClick={() => scrollToSection('booking')} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
+            <button onClick={() => scrollToSection('booking')} className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5">
               <CalendarCheck className="size-4" />
               Book Now
             </button>
-            <button onClick={() => scrollToSection('contact')} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
+            <button onClick={() => scrollToSection('contact')} className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5">
               <Mail className="size-4" />
               Contact
             </button>
-            <button onClick={() => { navigate("/about"); window.scrollTo(0, 0); }} className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5">
+            <button onClick={() => { navigate("/about"); window.scrollTo(0, 0); }} className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5">
               <Info className="size-4" />
               About
             </button>
             <button
               onClick={() => navigate("/es")} 
-              className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5"
+              className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5"
             >
               <Languages className="size-4" />
               Español
@@ -121,7 +121,7 @@ export function Navigation() {
 
           {/* Mobile Hamburger Button */}
           <button 
-            className="md:hidden text-amber-400 hover:text-yellow-500 transition-colors"
+            className="md:hidden text-sky-300 hover:text-sky-100 transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
@@ -130,11 +130,11 @@ export function Navigation() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-amber-500/30">
+          <div className="md:hidden py-4 border-t border-blue-500/30">
             <div className="flex flex-col gap-4">
               {/* Services Submenu */}
               <div className="flex flex-col gap-2">
-                <div className="font-medium text-amber-400 flex items-center gap-1.5 px-2">
+                <div className="font-medium text-sky-300 flex items-center gap-1.5 px-2">
                   <Scissors className="size-4" />
                   Services
                 </div>
@@ -143,12 +143,12 @@ export function Navigation() {
                     <button
                       key={service.id}
                       onClick={() => handleServiceClick(service.id)}
-                      className="text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-3 py-2"
+                      className="text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-3 py-2"
                     >
                       <service.icon className="size-4" />
                       <div className="text-left">
                         <div className="font-semibold text-sm">{service.title}</div>
-                        <div className="text-xs text-amber-300">{service.price}</div>
+                        <div className="text-xs text-sky-200">{service.price}</div>
                       </div>
                     </button>
                   ))}
@@ -157,42 +157,42 @@ export function Navigation() {
 
 <button
                 onClick={() => scrollToSection('team')}
-                className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
+                className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 px-2"
               >
                 <Users className="size-4" />
                 Meet Our Team
               </button>
               <button
                 onClick={() => scrollToSection('schedule')}
-                className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
+                className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 px-2"
               >
                 <Clock className="size-4" />
                 Business Hours
               </button>
               <button 
                 onClick={() => scrollToSection('booking')} 
-                className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
+                className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 px-2"
               >
                 <CalendarCheck className="size-4" />
                 Book Now
               </button>
               <button 
                 onClick={() => scrollToSection('contact')} 
-                className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
+                className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 px-2"
               >
                 <Mail className="size-4" />
                 Contact
               </button>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); navigate("/about"); window.scrollTo(0, 0); }}
-                className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
+                className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 px-2"
               >
                 <Info className="size-4" />
                 About
               </button>
               <button
                 onClick={handleLanguageSwitch}
-                className="font-medium text-amber-400 hover:text-yellow-500 transition-colors flex items-center gap-1.5 px-2"
+                className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 px-2"
               >
                 <Languages className="size-4" />
                 Español

@@ -94,14 +94,14 @@ export function ContactEs() {
     <section id="contact" className="py-20 bg-gradient-to-br from-slate-900 via-black to-slate-900">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-5xl mb-4 font-bold bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-400 bg-clip-text text-transparent">Contáctanos</h2>
-          <p className="text-amber-200 text-lg">Ponte en contacto con nuestro equipo</p>
+          <h2 className="text-5xl mb-4 font-bold bg-gradient-to-r from-sky-300 via-blue-400 to-sky-300 bg-clip-text text-transparent">Contáctanos</h2>
+          <p className="text-sky-200 text-lg">Ponte en contacto con nuestro equipo</p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {/* Contact Information */}
-          <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 overflow-hidden bg-slate-900">
-            <div className="bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 p-6">
+          <Card className="border-2 border-blue-500/30 shadow-2xl shadow-blue-500/20 overflow-hidden bg-slate-900">
+            <div className="bg-gradient-to-br from-red-700 via-red-600 to-red-600 p-6">
               <CardHeader className="p-0">
                 <CardTitle className="text-black text-2xl mb-2 font-bold">Ponte en Contacto</CardTitle>
                 <CardDescription className="text-slate-900 font-medium">Visítanos o contáctanos con cualquier pregunta</CardDescription>
@@ -109,11 +109,11 @@ export function ContactEs() {
             </div>
             <CardContent className="space-y-8 p-8 bg-gradient-to-br from-slate-900 to-black">
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-xl shadow-lg shadow-amber-500/50">
+                <div className="p-3 bg-gradient-to-br from-red-700 to-red-600 rounded-xl shadow-lg shadow-red-500/50">
                   <MapPin className="size-6 text-black" />
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2 text-lg text-amber-400">Ubicación</h3>
+                  <h3 className="font-semibold mb-2 text-lg text-sky-300">Ubicación</h3>
                   <p className="text-slate-300 leading-relaxed">
                     3A 2nd St<br />
                     Framingham, MA 01702
@@ -122,36 +122,36 @@ export function ContactEs() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-xl shadow-lg shadow-amber-500/50">
+                <div className="p-3 bg-gradient-to-br from-red-700 to-red-600 rounded-xl shadow-lg shadow-red-500/50">
                   <Phone className="size-6 text-black" />
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2 text-lg text-amber-400">Teléfono</h3>
+                  <h3 className="font-semibold mb-2 text-lg text-sky-300">Teléfono</h3>
                   <p className="text-slate-300">(508) 872-5556</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-xl shadow-lg shadow-amber-500/50">
+                <div className="p-3 bg-gradient-to-br from-red-700 to-red-600 rounded-xl shadow-lg shadow-red-500/50">
                   <Mail className="size-6 text-black" />
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2 text-lg text-amber-400">Correo Electrónico</h3>
-                  <a href="mailto:ddillahunt59@gmail.com" className="text-slate-300 hover:text-amber-400 transition-colors underline underline-offset-4">ddillahunt59@gmail.com</a>
+                  <h3 className="font-semibold mb-2 text-lg text-sky-300">Correo Electrónico</h3>
+                  <a href="mailto:ddillahunt59@gmail.com" className="text-slate-300 hover:text-sky-300 transition-colors underline underline-offset-4">ddillahunt59@gmail.com</a>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-xl shadow-lg shadow-amber-500/50">
+                <div className="p-3 bg-gradient-to-br from-red-700 to-red-600 rounded-xl shadow-lg shadow-red-500/50">
                   <Globe className="size-6 text-black" />
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2 text-lg text-amber-400">Sitio Web</h3>
+                  <h3 className="font-semibold mb-2 text-lg text-sky-300">Sitio Web</h3>
                   <a
                     href="https://www.grandes-ligas.net"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-slate-300 hover:text-amber-400 transition-colors underline underline-offset-4"
+                    className="text-slate-300 hover:text-sky-300 transition-colors underline underline-offset-4"
                   >
                     Grandes-Ligas.net
                   </a>
@@ -161,7 +161,7 @@ export function ContactEs() {
           </Card>
 
           {/* Map */}
-          <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 overflow-hidden bg-slate-900">
+          <Card className="border-2 border-blue-500/30 shadow-2xl shadow-blue-500/20 overflow-hidden bg-slate-900">
             <div className="relative h-full">
               <iframe
                 title="Ubicación de Grandes Ligas Barbería"
@@ -175,7 +175,7 @@ export function ContactEs() {
                 className="w-full"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900 to-transparent p-4 pt-8">
-                <p className="text-amber-400 text-sm font-medium text-center">
+                <p className="text-sky-300 text-sm font-medium text-center">
                   3A 2nd St, Framingham, MA 01702
                 </p>
               </div>
@@ -183,15 +183,15 @@ export function ContactEs() {
           </Card>
 
           {/* Contact Form */}
-          <Card className="border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 bg-slate-900">
+          <Card className="border-2 border-blue-500/30 shadow-2xl shadow-blue-500/20 bg-slate-900">
             <CardHeader className="p-8 pb-6">
-              <CardTitle className="text-2xl text-amber-400">Envíanos un Mensaje</CardTitle>
+              <CardTitle className="text-2xl text-sky-300">Envíanos un Mensaje</CardTitle>
               <CardDescription className="text-base text-slate-300">Te responderemos en 24 horas</CardDescription>
             </CardHeader>
             <CardContent className="p-8 pt-0">
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="contact-name-es" className="text-base text-amber-400">Nombre</Label>
+                  <Label htmlFor="contact-name-es" className="text-base text-sky-300">Nombre</Label>
                   <Input
                     id="contact-name-es"
                     value={formData.name}
@@ -202,7 +202,7 @@ export function ContactEs() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="contact-email-es" className="text-base text-amber-400">Correo Electrónico</Label>
+                  <Label htmlFor="contact-email-es" className="text-base text-sky-300">Correo Electrónico</Label>
                   <Input
                     id="contact-email-es"
                     type="email"
@@ -213,7 +213,7 @@ export function ContactEs() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="contact-phone-es" className="text-base text-amber-400">Número de Teléfono</Label>
+                  <Label htmlFor="contact-phone-es" className="text-base text-sky-300">Número de Teléfono</Label>
                   <Input
                     id="contact-phone-es"
                     type="tel"
@@ -225,7 +225,7 @@ export function ContactEs() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="message-es" className="text-base text-amber-400">Mensaje</Label>
+                  <Label htmlFor="message-es" className="text-base text-sky-300">Mensaje</Label>
                   <Textarea
                     id="message-es"
                     value={formData.message}
@@ -236,7 +236,7 @@ export function ContactEs() {
                   />
                 </div>
 
-                <Button type="submit" disabled={submitting} className="w-full h-12 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50">
+                <Button type="submit" disabled={submitting} className="w-full h-12 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white font-bold shadow-lg shadow-red-500/50 disabled:opacity-50">
                   {submitting ? "Enviando..." : "Enviar Mensaje"}
                 </Button>
               </form>

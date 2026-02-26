@@ -214,8 +214,8 @@ export function AppointmentBooking() {
             Walk-ins also welcome — no appointment needed!
           </p>
         </div>
-        <Card className="max-w-4xl mx-auto border-2 border-amber-500/30 shadow-2xl shadow-amber-500/20 bg-slate-900">
-          <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-500 p-8">
+        <Card className="max-w-4xl mx-auto border-2 border-blue-500/30 shadow-2xl shadow-blue-500/20 bg-slate-900">
+          <div className="bg-gradient-to-r from-red-700 via-red-600 to-red-600 p-8">
             <CardHeader className="p-0">
               <div className="flex items-center gap-4 text-black">
                 <div className="p-3 bg-black/20 backdrop-blur-sm rounded-xl">
@@ -232,7 +232,7 @@ export function AppointmentBooking() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Full Name *</Label>
+                  <Label htmlFor="name" style={{ color: "#7CB9E8", fontSize: "1rem", fontWeight: 600 }}>Full Name *</Label>
                   <Input
                     id="name"
                     value={formData.name}
@@ -243,7 +243,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Email</Label>
+                  <Label htmlFor="email" style={{ color: "#7CB9E8", fontSize: "1rem", fontWeight: 600 }}>Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -254,7 +254,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Phone Number *</Label>
+                  <Label htmlFor="phone" style={{ color: "#7CB9E8", fontSize: "1rem", fontWeight: 600 }}>Phone Number *</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -266,7 +266,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="barber" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Choose Your Barber</Label>
+                  <Label htmlFor="barber" style={{ color: "#7CB9E8", fontSize: "1rem", fontWeight: 600 }}>Choose Your Barber</Label>
                   <Select value={formData.barber} onValueChange={(value) => setFormData({ ...formData, barber: value, time: "" })}>
                     <SelectTrigger id="barber">
                       <SelectValue placeholder="Select a barber" />
@@ -282,7 +282,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="service" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Service</Label>
+                  <Label htmlFor="service" style={{ color: "#7CB9E8", fontSize: "1rem", fontWeight: 600 }}>Service</Label>
                   <Select value={formData.service} onValueChange={(value) => setFormData({ ...formData, service: value })}>
                     <SelectTrigger id="service">
                       <SelectValue placeholder="Select a service" />
@@ -298,7 +298,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="date" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Preferred Date *</Label>
+                  <Label htmlFor="date" style={{ color: "#7CB9E8", fontSize: "1rem", fontWeight: 600 }}>Preferred Date *</Label>
                   <Input
                     id="date"
                     type="date"
@@ -308,7 +308,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="time" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Preferred Time *</Label>
+                  <Label htmlFor="time" style={{ color: "#7CB9E8", fontSize: "1rem", fontWeight: 600 }}>Preferred Time *</Label>
                   <Select value={formData.time} onValueChange={(value) => setFormData({ ...formData, time: value })}>
                     <SelectTrigger id="time">
                       <SelectValue placeholder={availableTimeSlots.length === 0 && formData.date ? "No times available" : "Select a time"} />
@@ -324,7 +324,7 @@ export function AppointmentBooking() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="notes" style={{ color: "#fbbf24", fontSize: "1rem", fontWeight: 600 }}>Notes</Label>
+                  <Label htmlFor="notes" style={{ color: "#7CB9E8", fontSize: "1rem", fontWeight: 600 }}>Notes</Label>
                   <Textarea
                     id="notes"
                     value={formData.notes}
@@ -337,7 +337,7 @@ export function AppointmentBooking() {
               </div>
 
               <div className="flex items-center justify-center gap-3">
-                <Button type="submit" disabled={submitting} className="h-10 px-6 text-sm bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50 disabled:opacity-50">
+                <Button type="submit" disabled={submitting} className="h-10 px-6 text-sm bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white font-bold shadow-lg shadow-red-500/50 disabled:opacity-50">
                   {submitting ? "Sending..." : "Book Appointment"}
                 </Button>
 
@@ -345,7 +345,7 @@ export function AppointmentBooking() {
                   type="button"
                   variant="outline"
                   onClick={() => setFormData({ name: "", email: "", phone: "", barber: "", service: "", date: "", time: "", notes: "" })}
-                  className="h-10 px-4 text-sm bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50"
+                  className="h-10 px-4 text-sm bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white font-bold shadow-lg shadow-red-500/50"
                 >
                   <RotateCcw className="size-4 mr-1" />
                   Clear

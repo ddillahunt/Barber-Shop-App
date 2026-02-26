@@ -36,10 +36,10 @@ export function GalleryEs() {
     <section id="gallery" className="py-20 bg-gradient-to-b from-black via-slate-900 to-black">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-5xl mb-4 font-bold bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-400 bg-clip-text text-transparent">
+          <h2 className="text-5xl mb-4 font-bold bg-gradient-to-r from-sky-300 via-blue-400 to-sky-300 bg-clip-text text-transparent">
             Nuestro Trabajo
           </h2>
-          <p className="text-amber-200 text-lg max-w-2xl mx-auto">
+          <p className="text-sky-200 text-lg max-w-2xl mx-auto">
             Mira algunos de nuestros cortes y estilos más frescos
           </p>
         </div>
@@ -48,7 +48,7 @@ export function GalleryEs() {
           {galleryItems.map((item) => (
             <div
               key={item.id}
-              className="relative aspect-square rounded-xl overflow-hidden border-2 border-amber-500/20"
+              className="relative aspect-square rounded-xl overflow-hidden border-2 border-blue-500/20"
             >
               <img
                 src={item.image}
@@ -57,7 +57,7 @@ export function GalleryEs() {
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              <p className="absolute bottom-3 left-3 text-amber-400 font-bold text-lg">
+              <p className="absolute bottom-3 left-3 text-sky-300 font-bold text-lg">
                 {item.label}
               </p>
             </div>
@@ -66,7 +66,7 @@ export function GalleryEs() {
         <div className="text-center mt-12">
           <button
             onClick={() => document.getElementById('booking')?.scrollIntoView()}
-            className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-lg shadow-amber-500/50"
+            className="bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-lg shadow-red-500/50"
           >
             ¿Te Gusta Lo Que Ves? Obtén Este Look - ¡Reserva Ahora!
           </button>

@@ -19,14 +19,14 @@ export function ServicesEs() {
           {servicesEs.map((service) => (
             <Card 
               key={service.title} 
-              className={`hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-300 hover:-translate-y-2 border-2 border-amber-500/20 bg-gradient-to-br ${service.bgGradient} flex flex-col cursor-pointer`}
+              className={`hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-2 border-2 border-blue-500/20 bg-gradient-to-br ${service.bgGradient} flex flex-col cursor-pointer`}
               onClick={() => navigate(`/es/servicios/${service.id}`)}
             >
               <CardHeader className="flex-grow">
-                <div className={`inline-flex p-3 bg-gradient-to-br ${service.gradient} rounded-xl mb-4 w-fit shadow-lg shadow-amber-500/50`}>
+                <div className={`inline-flex p-3 bg-gradient-to-br ${service.gradient} rounded-xl mb-4 w-fit shadow-lg shadow-red-500/50`}>
                   <service.icon className="size-8 text-black" />
                 </div>
-                <CardTitle className="text-xl text-amber-400">{service.title}</CardTitle>
+                <CardTitle className="text-xl text-sky-300">{service.title}</CardTitle>
                 <CardDescription className="text-base text-slate-300">{service.description}</CardDescription>
               </CardHeader>
               <CardContent className="mt-auto">
@@ -38,7 +38,7 @@ export function ServicesEs() {
         <div className="text-center mt-12">
           <button
             onClick={() => document.getElementById('booking')?.scrollIntoView()}
-            className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-lg shadow-amber-500/50"
+            className="bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-lg shadow-red-500/50"
           >
             ¿Listo para un Nuevo Corte? ¡Reserva Tu Cita Ahora!
           </button>

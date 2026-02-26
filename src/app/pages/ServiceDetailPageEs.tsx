@@ -19,7 +19,7 @@ export function ServiceDetailPageEs() {
         <NavigationEs />
         <div className="text-center">
           <h1 className="text-4xl font-bold text-slate-900 mb-4">Servicio No Encontrado</h1>
-          <Button onClick={() => navigate("/es")} className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold">
+          <Button onClick={() => navigate("/es")} className="bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white font-bold">
             Volver al Inicio
           </Button>
         </div>
@@ -36,13 +36,13 @@ export function ServiceDetailPageEs() {
       <section className="py-16 bg-gradient-to-br from-slate-900 to-black text-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <div className={`inline-flex p-4 bg-gradient-to-br ${service.gradient} rounded-2xl mb-6 shadow-2xl shadow-amber-500/50`}>
+            <div className={`inline-flex p-4 bg-gradient-to-br ${service.gradient} rounded-2xl mb-6 shadow-2xl shadow-red-500/50`}>
               <service.icon className="size-12 text-black" />
             </div>
-            <h1 className="text-5xl md:text-6xl mb-6 font-bold bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-6xl mb-6 font-bold bg-gradient-to-r from-sky-200 via-blue-300 to-sky-200 bg-clip-text text-transparent">
               {service.title}
             </h1>
-            <p className="text-xl text-amber-100 leading-relaxed">
+            <p className="text-xl text-sky-100 leading-relaxed">
               {service.description}
             </p>
           </div>
@@ -55,9 +55,9 @@ export function ServiceDetailPageEs() {
           <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8">
             {/* Service Details */}
             <div className="lg:col-span-2 space-y-8">
-              <Card className="border-2 border-amber-500/30 shadow-xl bg-white">
+              <Card className="border-2 border-blue-500/30 shadow-xl bg-white">
                 <CardHeader>
-                  <CardTitle className="text-3xl bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent">
+                  <CardTitle className="text-3xl bg-gradient-to-r from-red-700 to-red-600 bg-clip-text text-transparent">
                     Descripción del Servicio
                   </CardTitle>
                 </CardHeader>
@@ -70,9 +70,9 @@ export function ServiceDetailPageEs() {
                 </CardContent>
               </Card>
 
-              <Card className="border-2 border-amber-500/30 shadow-xl bg-white">
+              <Card className="border-2 border-blue-500/30 shadow-xl bg-white">
                 <CardHeader>
-                  <CardTitle className="text-3xl bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent">
+                  <CardTitle className="text-3xl bg-gradient-to-r from-red-700 to-red-600 bg-clip-text text-transparent">
                     Qué Incluye
                   </CardTitle>
                 </CardHeader>
@@ -80,7 +80,7 @@ export function ServiceDetailPageEs() {
                   <ul className="space-y-3">
                     {service.included.map((item) => (
                       <li key={item} className="flex items-start gap-3">
-                        <CheckCircle className="size-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="size-6 text-blue-600 flex-shrink-0 mt-0.5" />
                         <span className="text-lg text-slate-700">{item}</span>
                       </li>
                     ))}
@@ -91,28 +91,28 @@ export function ServiceDetailPageEs() {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              <Card className="border-2 border-amber-500/30 shadow-xl bg-gradient-to-br from-slate-900 to-black sticky top-6">
+              <Card className="border-2 border-blue-500/30 shadow-xl bg-gradient-to-br from-slate-900 to-black sticky top-6">
                 <CardContent className="p-8 space-y-6">
-                  <div className="text-center pb-6 border-b border-amber-500/30">
-                    <p className="text-amber-400 text-lg mb-2 font-semibold">Precio del Servicio</p>
-                    <p className="text-5xl font-bold bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
+                  <div className="text-center pb-6 border-b border-blue-500/30">
+                    <p className="text-sky-300 text-lg mb-2 font-semibold">Precio del Servicio</p>
+                    <p className="text-5xl font-bold bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent">
                       {service.price}
                     </p>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="flex items-center gap-3 text-amber-200">
-                      <Clock className="size-6 text-amber-500" />
+                    <div className="flex items-center gap-3 text-sky-200">
+                      <Clock className="size-6 text-blue-500" />
                       <div>
-                        <p className="font-semibold text-amber-400">Duración</p>
+                        <p className="font-semibold text-sky-300">Duración</p>
                         <p>{service.duration}</p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3 text-amber-200">
-                      <DollarSign className="size-6 text-amber-500" />
+                    <div className="flex items-center gap-3 text-sky-200">
+                      <DollarSign className="size-6 text-blue-500" />
                       <div>
-                        <p className="font-semibold text-amber-400">Pago</p>
+                        <p className="font-semibold text-sky-300">Pago</p>
                         <p>Efectivo o tarjeta aceptados</p>
                       </div>
                     </div>
@@ -125,7 +125,7 @@ export function ServiceDetailPageEs() {
                         document.getElementById("booking")?.scrollIntoView();
                       }, 100);
                     }}
-                    className="w-full h-14 text-lg bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-bold shadow-lg shadow-amber-500/50"
+                    className="w-full h-14 text-lg bg-gradient-to-r from-red-700 to-red-600 hover:from-red-800 hover:to-red-700 text-white font-bold shadow-lg shadow-red-500/50"
                   >
                     Reservar Este Servicio
                   </Button>
@@ -137,23 +137,23 @@ export function ServiceDetailPageEs() {
       </section>
       
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-black via-slate-900 to-black text-white py-12 border-t-2 border-amber-500/50">
+      <footer className="bg-gradient-to-r from-black via-slate-900 to-black text-white py-12 border-t-2 border-blue-500/50">
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 mb-4">
             <img src={logoImg} alt="Grandes Ligas" className="h-6 w-auto object-contain" />
-            <span className="font-bold italic text-xl bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Grandes Ligas</span>
+            <span className="font-bold italic text-xl bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent">Grandes Ligas</span>
           </div>
-          <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">Enlaces Rápidos</h3>
+          <h3 className="font-bold text-lg mb-3 bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent">Enlaces Rápidos</h3>
           <nav className="flex flex-wrap justify-center gap-6 mb-6">
-            <Link to="/es" className="text-slate-300 hover:text-amber-400 transition-colors">Inicio</Link>
-            <Link to="/es#services" className="text-slate-300 hover:text-amber-400 transition-colors">Servicios</Link>
-<Link to="/es#team" className="text-slate-300 hover:text-amber-400 transition-colors">Equipo</Link>
-            <Link to="/es#schedule" className="text-slate-300 hover:text-amber-400 transition-colors">Horario</Link>
-            <Link to="/es#booking" className="text-slate-300 hover:text-amber-400 transition-colors">Reservar</Link>
-            <Link to="/es#contact" className="text-slate-300 hover:text-amber-400 transition-colors">Contacto</Link>
-            <Link to="/es/acerca-de" className="text-slate-300 hover:text-amber-400 transition-colors">Acerca De</Link>
+            <Link to="/es" className="text-slate-300 hover:text-sky-300 transition-colors">Inicio</Link>
+            <Link to="/es#services" className="text-slate-300 hover:text-sky-300 transition-colors">Servicios</Link>
+<Link to="/es#team" className="text-slate-300 hover:text-sky-300 transition-colors">Equipo</Link>
+            <Link to="/es#schedule" className="text-slate-300 hover:text-sky-300 transition-colors">Horario</Link>
+            <Link to="/es#booking" className="text-slate-300 hover:text-sky-300 transition-colors">Reservar</Link>
+            <Link to="/es#contact" className="text-slate-300 hover:text-sky-300 transition-colors">Contacto</Link>
+            <Link to="/es/acerca-de" className="text-slate-300 hover:text-sky-300 transition-colors">Acerca De</Link>
           </nav>
-          <p className="text-amber-200">
+          <p className="text-sky-200">
             &copy; 2026 Grandes Ligas Barbería. Todos los derechos reservados.
           </p>
           <p className="text-slate-400 text-sm mt-3">Powered by GDI Digital Solutions</p>
