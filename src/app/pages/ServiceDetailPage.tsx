@@ -35,6 +35,14 @@ export function ServiceDetailPage() {
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-br from-slate-900 to-black text-white">
         <div className="container mx-auto px-4">
+          <Button
+            onClick={() => navigate("/")}
+            variant="ghost"
+            className="mb-6 text-sky-300 hover:text-white hover:bg-white/10"
+          >
+            <ArrowLeft className="size-5 mr-2" />
+            Back to Home
+          </Button>
           <div className="max-w-4xl mx-auto text-center">
             <div className={`inline-flex p-4 bg-gradient-to-br ${service.gradient} rounded-2xl mb-6 shadow-2xl shadow-red-500/50`}>
               <service.icon className="size-12 text-black" />
