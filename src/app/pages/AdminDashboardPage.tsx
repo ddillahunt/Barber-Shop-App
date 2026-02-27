@@ -785,7 +785,7 @@ export function AdminDashboardPage() {
                 </div>
                 <CardContent className="p-4 text-center flex flex-col items-center">
                   {(barber.imageUrl || barberImages[barber.name]) ? (
-                    <img src={barber.imageUrl || barberImages[barber.name]} alt={barber.name} className="w-12 h-12 rounded-full object-cover border-2 border-blue-500/50 mb-2" />
+                    <img src={barber.imageUrl || barberImages[barber.name]} alt={barber.name} className="w-14 h-14 rounded-full object-cover object-top border-2 border-blue-500/50 mb-2" />
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-700 to-red-600 flex items-center justify-center mb-2">
                       <User className="size-6 text-white" />
