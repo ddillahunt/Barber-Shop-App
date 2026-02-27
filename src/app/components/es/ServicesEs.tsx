@@ -24,13 +24,13 @@ export function ServicesEs() {
             >
               <CardHeader className="flex-grow">
                 <div className={`inline-flex p-3 bg-gradient-to-br ${service.gradient} rounded-xl mb-4 w-fit shadow-lg shadow-red-500/50`}>
-                  <service.icon className="size-8 text-black" />
+                  <service.icon className="size-8 text-white" />
                 </div>
                 <CardTitle className="text-xl text-sky-300">{service.title}</CardTitle>
                 <CardDescription className="text-base text-slate-300">{service.description}</CardDescription>
               </CardHeader>
               <CardContent className="mt-auto">
-                <p className={`text-3xl font-bold bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent`}>{service.price}</p>
+                <p className="text-3xl font-bold text-white">{service.price}</p>
               </CardContent>
             </Card>
           ))}

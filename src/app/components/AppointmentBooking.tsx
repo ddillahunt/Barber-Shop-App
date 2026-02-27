@@ -8,7 +8,7 @@ import { Textarea } from "./ui/textarea";
 import { Calendar, UserCheck, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { sendEmail, sendSMS } from "../lib/email";
-import { saveAppointment, subscribeToBookedTimes, isTimeSlotAvailable, subscribeToBarbers, type Barber } from "../lib/appointments";
+import { saveAppointment, subscribeToBookedTimes, subscribeToBlockedTimes, isTimeSlotAvailable, subscribeToBarbers, type Barber, type BlockedTime } from "../lib/appointments";
 
 const timeSlots = [
   "9:00 AM", "9:15 AM", "9:30 AM", "9:45 AM",
@@ -25,10 +25,10 @@ const timeSlots = [
 ];
 
 const services = [
-  "Classic Haircut",
-  "Haircut & Shave",
-  "Beard Trim & Lineup",
-  "Children's Haircut (11 & Under)"
+  { name: "Classic Haircut", price: "$40" },
+  { name: "Haircut & Shave", price: "$50" },
+  { name: "Beard Trim & Lineup", price: "$30" },
+  { name: "Children's Haircut (11 & Under)", price: "$35" },
 ];
 
 function formatPhone(value: string) {
@@ -52,6 +52,7 @@ export function AppointmentBooking() {
 
   const [submitting, setSubmitting] = useState(false);
   const [bookedTimes, setBookedTimes] = useState<string[]>([]);
+  const [blockedTimeSlots, setBlockedTimeSlots] = useState<string[]>([]);
   const [barbers, setBarbers] = useState<Barber[]>([]);
 
   useEffect(() => {
@@ -70,7 +71,21 @@ export function AppointmentBooking() {
     }
   }, [formData.date, formData.barber]);
 
-  const availableTimeSlots = timeSlots.filter((t) => !bookedTimes.includes(t));
+  useEffect(() => {
+    if (formData.date) {
+      const selectedBarber = barbers.find(b => b.id === formData.barber);
+      const barberLabel = selectedBarber ? `${selectedBarber.name} - ${selectedBarber.phone}` : undefined;
+      const unsubscribe = subscribeToBlockedTimes(formData.date, barberLabel, (blocked) => {
+        setBlockedTimeSlots(blocked.map((bt) => bt.time));
+      });
+      return () => unsubscribe();
+    } else {
+      setBlockedTimeSlots([]);
+    }
+  }, [formData.date, formData.barber]);
+
+  const unavailableTimes = [...bookedTimes, ...blockedTimeSlots];
+  const availableTimeSlots = timeSlots.filter((t) => !unavailableTimes.includes(t));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -217,13 +232,13 @@ export function AppointmentBooking() {
         <Card className="max-w-4xl mx-auto border-2 border-blue-500/30 shadow-2xl shadow-blue-500/20 bg-slate-900">
           <div className="bg-gradient-to-r from-red-700 via-red-600 to-red-600 p-8">
             <CardHeader className="p-0">
-              <div className="flex items-center gap-4 text-black">
-                <div className="p-3 bg-black/20 backdrop-blur-sm rounded-xl">
-                  <Calendar className="size-8 text-black" />
+              <div className="flex items-center gap-4 text-white">
+                <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+                  <Calendar className="size-8 text-white" />
                 </div>
                 <div>
-                  <CardTitle className="text-black text-3xl mb-2 font-bold">Schedule Your Visit</CardTitle>
-                  <CardDescription className="text-slate-900 text-base font-medium">Choose your barber, service, and preferred time</CardDescription>
+                  <CardTitle className="text-white text-3xl mb-2 font-bold">Schedule Your Visit</CardTitle>
+                  <CardDescription className="text-white/80 text-base font-medium">Choose your barber, service, and preferred time</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -289,8 +304,8 @@ export function AppointmentBooking() {
                     </SelectTrigger>
                     <SelectContent>
                       {services.map((service) => (
-                        <SelectItem key={service} value={service}>
-                          {service}
+                        <SelectItem key={service.name} value={service.name}>
+                          {service.name} — {service.price}
                         </SelectItem>
                       ))}
                     </SelectContent>

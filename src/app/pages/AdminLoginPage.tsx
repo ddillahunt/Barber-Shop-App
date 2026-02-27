@@ -68,13 +68,13 @@ export function AdminLoginPage() {
       <Card className="w-full max-w-md border-2 border-blue-500/30 shadow-2xl bg-slate-900">
         <div className="bg-gradient-to-r from-red-700 via-red-600 to-red-600 p-6">
           <CardHeader className="p-0">
-            <div className="flex items-center gap-3 text-black">
-              <div className="p-2 bg-black/20 backdrop-blur-sm rounded-xl">
-                <Lock className="size-6 text-black" />
+            <div className="flex items-center gap-3 text-white">
+              <div className="p-2 bg-white/20 backdrop-blur-sm rounded-xl">
+                <Lock className="size-6 text-white" />
               </div>
               <div>
-                <CardTitle className="text-black text-2xl font-bold">Admin Login</CardTitle>
-                <CardDescription className="text-slate-900 font-medium">Grandes Ligas Dashboard</CardDescription>
+                <CardTitle className="text-white text-2xl font-bold">Admin Login</CardTitle>
+                <CardDescription className="text-white font-medium">Grandes Ligas Dashboard</CardDescription>
               </div>
             </div>
           </CardHeader>

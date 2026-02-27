@@ -18,8 +18,8 @@ export function HeroEs() {
       <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-blue-500/10 to-red-500/10 animate-pulse" />
 
       <div className="container mx-auto px-4 text-center relative z-10">
-        <div className="inline-flex items-center justify-center p-4 mb-6 bg-gradient-to-br from-red-700 to-red-600 backdrop-blur-sm rounded-2xl border border-red-400/30 shadow-2xl shadow-red-500/50">
-          <img src={logoImg} alt="Grandes Ligas" className="h-16 w-auto object-contain" />
+        <div className="inline-flex items-center justify-center p-4 mb-6">
+          <img src={logoImg} alt="Grandes Ligas" className="h-32 w-auto object-contain" />
         </div>
         <div className="flex items-center justify-center gap-8 mb-6">
           {/* Left Barber Pole */}

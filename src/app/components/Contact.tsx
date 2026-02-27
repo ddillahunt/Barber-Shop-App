@@ -103,14 +103,14 @@ export function Contact() {
           <Card className="border-2 border-blue-500/30 shadow-2xl shadow-blue-500/20 overflow-hidden bg-slate-900">
             <div className="bg-gradient-to-br from-red-700 via-red-600 to-red-600 p-6">
               <CardHeader className="p-0">
-                <CardTitle className="text-black text-2xl mb-2 font-bold">Get in Touch</CardTitle>
-                <CardDescription className="text-slate-900 font-medium">Visit us or reach out with any questions</CardDescription>
+                <CardTitle className="text-white text-2xl mb-2 font-bold">Get in Touch</CardTitle>
+                <CardDescription className="text-white/80 font-medium">Visit us or reach out with any questions</CardDescription>
               </CardHeader>
             </div>
             <CardContent className="space-y-8 p-8 bg-gradient-to-br from-slate-900 to-black">
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-gradient-to-br from-red-700 to-red-600 rounded-xl shadow-lg shadow-red-500/50">
-                  <MapPin className="size-6 text-black" />
+                  <MapPin className="size-6 text-white" />
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2 text-lg text-sky-300">Location</h3>
@@ -123,7 +123,7 @@ export function Contact() {
 
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-gradient-to-br from-red-700 to-red-600 rounded-xl shadow-lg shadow-red-500/50">
-                  <Phone className="size-6 text-black" />
+                  <Phone className="size-6 text-white" />
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2 text-lg text-sky-300">Phone</h3>
@@ -133,7 +133,7 @@ export function Contact() {
 
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-gradient-to-br from-red-700 to-red-600 rounded-xl shadow-lg shadow-red-500/50">
-                  <Mail className="size-6 text-black" />
+                  <Mail className="size-6 text-white" />
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2 text-lg text-sky-300">Email</h3>
@@ -143,7 +143,7 @@ export function Contact() {
 
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-gradient-to-br from-red-700 to-red-600 rounded-xl shadow-lg shadow-red-500/50">
-                  <Globe className="size-6 text-black" />
+                  <Globe className="size-6 text-white" />
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2 text-lg text-sky-300">Website</h3>

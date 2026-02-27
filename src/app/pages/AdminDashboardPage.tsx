@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteAppointment, saveAppointment, updateAppointment, deleteMessage, subscribeToAppointments, subscribeToMessages, saveBarber, updateBarber, deleteBarber, subscribeToBarbers, uploadBarberImage, type Appointment, type Message, type Barber } from "../lib/appointments";
+import { deleteAppointment, saveAppointment, updateAppointment, deleteMessage, subscribeToAppointments, subscribeToMessages, saveBarber, updateBarber, deleteBarber, subscribeToBarbers, uploadBarberImage, saveBlockedTime, deleteBlockedTime, subscribeToAllBlockedTimes, type Appointment, type Message, type Barber, type BlockedTime } from "../lib/appointments";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -16,7 +16,7 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { LogOut, CalendarDays, Users, User, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell } from "lucide-react";
+import { LogOut, CalendarDays, Users, User, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell, Ban, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { sendEmail, sendSMS } from "../lib/email";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
@@ -46,16 +46,24 @@ const defaultBarbers = [
 ];
 
 const timeSlots = [
-  "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
-  "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM",
-  "5:00 PM", "6:00 PM", "7:00 PM",
+  "9:00 AM", "9:15 AM", "9:30 AM", "9:45 AM",
+  "10:00 AM", "10:15 AM", "10:30 AM", "10:45 AM",
+  "11:00 AM", "11:15 AM", "11:30 AM", "11:45 AM",
+  "12:00 PM", "12:15 PM", "12:30 PM", "12:45 PM",
+  "1:00 PM", "1:15 PM", "1:30 PM", "1:45 PM",
+  "2:00 PM", "2:15 PM", "2:30 PM", "2:45 PM",
+  "3:00 PM", "3:15 PM", "3:30 PM", "3:45 PM",
+  "4:00 PM", "4:15 PM", "4:30 PM", "4:45 PM",
+  "5:00 PM", "5:15 PM", "5:30 PM", "5:45 PM",
+  "6:00 PM", "6:15 PM", "6:30 PM", "6:45 PM",
+  "7:00 PM",
 ];
 
 const services = [
-  "Classic Haircut",
-  "Haircut & Shave",
-  "Beard Trim & Lineup",
-  "Children's Haircut (11 & Under)",
+  { name: "Classic Haircut", price: "$40" },
+  { name: "Haircut & Shave", price: "$50" },
+  { name: "Beard Trim & Lineup", price: "$30" },
+  { name: "Children's Haircut (11 & Under)", price: "$35" },
 ];
 
 function formatPhone(value: string) {
@@ -94,6 +102,10 @@ export function AdminDashboardPage() {
   const [editBarberForm, setEditBarberForm] = useState({ name: "", phone: "", email: "", imageUrl: "" });
   const [newBarberImage, setNewBarberImage] = useState<File | null>(null);
   const [editBarberImage, setEditBarberImage] = useState<File | null>(null);
+  const [blockedTimes, setBlockedTimes] = useState<BlockedTime[]>([]);
+  const [blockTimeDate, setBlockTimeDate] = useState("");
+  const [blockTimeReason, setBlockTimeReason] = useState("");
+  const [blockTimeSelected, setBlockTimeSelected] = useState<string[]>([]);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -104,6 +116,7 @@ export function AdminDashboardPage() {
     let unsubAppts: (() => void) | undefined;
     let unsubMsgs: (() => void) | undefined;
     let unsubBarbers: (() => void) | undefined;
+    let unsubBlocked: (() => void) | undefined;
 
     if (sessionStorage.getItem("adminAuth") !== "true") {
       navigate("/admin/login");
@@ -124,11 +137,13 @@ export function AdminDashboardPage() {
         defaultBarbers.forEach((b) => saveBarber({ name: b.name, phone: b.phone }));
       }
     });
+    unsubBlocked = subscribeToAllBlockedTimes(setBlockedTimes);
 
     return () => {
       unsubAppts?.();
       unsubMsgs?.();
       unsubBarbers?.();
+      unsubBlocked?.();
     };
   }, [navigate, barbersSeeded]);
 
@@ -155,6 +170,9 @@ export function AdminDashboardPage() {
   const handleEditBarberOpen = (barber: Barber) => {
     setEditingBarber(barber);
     setEditBarberForm({ name: barber.name, phone: barber.phone, email: barber.email || "", imageUrl: barber.imageUrl || "" });
+    setBlockTimeDate("");
+    setBlockTimeReason("");
+    setBlockTimeSelected([]);
   };
 
   const handleEditBarberSave = async () => {
@@ -185,6 +203,36 @@ export function AdminDashboardPage() {
       toast.success(`${name} removed`);
     } catch {
       toast.error("Failed to remove barber");
+    }
+  };
+
+  const handleBlockTime = async (barberLabel: string) => {
+    if (!blockTimeDate || blockTimeSelected.length === 0) {
+      toast.error("Select a date and at least one time slot");
+      return;
+    }
+    try {
+      await Promise.all(
+        blockTimeSelected.map((time) =>
+          saveBlockedTime({ barber: barberLabel, date: blockTimeDate, time, reason: blockTimeReason || "" })
+        )
+      );
+      toast.success(`Blocked ${blockTimeSelected.length} time slot${blockTimeSelected.length > 1 ? "s" : ""} for ${barberLabel.split(" - ")[0]}`);
+      setBlockTimeDate("");
+      setBlockTimeReason("");
+      setBlockTimeSelected([]);
+    } catch (err) {
+      console.error("Block time error:", err);
+      toast.error("Failed to block time slots");
+    }
+  };
+
+  const handleDeleteBlockedTime = async (id: string) => {
+    try {
+      await deleteBlockedTime(id);
+      toast.success("Blocked time removed");
+    } catch {
+      toast.error("Failed to remove blocked time");
     }
   };
 
@@ -412,7 +460,11 @@ export function AdminDashboardPage() {
   const bookedTimesForDate = newAppt.date && newAppt.barber
     ? appointments.filter((a) => a.date === newAppt.date && a.barber === newAppt.barber).map((a) => a.time).filter(Boolean)
     : [];
-  const availableTimeSlots = timeSlots.filter((t) => !bookedTimesForDate.includes(t));
+  const blockedTimesForDate = newAppt.date && newAppt.barber
+    ? blockedTimes.filter((bt) => bt.date === newAppt.date && bt.barber === newAppt.barber).map((bt) => bt.time)
+    : [];
+  const unavailableTimes = [...bookedTimesForDate, ...blockedTimesForDate];
+  const availableTimeSlots = timeSlots.filter((t) => !unavailableTimes.includes(t));
 
   const appointmentDates = appointments.reduce<Record<string, number>>((acc, appt) => {
     if (appt.date) acc[appt.date] = (acc[appt.date] || 0) + 1;
@@ -424,18 +476,22 @@ export function AdminDashboardPage() {
   const editBookedTimes = editForm.date
     ? appointments.filter((a) => a.date === editForm.date && a.id !== editingAppt?.id).map((a) => a.time).filter(Boolean)
     : [];
-  const editAvailableTimeSlots = timeSlots.filter((t) => !editBookedTimes.includes(t));
+  const editBlockedTimes = editForm.date && editForm.barber
+    ? blockedTimes.filter((bt) => bt.date === editForm.date && bt.barber === editForm.barber).map((bt) => bt.time)
+    : [];
+  const editUnavailableTimes = [...editBookedTimes, ...editBlockedTimes];
+  const editAvailableTimeSlots = timeSlots.filter((t) => !editUnavailableTimes.includes(t));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100">
       {/* Header */}
       <header className="bg-gradient-to-r from-black via-slate-900 to-black border-b-2 border-blue-500/50 px-4 py-4">
         <div className="container mx-auto flex flex-col items-center gap-3">
-          <div className="flex items-center gap-3">
-            <img src={logoImg} alt="Grandes Ligas" className="h-10 w-auto object-contain" />
+          <div className="flex flex-col items-center gap-2">
             <span className="font-bold italic text-lg bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent">
               Grandes Ligas Admin Dashboard
             </span>
+            <img src={logoImg} alt="Grandes Ligas" className="h-16 w-auto object-contain" />
           </div>
           <div className="font-mono text-2xl font-bold text-sky-300 tracking-wider">
             {currentTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true })}
@@ -563,44 +619,141 @@ export function AdminDashboardPage() {
         </Dialog>
 
         {/* Edit Barber Dialog */}
-        <Dialog open={!!editingBarber} onOpenChange={(open) => { if (!open) setEditingBarber(null); }}>
-          <DialogContent className="sm:max-w-sm">
+        <Dialog open={!!editingBarber} onOpenChange={(open) => { if (!open) { setEditingBarber(null); setBlockTimeDate(""); setBlockTimeReason(""); setBlockTimeSelected([]); } }}>
+          <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Edit Barber</DialogTitle>
-              <DialogDescription>Update barber information.</DialogDescription>
+              <DialogTitle>Edit Barber — {editingBarber?.name}</DialogTitle>
+              <DialogDescription>Update barber info and manage blocked times.</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
-              <div className="space-y-1">
-                <Label htmlFor="edit-barber-name">Name *</Label>
-                <Input id="edit-barber-name" value={editBarberForm.name} onChange={(e) => setEditBarberForm({ ...editBarberForm, name: e.target.value })} placeholder="Barber name" />
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <Label htmlFor="edit-barber-name">Name *</Label>
+                  <Input id="edit-barber-name" value={editBarberForm.name} onChange={(e) => setEditBarberForm({ ...editBarberForm, name: e.target.value })} placeholder="Barber name" />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="edit-barber-phone">Phone *</Label>
+                  <Input id="edit-barber-phone" type="tel" value={editBarberForm.phone} onChange={(e) => setEditBarberForm({ ...editBarberForm, phone: formatPhone(e.target.value) })} placeholder="(508) 555-1234" maxLength={14} />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="edit-barber-email">Email</Label>
+                  <Input id="edit-barber-email" type="email" value={editBarberForm.email} onChange={(e) => setEditBarberForm({ ...editBarberForm, email: e.target.value })} placeholder="barber@email.com" />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="edit-barber-image">Photo</Label>
+                  <Input id="edit-barber-image" type="file" accept="image/*" onChange={(e) => setEditBarberImage(e.target.files?.[0] || null)} />
+                  {editBarberForm.imageUrl && !editBarberImage && (
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs text-green-600">Current photo set</p>
+                      <button type="button" onClick={() => setEditBarberForm({ ...editBarberForm, imageUrl: "" })} className="text-xs text-red-500 hover:text-red-700 underline">Remove photo</button>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="space-y-1">
-                <Label htmlFor="edit-barber-phone">Phone *</Label>
-                <Input id="edit-barber-phone" type="tel" value={editBarberForm.phone} onChange={(e) => setEditBarberForm({ ...editBarberForm, phone: formatPhone(e.target.value) })} placeholder="(508) 555-1234" maxLength={14} />
+              <div className="flex justify-end">
+                <Button onClick={handleEditBarberSave} className="bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
+                  Save Changes
+                </Button>
               </div>
-              <div className="space-y-1">
-                <Label htmlFor="edit-barber-email">Email</Label>
-                <Input id="edit-barber-email" type="email" value={editBarberForm.email} onChange={(e) => setEditBarberForm({ ...editBarberForm, email: e.target.value })} placeholder="barber@email.com" />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="edit-barber-image">Photo</Label>
-                <Input id="edit-barber-image" type="file" accept="image/*" onChange={(e) => setEditBarberImage(e.target.files?.[0] || null)} />
-                {editBarberForm.imageUrl && !editBarberImage && (
-                  <div className="flex items-center gap-2">
-                    <p className="text-xs text-green-600">Current photo set</p>
-                    <button type="button" onClick={() => setEditBarberForm({ ...editBarberForm, imageUrl: "" })} className="text-xs text-red-500 hover:text-red-700 underline">Remove photo</button>
+
+              {/* Block Time Section */}
+              {editingBarber && (() => {
+                const editBarberLabel = `${editingBarber.name} - ${editingBarber.phone}`;
+                const barberBlocked = blockedTimes.filter((bt) => bt.barber === editBarberLabel);
+                const blockedByDate = barberBlocked.reduce<Record<string, BlockedTime[]>>((acc, bt) => {
+                  (acc[bt.date] = acc[bt.date] || []).push(bt);
+                  return acc;
+                }, {});
+                return (
+                  <div className="border-t border-orange-200 pt-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Ban className="size-4 text-orange-600" />
+                      <span className="font-semibold text-sm text-orange-700">Block Time Slots</span>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="space-y-1">
+                        <Label className="text-xs font-medium text-slate-600">Date *</Label>
+                        <Input type="date" value={blockTimeDate} onChange={(e) => { setBlockTimeDate(e.target.value); setBlockTimeSelected([]); }} className="h-8 text-sm" />
+                      </div>
+                      {blockTimeDate && (
+                        <>
+                          <div className="space-y-1">
+                            <Label className="text-xs font-medium text-slate-600">Select Time Slots</Label>
+                            <div className="grid grid-cols-5 gap-1">
+                              {timeSlots.map((t) => {
+                                const isBooked = appointments.some((a) => a.date === blockTimeDate && a.barber === editBarberLabel && a.time === t);
+                                const isAlreadyBlocked = blockedTimes.some((bt) => bt.date === blockTimeDate && bt.barber === editBarberLabel && bt.time === t);
+                                const isSelected = blockTimeSelected.includes(t);
+                                return (
+                                  <button
+                                    key={t}
+                                    type="button"
+                                    disabled={isBooked || isAlreadyBlocked}
+                                    onClick={() => setBlockTimeSelected(isSelected ? blockTimeSelected.filter((s) => s !== t) : [...blockTimeSelected, t])}
+                                    className={`text-xs py-1 px-0.5 rounded border font-medium transition-colors ${
+                                      isBooked ? "bg-blue-100 text-blue-400 border-blue-200 cursor-not-allowed" :
+                                      isAlreadyBlocked ? "bg-orange-100 text-orange-400 border-orange-200 cursor-not-allowed" :
+                                      isSelected ? "bg-red-600 text-white border-red-600" :
+                                      "bg-white text-slate-700 border-slate-300 hover:border-red-400 hover:bg-red-50"
+                                    }`}
+                                  >
+                                    {t}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            <div className="flex items-center gap-3 text-xs text-slate-500 mt-1">
+                              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-blue-100 border border-blue-200 inline-block" /> Booked</span>
+                              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-orange-100 border border-orange-200 inline-block" /> Blocked</span>
+                              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-red-600 inline-block" /> Selected</span>
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-xs font-medium text-slate-600">Reason (optional)</Label>
+                            <Input value={blockTimeReason} onChange={(e) => setBlockTimeReason(e.target.value)} placeholder="e.g., Lunch break, Training" className="h-8 text-sm" />
+                          </div>
+                          <Button
+                            size="sm"
+                            onClick={() => handleBlockTime(editBarberLabel)}
+                            disabled={blockTimeSelected.length === 0}
+                            className="h-8 px-3 text-xs bg-gradient-to-br from-orange-600 to-orange-500 text-white font-bold hover:from-orange-700 hover:to-orange-600 disabled:opacity-50"
+                          >
+                            Block {blockTimeSelected.length > 0 ? `${blockTimeSelected.length} Slot${blockTimeSelected.length > 1 ? "s" : ""}` : "Time"}
+                          </Button>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Existing blocked times */}
+                    {Object.keys(blockedByDate).length > 0 && (
+                      <div className="mt-4 pt-3 border-t border-orange-100">
+                        <span className="text-xs font-semibold text-orange-600">Current Blocked Times</span>
+                        {Object.entries(blockedByDate).sort(([a], [b]) => a.localeCompare(b)).map(([date, slots]) => (
+                          <div key={date} className="mt-2">
+                            <div className="text-xs font-medium text-slate-500 mb-1">{date}</div>
+                            <div className="flex flex-wrap gap-1">
+                              {slots.sort((a, b) => a.time.localeCompare(b.time)).map((bt) => (
+                                <span key={bt.id} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
+                                  <Clock className="size-3" />
+                                  {bt.time}
+                                  {bt.reason && <span className="text-orange-500">({bt.reason})</span>}
+                                  <button onClick={() => handleDeleteBlockedTime(bt.id!)} className="ml-0.5 text-orange-400 hover:text-red-600">
+                                    <X className="size-3" />
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                );
+              })()}
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setEditingBarber(null)}>Cancel</Button>
-              <Button onClick={handleEditBarberSave} className="bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
-                Save Changes
-              </Button>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
+
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-2">
           {barbers.map((barber) => {
             const count = appointments.filter((a) => a.barber?.startsWith(barber.name)).length;
@@ -635,7 +788,7 @@ export function AdminDashboardPage() {
                     <img src={barber.imageUrl || barberImages[barber.name]} alt={barber.name} className="w-12 h-12 rounded-full object-cover border-2 border-blue-500/50 mb-2" />
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-700 to-red-600 flex items-center justify-center mb-2">
-                      <User className="size-6 text-black" />
+                      <User className="size-6 text-white" />
                     </div>
                   )}
                   <div className="font-bold text-slate-900 text-sm mb-1">{barber.name}</div>
@@ -653,6 +806,11 @@ export function AdminDashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
         {expandedBarbers.map((barberName) => {
           const barberAppts = appointments.filter((a) => a.barber?.startsWith(barberName));
+          const barberBlocked = blockedTimes.filter((bt) => bt.barber?.startsWith(barberName));
+          const blockedByDate = barberBlocked.reduce<Record<string, BlockedTime[]>>((acc, bt) => {
+            (acc[bt.date] = acc[bt.date] || []).push(bt);
+            return acc;
+          }, {});
           return (
             <Card key={barberName} className="border-blue-500/30 bg-white">
               <CardHeader className="flex flex-row items-center justify-between pb-3">
@@ -732,6 +890,32 @@ export function AdminDashboardPage() {
                     ))}
                   </div>
                 )}
+                {/* Blocked Times for this barber */}
+                {Object.keys(blockedByDate).length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-orange-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Ban className="size-4 text-orange-500" />
+                      <span className="font-semibold text-sm text-orange-700">Blocked Times</span>
+                    </div>
+                    {Object.entries(blockedByDate).sort(([a], [b]) => a.localeCompare(b)).map(([date, slots]) => (
+                      <div key={date} className="mb-2">
+                        <div className="text-xs font-medium text-slate-500 mb-1">{date}</div>
+                        <div className="flex flex-wrap gap-1">
+                          {slots.sort((a, b) => a.time.localeCompare(b.time)).map((bt) => (
+                            <span key={bt.id} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
+                              <Clock className="size-3" />
+                              {bt.time}
+                              {bt.reason && <span className="text-orange-500">({bt.reason})</span>}
+                              <button onClick={() => handleDeleteBlockedTime(bt.id!)} className="ml-0.5 text-orange-400 hover:text-red-600">
+                                <X className="size-3" />
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           );
@@ -778,7 +962,7 @@ export function AdminDashboardPage() {
                     <SelectTrigger id="new-service"><SelectValue placeholder="Select a service" /></SelectTrigger>
                     <SelectContent>
                       {services.map((s) => (
-                        <SelectItem key={s} value={s}>{s}</SelectItem>
+                        <SelectItem key={s.name} value={s.name}>{s.name} — {s.price}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -1131,7 +1315,7 @@ export function AdminDashboardPage() {
                 <SelectTrigger id="edit-service"><SelectValue placeholder="Select a service" /></SelectTrigger>
                 <SelectContent>
                   {services.map((s) => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                    <SelectItem key={s.name} value={s.name}>{s.name} — {s.price}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

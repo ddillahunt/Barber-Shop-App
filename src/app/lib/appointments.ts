@@ -19,6 +19,7 @@ export interface Appointment {
 }
 
 const appointmentsRef = collection(db, "appointments");
+const blockedTimesRef = collection(db, "blockedTimes");
 
 export async function saveAppointment(data: Omit<Appointment, "id" | "createdAt">) {
   return addDoc(appointmentsRef, {
@@ -48,10 +49,18 @@ export async function getBookedTimes(date: string, barber?: string): Promise<str
 export async function isTimeSlotAvailable(date: string, time: string, barber: string): Promise<boolean> {
   const q = query(appointmentsRef, where("date", "==", date));
   const snapshot = await getDocs(q);
-  return !snapshot.docs.some((doc) => {
+  const hasAppointment = snapshot.docs.some((doc) => {
     const d = doc.data();
     return d.time === time && d.barber === barber;
   });
+  if (hasAppointment) return false;
+
+  const blockedQuery = query(blockedTimesRef, where("date", "==", date), where("barber", "==", barber));
+  const blockedSnapshot = await getDocs(blockedQuery);
+  const isBlocked = blockedSnapshot.docs.some((doc) => doc.data().time === time);
+  if (isBlocked) return false;
+
+  return true;
 }
 
 export function subscribeToBookedTimes(
@@ -162,5 +171,58 @@ export function subscribeToMessages(callback: (messages: Message[]) => void): Un
   const q = query(messagesRef, orderBy("createdAt", "desc"));
   return onSnapshot(q, (snapshot) => {
     callback(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as Message[]);
+  });
+}
+
+// Blocked Times
+export interface BlockedTime {
+  id?: string;
+  barber: string;
+  date: string;
+  time: string;
+  reason?: string;
+  createdAt: Timestamp;
+}
+
+export async function saveBlockedTime(data: Omit<BlockedTime, "id" | "createdAt">) {
+  const doc: Record<string, unknown> = {
+    barber: data.barber,
+    date: data.date,
+    time: data.time,
+    createdAt: Timestamp.now(),
+  };
+  if (data.reason) doc.reason = data.reason;
+  return addDoc(blockedTimesRef, doc);
+}
+
+export async function deleteBlockedTime(id: string) {
+  return deleteDoc(doc(db, "blockedTimes", id));
+}
+
+export function subscribeToBlockedTimes(
+  date: string,
+  barber: string | undefined,
+  callback: (blockedTimes: BlockedTime[]) => void
+): Unsubscribe {
+  const q = query(blockedTimesRef, where("date", "==", date));
+  return onSnapshot(q, (snapshot) => {
+    const docs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as BlockedTime[];
+    if (barber) {
+      callback(docs.filter((d) => d.barber === barber));
+    } else {
+      callback(docs);
+    }
+  }, (error) => {
+    console.error("Blocked times listener error:", error);
+    callback([]);
+  });
+}
+
+export function subscribeToAllBlockedTimes(callback: (blockedTimes: BlockedTime[]) => void): Unsubscribe {
+  return onSnapshot(blockedTimesRef, (snapshot) => {
+    callback(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as BlockedTime[]);
+  }, (error) => {
+    console.error("All blocked times listener error:", error);
+    callback([]);
   });
 }

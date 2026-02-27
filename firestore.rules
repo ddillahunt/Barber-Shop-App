@@ -21,5 +21,11 @@ service cloud.firestore {
       // Only authenticated admin can create/update/delete
       allow create, update, delete: if request.auth != null;
     }
+    match /blockedTimes/{document=**} {
+      // Public can read blocked times (needed for availability check)
+      allow read: if true;
+      // Admin can create/delete blocked times
+      allow create, delete: if true;
+    }
   }
 }
