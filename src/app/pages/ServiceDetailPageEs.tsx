@@ -121,7 +121,7 @@ export function ServiceDetailPageEs() {
                       <DollarSign className="size-6 text-blue-500" />
                       <div>
                         <p className="font-semibold text-sky-300">Pago</p>
-                        <p>Efectivo o tarjeta aceptados</p>
+                        <p>Solo efectivo</p>
                       </div>
                     </div>
                   </div>

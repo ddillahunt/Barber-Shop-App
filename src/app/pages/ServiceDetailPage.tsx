@@ -121,7 +121,7 @@ export function ServiceDetailPage() {
                       <DollarSign className="size-6 text-blue-500" />
                       <div>
                         <p className="font-semibold text-sky-300">Payment</p>
-                        <p>Cash or Card accepted</p>
+                        <p>Cash only</p>
                       </div>
                     </div>
                   </div>
