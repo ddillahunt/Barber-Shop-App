@@ -111,6 +111,16 @@ export function AdminDashboardPage() {
   const [blockRangeEnd, setBlockRangeEnd] = useState("");
   const [quickRangeFrom, setQuickRangeFrom] = useState("");
   const [quickRangeTo, setQuickRangeTo] = useState("");
+  const [editingBlocked, setEditingBlocked] = useState<{
+    type: "fullday" | "partial";
+    ids: string[];
+    barber: string;
+    startDate: string;
+    endDate: string;
+    startTime: string;
+    endTime: string;
+    reason: string;
+  } | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -278,6 +288,48 @@ export function AdminDashboardPage() {
       toast.success("Blocked time removed");
     } catch {
       toast.error("Failed to remove blocked time");
+    }
+  };
+
+  const handleSaveEditBlocked = async () => {
+    if (!editingBlocked) return;
+    try {
+      // Delete old blocked time documents
+      await Promise.all(editingBlocked.ids.map((id) => deleteBlockedTime(id)));
+
+      if (editingBlocked.type === "fullday") {
+        // Re-create full-day blocks for new date range
+        const dates: string[] = [];
+        const current = new Date(editingBlocked.startDate + "T00:00:00");
+        const end = new Date(editingBlocked.endDate + "T00:00:00");
+        while (current <= end) {
+          dates.push(current.toISOString().split("T")[0]);
+          current.setDate(current.getDate() + 1);
+        }
+        const promises = dates.flatMap((date) =>
+          timeSlots.map((time) =>
+            saveBlockedTime({ barber: editingBlocked.barber, date, time, reason: editingBlocked.reason || "" })
+          )
+        );
+        await Promise.all(promises);
+      } else {
+        // Re-create partial-day blocks for new time range
+        const fromIdx = timeSlots.indexOf(editingBlocked.startTime);
+        const toIdx = timeSlots.indexOf(editingBlocked.endTime);
+        if (fromIdx >= 0 && toIdx >= 0 && fromIdx <= toIdx) {
+          const slots = timeSlots.slice(fromIdx, toIdx + 1);
+          await Promise.all(
+            slots.map((time) =>
+              saveBlockedTime({ barber: editingBlocked.barber, date: editingBlocked.startDate, time, reason: editingBlocked.reason || "" })
+            )
+          );
+        }
+      }
+      toast.success("Blocked time updated");
+      setEditingBlocked(null);
+    } catch (err) {
+      console.error("Edit blocked time error:", err);
+      toast.error("Failed to update blocked time");
     }
   };
 
@@ -939,16 +991,46 @@ export function AdminDashboardPage() {
                         <div className="mt-4 pt-3 border-t border-orange-100">
                           <span className="text-xs font-semibold text-orange-600">Current Blocked Times</span>
                           <div className="flex flex-wrap gap-1 mt-2">
-                            {dateRanges.map((r) => (
-                              <span key={r.start} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
-                                <Clock className="size-3" />
-                                {r.start === r.end ? `${r.start} (all day)` : `${r.start} → ${r.end}`}
-                                {r.reason && <span className="text-orange-500">({r.reason})</span>}
-                                <button onClick={() => Promise.all(r.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked dates removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
-                                  <X className="size-3" />
-                                </button>
-                              </span>
-                            ))}
+                            {dateRanges.map((r) => {
+                              const isEditing = editingBlocked?.type === "fullday" && editingBlocked.ids.join() === r.ids.join();
+                              return (
+                                <div key={r.start} className="w-full">
+                                  <span className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
+                                    <Clock className="size-3" />
+                                    {r.start === r.end ? `${r.start} (all day)` : `${r.start} → ${r.end}`}
+                                    {r.reason && <span className="text-orange-500">({r.reason})</span>}
+                                    <button onClick={() => setEditingBlocked({ type: "fullday", ids: r.ids, barber: editBarberLabel, startDate: r.start, endDate: r.end, startTime: "", endTime: "", reason: r.reason })} className="ml-0.5 text-orange-400 hover:text-blue-600">
+                                      <Pencil className="size-3" />
+                                    </button>
+                                    <button onClick={() => Promise.all(r.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked dates removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
+                                      <X className="size-3" />
+                                    </button>
+                                  </span>
+                                  {isEditing && (
+                                    <div className="mt-2 p-3 bg-orange-50 border border-orange-200 rounded-lg space-y-2">
+                                      <div className="grid grid-cols-2 gap-2">
+                                        <div className="space-y-1">
+                                          <Label className="text-xs font-medium text-slate-600">Start Date</Label>
+                                          <Input type="date" value={editingBlocked.startDate} onChange={(e) => setEditingBlocked({ ...editingBlocked, startDate: e.target.value })} className="h-7 text-xs" />
+                                        </div>
+                                        <div className="space-y-1">
+                                          <Label className="text-xs font-medium text-slate-600">End Date</Label>
+                                          <Input type="date" value={editingBlocked.endDate} onChange={(e) => setEditingBlocked({ ...editingBlocked, endDate: e.target.value })} className="h-7 text-xs" />
+                                        </div>
+                                      </div>
+                                      <div className="space-y-1">
+                                        <Label className="text-xs font-medium text-slate-600">Reason</Label>
+                                        <Input value={editingBlocked.reason} onChange={(e) => setEditingBlocked({ ...editingBlocked, reason: e.target.value })} placeholder="e.g., Vacation" className="h-7 text-xs" />
+                                      </div>
+                                      <div className="flex gap-2">
+                                        <Button size="sm" onClick={handleSaveEditBlocked} className="h-7 px-3 text-xs bg-orange-600 hover:bg-orange-700 text-white font-bold">Save</Button>
+                                        <Button size="sm" variant="ghost" onClick={() => setEditingBlocked(null)} className="h-7 px-3 text-xs">Cancel</Button>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
                             {partialDates.map((date) => {
                               const sorted = blockedByDate[date].sort((a, b) => timeSlots.indexOf(a.time) - timeSlots.indexOf(b.time));
                               const timeRanges: { start: string; end: string; reason: string; ids: string[] }[] = [];
@@ -971,16 +1053,54 @@ export function AdminDashboardPage() {
                                 timeRanges.push({ start: tStart, end: tEnd, reason, ids });
                                 ti++;
                               }
-                              return timeRanges.map((tr) => (
-                                <span key={`${date}-${tr.start}`} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
-                                  <Clock className="size-3" />
-                                  {date}: {tr.start === tr.end ? tr.start : `${tr.start} → ${tr.end}`}
-                                  {tr.reason && <span className="text-orange-500">({tr.reason})</span>}
-                                  <button onClick={() => Promise.all(tr.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked time removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
-                                    <X className="size-3" />
-                                  </button>
-                                </span>
-                              ));
+                              return timeRanges.map((tr) => {
+                                const isEditing = editingBlocked?.type === "partial" && editingBlocked.ids.join() === tr.ids.join();
+                                return (
+                                  <div key={`${date}-${tr.start}`} className="w-full">
+                                    <span className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
+                                      <Clock className="size-3" />
+                                      {date}: {tr.start === tr.end ? tr.start : `${tr.start} → ${tr.end}`}
+                                      {tr.reason && <span className="text-orange-500">({tr.reason})</span>}
+                                      <button onClick={() => setEditingBlocked({ type: "partial", ids: tr.ids, barber: editBarberLabel, startDate: date, endDate: date, startTime: tr.start, endTime: tr.end, reason: tr.reason })} className="ml-0.5 text-orange-400 hover:text-blue-600">
+                                        <Pencil className="size-3" />
+                                      </button>
+                                      <button onClick={() => Promise.all(tr.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked time removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
+                                        <X className="size-3" />
+                                      </button>
+                                    </span>
+                                    {isEditing && (
+                                      <div className="mt-2 p-3 bg-orange-50 border border-orange-200 rounded-lg space-y-2">
+                                        <div className="space-y-1">
+                                          <Label className="text-xs font-medium text-slate-600">Date</Label>
+                                          <Input type="date" value={editingBlocked.startDate} onChange={(e) => setEditingBlocked({ ...editingBlocked, startDate: e.target.value })} className="h-7 text-xs" />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2">
+                                          <div className="space-y-1">
+                                            <Label className="text-xs font-medium text-slate-600">From</Label>
+                                            <select value={editingBlocked.startTime} onChange={(e) => setEditingBlocked({ ...editingBlocked, startTime: e.target.value })} className="h-7 text-xs border border-slate-300 rounded px-2 bg-white w-full">
+                                              {timeSlots.map((t) => <option key={t} value={t}>{t}</option>)}
+                                            </select>
+                                          </div>
+                                          <div className="space-y-1">
+                                            <Label className="text-xs font-medium text-slate-600">To</Label>
+                                            <select value={editingBlocked.endTime} onChange={(e) => setEditingBlocked({ ...editingBlocked, endTime: e.target.value })} className="h-7 text-xs border border-slate-300 rounded px-2 bg-white w-full">
+                                              {timeSlots.map((t) => <option key={t} value={t}>{t}</option>)}
+                                            </select>
+                                          </div>
+                                        </div>
+                                        <div className="space-y-1">
+                                          <Label className="text-xs font-medium text-slate-600">Reason</Label>
+                                          <Input value={editingBlocked.reason} onChange={(e) => setEditingBlocked({ ...editingBlocked, reason: e.target.value })} placeholder="e.g., Lunch break" className="h-7 text-xs" />
+                                        </div>
+                                        <div className="flex gap-2">
+                                          <Button size="sm" onClick={handleSaveEditBlocked} className="h-7 px-3 text-xs bg-orange-600 hover:bg-orange-700 text-white font-bold">Save</Button>
+                                          <Button size="sm" variant="ghost" onClick={() => setEditingBlocked(null)} className="h-7 px-3 text-xs">Cancel</Button>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              });
                             })}
                           </div>
                         </div>
@@ -1179,16 +1299,47 @@ export function AdminDashboardPage() {
                           <div className="text-xs font-semibold text-orange-600 mb-1">Days Off & Vacations</div>
                           <div className="text-xs text-slate-400 mb-2">Full days this barber is unavailable</div>
                           <div className="flex flex-wrap gap-1">
-                          {ranges.map((r) => (
-                            <span key={r.start} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
-                              <Clock className="size-3" />
-                              {r.start === r.end ? `${r.start} (all day)` : `${r.start} → ${r.end}`}
-                              {r.reason && <span className="text-orange-500">({r.reason})</span>}
-                              <button onClick={() => Promise.all(r.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked dates removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
-                                <X className="size-3" />
-                              </button>
-                            </span>
-                          ))}
+                          {ranges.map((r) => {
+                            const barberLabel = barberBlocked[0]?.barber || barberName;
+                            const isEditing = editingBlocked?.type === "fullday" && editingBlocked.ids.join() === r.ids.join();
+                            return (
+                              <div key={r.start} className="w-full">
+                                <span className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
+                                  <Clock className="size-3" />
+                                  {r.start === r.end ? `${r.start} (all day)` : `${r.start} → ${r.end}`}
+                                  {r.reason && <span className="text-orange-500">({r.reason})</span>}
+                                  <button onClick={() => setEditingBlocked({ type: "fullday", ids: r.ids, barber: barberLabel, startDate: r.start, endDate: r.end, startTime: "", endTime: "", reason: r.reason })} className="ml-0.5 text-orange-400 hover:text-blue-600">
+                                    <Pencil className="size-3" />
+                                  </button>
+                                  <button onClick={() => Promise.all(r.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked dates removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
+                                    <X className="size-3" />
+                                  </button>
+                                </span>
+                                {isEditing && (
+                                  <div className="mt-2 p-3 bg-orange-50 border border-orange-200 rounded-lg space-y-2" onClick={(e) => e.stopPropagation()}>
+                                    <div className="grid grid-cols-2 gap-2">
+                                      <div className="space-y-1">
+                                        <Label className="text-xs font-medium text-slate-600">Start Date</Label>
+                                        <Input type="date" value={editingBlocked.startDate} onChange={(e) => setEditingBlocked({ ...editingBlocked, startDate: e.target.value })} className="h-7 text-xs" />
+                                      </div>
+                                      <div className="space-y-1">
+                                        <Label className="text-xs font-medium text-slate-600">End Date</Label>
+                                        <Input type="date" value={editingBlocked.endDate} onChange={(e) => setEditingBlocked({ ...editingBlocked, endDate: e.target.value })} className="h-7 text-xs" />
+                                      </div>
+                                    </div>
+                                    <div className="space-y-1">
+                                      <Label className="text-xs font-medium text-slate-600">Reason</Label>
+                                      <Input value={editingBlocked.reason} onChange={(e) => setEditingBlocked({ ...editingBlocked, reason: e.target.value })} placeholder="e.g., Vacation" className="h-7 text-xs" />
+                                    </div>
+                                    <div className="flex gap-2">
+                                      <Button size="sm" onClick={handleSaveEditBlocked} className="h-7 px-3 text-xs bg-orange-600 hover:bg-orange-700 text-white font-bold">Save</Button>
+                                      <Button size="sm" variant="ghost" onClick={() => setEditingBlocked(null)} className="h-7 px-3 text-xs">Cancel</Button>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
                           </div>
                         </div>
                       )}
@@ -1200,6 +1351,7 @@ export function AdminDashboardPage() {
                         </div>
                       )}
                       {partialDates.map((date) => {
+                        const barberLabel = barberBlocked[0]?.barber || barberName;
                         const sorted = blockedByDate[date].sort((a, b) => timeSlots.indexOf(a.time) - timeSlots.indexOf(b.time));
                         const timeRanges: { start: string; end: string; reason: string; ids: string[] }[] = [];
                         let ti = 0;
@@ -1225,16 +1377,54 @@ export function AdminDashboardPage() {
                           <div key={date} className="mb-2">
                             <div className="text-xs font-medium text-slate-500 mb-1">{date}</div>
                             <div className="flex flex-wrap gap-1">
-                              {timeRanges.map((tr) => (
-                                <span key={tr.start} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
-                                  <Clock className="size-3" />
-                                  {tr.start === tr.end ? tr.start : `${tr.start} → ${tr.end}`}
-                                  {tr.reason && <span className="text-orange-500">({tr.reason})</span>}
-                                  <button onClick={() => Promise.all(tr.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked time removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
-                                    <X className="size-3" />
-                                  </button>
-                                </span>
-                              ))}
+                              {timeRanges.map((tr) => {
+                                const isEditing = editingBlocked?.type === "partial" && editingBlocked.ids.join() === tr.ids.join();
+                                return (
+                                  <div key={tr.start} className="w-full">
+                                    <span className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
+                                      <Clock className="size-3" />
+                                      {tr.start === tr.end ? tr.start : `${tr.start} → ${tr.end}`}
+                                      {tr.reason && <span className="text-orange-500">({tr.reason})</span>}
+                                      <button onClick={() => setEditingBlocked({ type: "partial", ids: tr.ids, barber: barberLabel, startDate: date, endDate: date, startTime: tr.start, endTime: tr.end, reason: tr.reason })} className="ml-0.5 text-orange-400 hover:text-blue-600">
+                                        <Pencil className="size-3" />
+                                      </button>
+                                      <button onClick={() => Promise.all(tr.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked time removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
+                                        <X className="size-3" />
+                                      </button>
+                                    </span>
+                                    {isEditing && (
+                                      <div className="mt-2 p-3 bg-orange-50 border border-orange-200 rounded-lg space-y-2" onClick={(e) => e.stopPropagation()}>
+                                        <div className="space-y-1">
+                                          <Label className="text-xs font-medium text-slate-600">Date</Label>
+                                          <Input type="date" value={editingBlocked.startDate} onChange={(e) => setEditingBlocked({ ...editingBlocked, startDate: e.target.value })} className="h-7 text-xs" />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2">
+                                          <div className="space-y-1">
+                                            <Label className="text-xs font-medium text-slate-600">From</Label>
+                                            <select value={editingBlocked.startTime} onChange={(e) => setEditingBlocked({ ...editingBlocked, startTime: e.target.value })} className="h-7 text-xs border border-slate-300 rounded px-2 bg-white w-full">
+                                              {timeSlots.map((t) => <option key={t} value={t}>{t}</option>)}
+                                            </select>
+                                          </div>
+                                          <div className="space-y-1">
+                                            <Label className="text-xs font-medium text-slate-600">To</Label>
+                                            <select value={editingBlocked.endTime} onChange={(e) => setEditingBlocked({ ...editingBlocked, endTime: e.target.value })} className="h-7 text-xs border border-slate-300 rounded px-2 bg-white w-full">
+                                              {timeSlots.map((t) => <option key={t} value={t}>{t}</option>)}
+                                            </select>
+                                          </div>
+                                        </div>
+                                        <div className="space-y-1">
+                                          <Label className="text-xs font-medium text-slate-600">Reason</Label>
+                                          <Input value={editingBlocked.reason} onChange={(e) => setEditingBlocked({ ...editingBlocked, reason: e.target.value })} placeholder="e.g., Lunch break" className="h-7 text-xs" />
+                                        </div>
+                                        <div className="flex gap-2">
+                                          <Button size="sm" onClick={handleSaveEditBlocked} className="h-7 px-3 text-xs bg-orange-600 hover:bg-orange-700 text-white font-bold">Save</Button>
+                                          <Button size="sm" variant="ghost" onClick={() => setEditingBlocked(null)} className="h-7 px-3 text-xs">Cancel</Button>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
                             </div>
                           </div>
                         );
