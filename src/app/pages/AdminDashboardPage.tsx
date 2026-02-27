@@ -1175,7 +1175,10 @@ export function AdminDashboardPage() {
                       </div>
                       {/* Full-day date ranges */}
                       {ranges.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mb-2">
+                        <div className="mb-3">
+                          <div className="text-xs font-semibold text-orange-600 mb-1">Days Off & Vacations</div>
+                          <div className="text-xs text-slate-400 mb-2">Full days this barber is unavailable</div>
+                          <div className="flex flex-wrap gap-1">
                           {ranges.map((r) => (
                             <span key={r.start} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
                               <Clock className="size-3" />
@@ -1186,9 +1189,16 @@ export function AdminDashboardPage() {
                               </button>
                             </span>
                           ))}
+                          </div>
                         </div>
                       )}
                       {/* Partial-day blocks with time ranges */}
+                      {partialDates.length > 0 && (
+                        <div className="mb-2">
+                          <div className="text-xs font-semibold text-orange-600 mb-1">Scheduled Breaks</div>
+                          <div className="text-xs text-slate-400 mb-2">Specific time slots blocked during the day</div>
+                        </div>
+                      )}
                       {partialDates.map((date) => {
                         const sorted = blockedByDate[date].sort((a, b) => timeSlots.indexOf(a.time) - timeSlots.indexOf(b.time));
                         const timeRanges: { start: string; end: string; reason: string; ids: string[] }[] = [];
