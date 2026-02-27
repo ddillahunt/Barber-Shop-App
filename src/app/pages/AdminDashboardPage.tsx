@@ -106,6 +106,11 @@ export function AdminDashboardPage() {
   const [blockTimeDate, setBlockTimeDate] = useState("");
   const [blockTimeReason, setBlockTimeReason] = useState("");
   const [blockTimeSelected, setBlockTimeSelected] = useState<string[]>([]);
+  const [blockMode, setBlockMode] = useState<"single" | "range">("single");
+  const [blockRangeStart, setBlockRangeStart] = useState("");
+  const [blockRangeEnd, setBlockRangeEnd] = useState("");
+  const [quickRangeFrom, setQuickRangeFrom] = useState("");
+  const [quickRangeTo, setQuickRangeTo] = useState("");
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -173,6 +178,9 @@ export function AdminDashboardPage() {
     setBlockTimeDate("");
     setBlockTimeReason("");
     setBlockTimeSelected([]);
+    setBlockMode("single");
+    setBlockRangeStart("");
+    setBlockRangeEnd("");
   };
 
   const handleEditBarberSave = async () => {
@@ -224,6 +232,43 @@ export function AdminDashboardPage() {
     } catch (err) {
       console.error("Block time error:", err);
       toast.error("Failed to block time slots");
+    }
+  };
+
+  const handleBlockDateRange = async (barberLabel: string) => {
+    if (!blockRangeStart || !blockRangeEnd) {
+      toast.error("Select both a start and end date");
+      return;
+    }
+    if (blockRangeEnd < blockRangeStart) {
+      toast.error("End date must be on or after start date");
+      return;
+    }
+    const dates: string[] = [];
+    const current = new Date(blockRangeStart + "T00:00:00");
+    const end = new Date(blockRangeEnd + "T00:00:00");
+    while (current <= end) {
+      dates.push(current.toISOString().split("T")[0]);
+      current.setDate(current.getDate() + 1);
+    }
+    if (dates.length > 60) {
+      toast.error("Cannot block more than 60 days at once");
+      return;
+    }
+    try {
+      const promises = dates.flatMap((date) =>
+        timeSlots.map((time) =>
+          saveBlockedTime({ barber: barberLabel, date, time, reason: blockTimeReason || "" })
+        )
+      );
+      await Promise.all(promises);
+      toast.success(`Blocked all time slots for ${dates.length} day${dates.length > 1 ? "s" : ""} for ${barberLabel.split(" - ")[0]}`);
+      setBlockRangeStart("");
+      setBlockRangeEnd("");
+      setBlockTimeReason("");
+    } catch (err) {
+      console.error("Block date range error:", err);
+      toast.error("Failed to block date range");
     }
   };
 
@@ -668,17 +713,121 @@ export function AdminDashboardPage() {
                   <div className="border-t border-orange-200 pt-4">
                     <div className="flex items-center gap-2 mb-3">
                       <Ban className="size-4 text-orange-600" />
-                      <span className="font-semibold text-sm text-orange-700">Block Time Slots</span>
+                      <span className="font-semibold text-sm text-orange-700">Block Time</span>
                     </div>
+
+                    {/* Mode Toggle */}
+                    <div className="flex gap-1 mb-3">
+                      <button
+                        type="button"
+                        onClick={() => setBlockMode("single")}
+                        className={`text-xs font-semibold px-3 py-1.5 rounded-l-md border transition-colors ${
+                          blockMode === "single" ? "bg-orange-600 text-white border-orange-600" : "bg-white text-slate-600 border-slate-300 hover:bg-orange-50"
+                        }`}
+                      >
+                        Single Day
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setBlockMode("range")}
+                        className={`text-xs font-semibold px-3 py-1.5 rounded-r-md border transition-colors ${
+                          blockMode === "range" ? "bg-orange-600 text-white border-orange-600" : "bg-white text-slate-600 border-slate-300 hover:bg-orange-50"
+                        }`}
+                      >
+                        Date Range
+                      </button>
+                    </div>
+
+                    {blockMode === "single" ? (
                     <div className="space-y-3">
                       <div className="space-y-1">
                         <Label className="text-xs font-medium text-slate-600">Date *</Label>
-                        <Input type="date" value={blockTimeDate} onChange={(e) => { setBlockTimeDate(e.target.value); setBlockTimeSelected([]); }} className="h-8 text-sm" />
+                        <Input type="date" value={blockTimeDate} onChange={(e) => { setBlockTimeDate(e.target.value); setBlockTimeSelected([]); setQuickRangeFrom(""); setQuickRangeTo(""); }} className="h-8 text-sm" />
                       </div>
                       {blockTimeDate && (
                         <>
                           <div className="space-y-1">
-                            <Label className="text-xs font-medium text-slate-600">Select Time Slots</Label>
+                            <Label className="text-xs font-medium text-slate-600">Quick Range</Label>
+                            <div className="flex items-center gap-2">
+                              <select
+                                className="h-8 text-xs border border-slate-300 rounded px-2 bg-white"
+                                value={quickRangeFrom}
+                                onChange={(e) => {
+                                  const from = e.target.value;
+                                  setQuickRangeFrom(from);
+                                  if (from && quickRangeTo) {
+                                    const fromIdx = timeSlots.indexOf(from);
+                                    const toIdx = timeSlots.indexOf(quickRangeTo);
+                                    if (fromIdx >= 0 && toIdx >= 0 && fromIdx <= toIdx) {
+                                      const range = timeSlots.slice(fromIdx, toIdx + 1).filter((t) =>
+                                        !appointments.some((a) => a.date === blockTimeDate && a.barber === editBarberLabel && a.time === t) &&
+                                        !blockedTimes.some((bt) => bt.date === blockTimeDate && bt.barber === editBarberLabel && bt.time === t)
+                                      );
+                                      setBlockTimeSelected(range);
+                                    }
+                                  }
+                                }}
+                              >
+                                <option value="">From</option>
+                                {timeSlots.map((t) => <option key={t} value={t}>{t}</option>)}
+                              </select>
+                              <span className="text-xs text-slate-400">to</span>
+                              <select
+                                className="h-8 text-xs border border-slate-300 rounded px-2 bg-white"
+                                value={quickRangeTo}
+                                onChange={(e) => {
+                                  const to = e.target.value;
+                                  setQuickRangeTo(to);
+                                  if (quickRangeFrom && to) {
+                                    const fromIdx = timeSlots.indexOf(quickRangeFrom);
+                                    const toIdx = timeSlots.indexOf(to);
+                                    if (fromIdx >= 0 && toIdx >= 0 && fromIdx <= toIdx) {
+                                      const range = timeSlots.slice(fromIdx, toIdx + 1).filter((t) =>
+                                        !appointments.some((a) => a.date === blockTimeDate && a.barber === editBarberLabel && a.time === t) &&
+                                        !blockedTimes.some((bt) => bt.date === blockTimeDate && bt.barber === editBarberLabel && bt.time === t)
+                                      );
+                                      setBlockTimeSelected(range);
+                                    }
+                                  }
+                                }}
+                              >
+                                <option value="">To</option>
+                                {timeSlots.map((t) => <option key={t} value={t}>{t}</option>)}
+                              </select>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const available = timeSlots.filter((t) =>
+                                    !appointments.some((a) => a.date === blockTimeDate && a.barber === editBarberLabel && a.time === t) &&
+                                    !blockedTimes.some((bt) => bt.date === blockTimeDate && bt.barber === editBarberLabel && bt.time === t)
+                                  );
+                                  setQuickRangeFrom(timeSlots[0]);
+                                  setQuickRangeTo(timeSlots[timeSlots.length - 1]);
+                                  setBlockTimeSelected(available);
+                                }}
+                                className="text-xs px-2 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50 font-medium whitespace-nowrap"
+                              >
+                                All Day
+                              </button>
+                            </div>
+                            {quickRangeFrom && quickRangeTo && (
+                              <div className="flex items-center justify-between mt-2 p-2 bg-red-50 border border-red-200 rounded">
+                                <span className="text-xs font-medium text-red-700">
+                                  {quickRangeFrom} → {quickRangeTo} ({blockTimeSelected.length} slot{blockTimeSelected.length !== 1 ? "s" : ""})
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => { setQuickRangeFrom(""); setQuickRangeTo(""); setBlockTimeSelected([]); }}
+                                  className="text-xs text-red-500 hover:text-red-700 font-medium"
+                                >
+                                  Clear
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                          {!quickRangeFrom && !quickRangeTo && (
+                          <div className="space-y-1">
+                            <Label className="text-xs font-medium text-slate-600">Or Select Individual Slots</Label>
                             <div className="grid grid-cols-5 gap-1">
                               {timeSlots.map((t) => {
                                 const isBooked = appointments.some((a) => a.date === blockTimeDate && a.barber === editBarberLabel && a.time === t);
@@ -708,6 +857,7 @@ export function AdminDashboardPage() {
                               <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-red-600 inline-block" /> Selected</span>
                             </div>
                           </div>
+                          )}
                           <div className="space-y-1">
                             <Label className="text-xs font-medium text-slate-600">Reason (optional)</Label>
                             <Input value={blockTimeReason} onChange={(e) => setBlockTimeReason(e.target.value)} placeholder="e.g., Lunch break, Training" className="h-8 text-sm" />
@@ -723,30 +873,82 @@ export function AdminDashboardPage() {
                         </>
                       )}
                     </div>
+                    ) : (
+                    <div className="space-y-3">
+                      <p className="text-xs text-slate-500">Block all time slots across a range of dates (e.g., vacation).</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="space-y-1">
+                          <Label className="text-xs font-medium text-slate-600">Start Date *</Label>
+                          <Input type="date" value={blockRangeStart} onChange={(e) => setBlockRangeStart(e.target.value)} className="h-8 text-sm" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-xs font-medium text-slate-600">End Date *</Label>
+                          <Input type="date" value={blockRangeEnd} onChange={(e) => setBlockRangeEnd(e.target.value)} className="h-8 text-sm" />
+                        </div>
+                      </div>
+                      {blockRangeStart && blockRangeEnd && blockRangeEnd >= blockRangeStart && (
+                        <div className="text-xs text-slate-500">
+                          {Math.floor((new Date(blockRangeEnd + "T00:00:00").getTime() - new Date(blockRangeStart + "T00:00:00").getTime()) / 86400000) + 1} day(s) will be fully blocked
+                        </div>
+                      )}
+                      <div className="space-y-1">
+                        <Label className="text-xs font-medium text-slate-600">Reason (optional)</Label>
+                        <Input value={blockTimeReason} onChange={(e) => setBlockTimeReason(e.target.value)} placeholder="e.g., Vacation, Personal leave" className="h-8 text-sm" />
+                      </div>
+                      <Button
+                        size="sm"
+                        onClick={() => handleBlockDateRange(editBarberLabel)}
+                        disabled={!blockRangeStart || !blockRangeEnd || blockRangeEnd < blockRangeStart}
+                        className="h-8 px-3 text-xs bg-gradient-to-br from-orange-600 to-orange-500 text-white font-bold hover:from-orange-700 hover:to-orange-600 disabled:opacity-50"
+                      >
+                        Block Date Range
+                      </Button>
+                    </div>
+                    )}
 
                     {/* Existing blocked times */}
-                    {Object.keys(blockedByDate).length > 0 && (
-                      <div className="mt-4 pt-3 border-t border-orange-100">
-                        <span className="text-xs font-semibold text-orange-600">Current Blocked Times</span>
-                        {Object.entries(blockedByDate).sort(([a], [b]) => a.localeCompare(b)).map(([date, slots]) => (
-                          <div key={date} className="mt-2">
-                            <div className="text-xs font-medium text-slate-500 mb-1">{date}</div>
-                            <div className="flex flex-wrap gap-1">
-                              {slots.sort((a, b) => a.time.localeCompare(b.time)).map((bt) => (
-                                <span key={bt.id} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
-                                  <Clock className="size-3" />
-                                  {bt.time}
-                                  {bt.reason && <span className="text-orange-500">({bt.reason})</span>}
-                                  <button onClick={() => handleDeleteBlockedTime(bt.id!)} className="ml-0.5 text-orange-400 hover:text-red-600">
-                                    <X className="size-3" />
-                                  </button>
-                                </span>
-                              ))}
-                            </div>
+                    {Object.keys(blockedByDate).length > 0 && (() => {
+                      const sortedDates = Object.keys(blockedByDate).sort();
+                      const ranges: { start: string; end: string; reason: string; ids: string[] }[] = [];
+                      let i = 0;
+                      while (i < sortedDates.length) {
+                        const rangeStart = sortedDates[i];
+                        const reason = blockedByDate[rangeStart][0]?.reason || "";
+                        const ids = blockedByDate[rangeStart].map((bt) => bt.id!);
+                        let end = rangeStart;
+                        while (i + 1 < sortedDates.length) {
+                          const next = sortedDates[i + 1];
+                          const nextReason = blockedByDate[next][0]?.reason || "";
+                          const expectedNext = new Date(end + "T00:00:00");
+                          expectedNext.setDate(expectedNext.getDate() + 1);
+                          const expectedStr = expectedNext.toISOString().split("T")[0];
+                          if (next === expectedStr && nextReason === reason) {
+                            end = next;
+                            ids.push(...blockedByDate[next].map((bt) => bt.id!));
+                            i++;
+                          } else break;
+                        }
+                        ranges.push({ start: rangeStart, end, reason, ids });
+                        i++;
+                      }
+                      return (
+                        <div className="mt-4 pt-3 border-t border-orange-100">
+                          <span className="text-xs font-semibold text-orange-600">Current Blocked Dates</span>
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {ranges.map((r) => (
+                              <span key={r.start} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
+                                <Clock className="size-3" />
+                                {r.start === r.end ? r.start : `${r.start} → ${r.end}`}
+                                {r.reason && <span className="text-orange-500">({r.reason})</span>}
+                                <button onClick={() => Promise.all(r.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked dates removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
+                                  <X className="size-3" />
+                                </button>
+                              </span>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    )}
+                        </div>
+                      );
+                    })()}
                   </div>
                 );
               })()}
@@ -899,31 +1101,77 @@ export function AdminDashboardPage() {
                   </div>
                 )}
                 {/* Blocked Times for this barber */}
-                {Object.keys(blockedByDate).length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-orange-200">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Ban className="size-4 text-orange-500" />
-                      <span className="font-semibold text-sm text-orange-700">Blocked Times</span>
-                    </div>
-                    {Object.entries(blockedByDate).sort(([a], [b]) => a.localeCompare(b)).map(([date, slots]) => (
-                      <div key={date} className="mb-2">
-                        <div className="text-xs font-medium text-slate-500 mb-1">{date}</div>
-                        <div className="flex flex-wrap gap-1">
-                          {slots.sort((a, b) => a.time.localeCompare(b.time)).map((bt) => (
-                            <span key={bt.id} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
+                {Object.keys(blockedByDate).length > 0 && (() => {
+                  const totalSlots = timeSlots.length;
+                  const sortedDates = Object.keys(blockedByDate).sort();
+                  // Separate full-day blocks from partial blocks
+                  const fullDayDates = sortedDates.filter((d) => blockedByDate[d].length >= totalSlots);
+                  const partialDates = sortedDates.filter((d) => blockedByDate[d].length < totalSlots);
+                  // Group full-day dates into ranges
+                  const ranges: { start: string; end: string; reason: string; ids: string[] }[] = [];
+                  let i = 0;
+                  while (i < fullDayDates.length) {
+                    const rangeStart = fullDayDates[i];
+                    const reason = blockedByDate[rangeStart][0]?.reason || "";
+                    const ids = blockedByDate[rangeStart].map((bt) => bt.id!);
+                    let end = rangeStart;
+                    while (i + 1 < fullDayDates.length) {
+                      const next = fullDayDates[i + 1];
+                      const nextReason = blockedByDate[next][0]?.reason || "";
+                      const expectedNext = new Date(end + "T00:00:00");
+                      expectedNext.setDate(expectedNext.getDate() + 1);
+                      const expectedStr = expectedNext.toISOString().split("T")[0];
+                      if (next === expectedStr && nextReason === reason) {
+                        end = next;
+                        ids.push(...blockedByDate[next].map((bt) => bt.id!));
+                        i++;
+                      } else break;
+                    }
+                    ranges.push({ start: rangeStart, end, reason, ids });
+                    i++;
+                  }
+                  return (
+                    <div className="mt-4 pt-4 border-t border-orange-200">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Ban className="size-4 text-orange-500" />
+                        <span className="font-semibold text-sm text-orange-700">Blocked Times</span>
+                      </div>
+                      {/* Full-day date ranges */}
+                      {ranges.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-2">
+                          {ranges.map((r) => (
+                            <span key={r.start} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
                               <Clock className="size-3" />
-                              {bt.time}
-                              {bt.reason && <span className="text-orange-500">({bt.reason})</span>}
-                              <button onClick={() => handleDeleteBlockedTime(bt.id!)} className="ml-0.5 text-orange-400 hover:text-red-600">
+                              {r.start === r.end ? `${r.start} (all day)` : `${r.start} → ${r.end}`}
+                              {r.reason && <span className="text-orange-500">({r.reason})</span>}
+                              <button onClick={() => Promise.all(r.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked dates removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
                                 <X className="size-3" />
                               </button>
                             </span>
                           ))}
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      )}
+                      {/* Partial-day blocks with time slots */}
+                      {partialDates.map((date) => (
+                        <div key={date} className="mb-2">
+                          <div className="text-xs font-medium text-slate-500 mb-1">{date}</div>
+                          <div className="flex flex-wrap gap-1">
+                            {blockedByDate[date].sort((a, b) => a.time.localeCompare(b.time)).map((bt) => (
+                              <span key={bt.id} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
+                                <Clock className="size-3" />
+                                {bt.time}
+                                {bt.reason && <span className="text-orange-500">({bt.reason})</span>}
+                                <button onClick={() => handleDeleteBlockedTime(bt.id!)} className="ml-0.5 text-orange-400 hover:text-red-600">
+                                  <X className="size-3" />
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
               </CardContent>
             </Card>
           );
