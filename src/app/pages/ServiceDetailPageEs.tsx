@@ -44,8 +44,8 @@ export function ServiceDetailPageEs() {
             Volver al Inicio
           </Button>
           <div className="max-w-4xl mx-auto text-center">
-            <div className={`inline-flex p-4 bg-gradient-to-br ${service.gradient} rounded-2xl mb-6 shadow-2xl shadow-red-500/50`}>
-              <service.icon className="size-12 text-black" />
+            <div className="inline-flex p-4 mb-6">
+              <img src={logoImg} alt="Grandes Ligas" className="h-20 w-auto object-contain" />
             </div>
             <h1 className="text-5xl md:text-6xl mb-6 font-bold bg-gradient-to-r from-sky-200 via-blue-300 to-sky-200 bg-clip-text text-transparent">
               {service.title}
