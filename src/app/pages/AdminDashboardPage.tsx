@@ -760,6 +760,9 @@ export function AdminDashboardPage() {
             const todayBarberCount = appointments.filter(
               (a) => a.barber?.startsWith(barber.name) && a.date === todayStr
             ).length;
+            const todayBlockedCount = blockedTimes.filter(
+              (bt) => bt.barber?.startsWith(barber.name) && bt.date === todayStr
+            ).length;
             const isExpanded = expandedBarbers.includes(barber.name);
             return (
               <Card
@@ -796,6 +799,11 @@ export function AdminDashboardPage() {
                   <div className="text-xs text-slate-500 mt-1">
                     {todayBarberCount} today
                   </div>
+                  {todayBlockedCount > 0 && (
+                    <div className="text-xs text-red-500 font-semibold mt-0.5">
+                      {todayBlockedCount} blocked
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             );
