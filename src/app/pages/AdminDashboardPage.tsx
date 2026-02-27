@@ -825,7 +825,7 @@ export function AdminDashboardPage() {
                               </div>
                             )}
                           </div>
-                          {!quickRangeFrom && !quickRangeTo && (
+                          {!(quickRangeFrom && quickRangeTo) && (
                           <div className="space-y-1">
                             <Label className="text-xs font-medium text-slate-600">Or Select Individual Slots</Label>
                             <div className="grid grid-cols-5 gap-1">
@@ -908,16 +908,20 @@ export function AdminDashboardPage() {
 
                     {/* Existing blocked times */}
                     {Object.keys(blockedByDate).length > 0 && (() => {
+                      const totalSlots = timeSlots.length;
                       const sortedDates = Object.keys(blockedByDate).sort();
-                      const ranges: { start: string; end: string; reason: string; ids: string[] }[] = [];
+                      const fullDayDates = sortedDates.filter((d) => blockedByDate[d].length >= totalSlots);
+                      const partialDates = sortedDates.filter((d) => blockedByDate[d].length < totalSlots);
+                      // Group full-day dates into date ranges
+                      const dateRanges: { start: string; end: string; reason: string; ids: string[] }[] = [];
                       let i = 0;
-                      while (i < sortedDates.length) {
-                        const rangeStart = sortedDates[i];
+                      while (i < fullDayDates.length) {
+                        const rangeStart = fullDayDates[i];
                         const reason = blockedByDate[rangeStart][0]?.reason || "";
                         const ids = blockedByDate[rangeStart].map((bt) => bt.id!);
                         let end = rangeStart;
-                        while (i + 1 < sortedDates.length) {
-                          const next = sortedDates[i + 1];
+                        while (i + 1 < fullDayDates.length) {
+                          const next = fullDayDates[i + 1];
                           const nextReason = blockedByDate[next][0]?.reason || "";
                           const expectedNext = new Date(end + "T00:00:00");
                           expectedNext.setDate(expectedNext.getDate() + 1);
@@ -928,23 +932,56 @@ export function AdminDashboardPage() {
                             i++;
                           } else break;
                         }
-                        ranges.push({ start: rangeStart, end, reason, ids });
+                        dateRanges.push({ start: rangeStart, end, reason, ids });
                         i++;
                       }
                       return (
                         <div className="mt-4 pt-3 border-t border-orange-100">
-                          <span className="text-xs font-semibold text-orange-600">Current Blocked Dates</span>
+                          <span className="text-xs font-semibold text-orange-600">Current Blocked Times</span>
                           <div className="flex flex-wrap gap-1 mt-2">
-                            {ranges.map((r) => (
+                            {dateRanges.map((r) => (
                               <span key={r.start} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
                                 <Clock className="size-3" />
-                                {r.start === r.end ? r.start : `${r.start} → ${r.end}`}
+                                {r.start === r.end ? `${r.start} (all day)` : `${r.start} → ${r.end}`}
                                 {r.reason && <span className="text-orange-500">({r.reason})</span>}
                                 <button onClick={() => Promise.all(r.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked dates removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
                                   <X className="size-3" />
                                 </button>
                               </span>
                             ))}
+                            {partialDates.map((date) => {
+                              const sorted = blockedByDate[date].sort((a, b) => timeSlots.indexOf(a.time) - timeSlots.indexOf(b.time));
+                              const timeRanges: { start: string; end: string; reason: string; ids: string[] }[] = [];
+                              let ti = 0;
+                              while (ti < sorted.length) {
+                                const tStart = sorted[ti].time;
+                                const reason = sorted[ti].reason || "";
+                                const ids = [sorted[ti].id!];
+                                let tEnd = tStart;
+                                while (ti + 1 < sorted.length) {
+                                  const curIdx = timeSlots.indexOf(sorted[ti].time);
+                                  const nextIdx = timeSlots.indexOf(sorted[ti + 1].time);
+                                  const nextReason = sorted[ti + 1].reason || "";
+                                  if (nextIdx === curIdx + 1 && nextReason === reason) {
+                                    tEnd = sorted[ti + 1].time;
+                                    ids.push(sorted[ti + 1].id!);
+                                    ti++;
+                                  } else break;
+                                }
+                                timeRanges.push({ start: tStart, end: tEnd, reason, ids });
+                                ti++;
+                              }
+                              return timeRanges.map((tr) => (
+                                <span key={`${date}-${tr.start}`} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
+                                  <Clock className="size-3" />
+                                  {date}: {tr.start === tr.end ? tr.start : `${tr.start} → ${tr.end}`}
+                                  {tr.reason && <span className="text-orange-500">({tr.reason})</span>}
+                                  <button onClick={() => Promise.all(tr.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked time removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
+                                    <X className="size-3" />
+                                  </button>
+                                </span>
+                              ));
+                            })}
                           </div>
                         </div>
                       );
@@ -1151,24 +1188,47 @@ export function AdminDashboardPage() {
                           ))}
                         </div>
                       )}
-                      {/* Partial-day blocks with time slots */}
-                      {partialDates.map((date) => (
-                        <div key={date} className="mb-2">
-                          <div className="text-xs font-medium text-slate-500 mb-1">{date}</div>
-                          <div className="flex flex-wrap gap-1">
-                            {blockedByDate[date].sort((a, b) => a.time.localeCompare(b.time)).map((bt) => (
-                              <span key={bt.id} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
-                                <Clock className="size-3" />
-                                {bt.time}
-                                {bt.reason && <span className="text-orange-500">({bt.reason})</span>}
-                                <button onClick={() => handleDeleteBlockedTime(bt.id!)} className="ml-0.5 text-orange-400 hover:text-red-600">
-                                  <X className="size-3" />
-                                </button>
-                              </span>
-                            ))}
+                      {/* Partial-day blocks with time ranges */}
+                      {partialDates.map((date) => {
+                        const sorted = blockedByDate[date].sort((a, b) => timeSlots.indexOf(a.time) - timeSlots.indexOf(b.time));
+                        const timeRanges: { start: string; end: string; reason: string; ids: string[] }[] = [];
+                        let ti = 0;
+                        while (ti < sorted.length) {
+                          const rangeStart = sorted[ti].time;
+                          const reason = sorted[ti].reason || "";
+                          const ids = [sorted[ti].id!];
+                          let endTime = rangeStart;
+                          while (ti + 1 < sorted.length) {
+                            const curIdx = timeSlots.indexOf(sorted[ti].time);
+                            const nextIdx = timeSlots.indexOf(sorted[ti + 1].time);
+                            const nextReason = sorted[ti + 1].reason || "";
+                            if (nextIdx === curIdx + 1 && nextReason === reason) {
+                              endTime = sorted[ti + 1].time;
+                              ids.push(sorted[ti + 1].id!);
+                              ti++;
+                            } else break;
+                          }
+                          timeRanges.push({ start: rangeStart, end: endTime, reason, ids });
+                          ti++;
+                        }
+                        return (
+                          <div key={date} className="mb-2">
+                            <div className="text-xs font-medium text-slate-500 mb-1">{date}</div>
+                            <div className="flex flex-wrap gap-1">
+                              {timeRanges.map((tr) => (
+                                <span key={tr.start} className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5">
+                                  <Clock className="size-3" />
+                                  {tr.start === tr.end ? tr.start : `${tr.start} → ${tr.end}`}
+                                  {tr.reason && <span className="text-orange-500">({tr.reason})</span>}
+                                  <button onClick={() => Promise.all(tr.ids.map((id) => deleteBlockedTime(id))).then(() => toast.success("Blocked time removed"))} className="ml-0.5 text-orange-400 hover:text-red-600">
+                                    <X className="size-3" />
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   );
                 })()}
