@@ -754,7 +754,7 @@ export function AdminDashboardPage() {
           </DialogContent>
         </Dialog>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-2">
+        <div className="flex flex-wrap justify-center gap-3 mb-2">
           {barbers.map((barber) => {
             const count = appointments.filter((a) => a.barber?.startsWith(barber.name)).length;
             const todayBarberCount = appointments.filter(
@@ -765,7 +765,7 @@ export function AdminDashboardPage() {
               <Card
                 key={barber.id}
                 onClick={() => setExpandedBarbers(isExpanded ? expandedBarbers.filter((b) => b !== barber.name) : [...expandedBarbers, barber.name])}
-                className={`border-blue-500/30 bg-white cursor-pointer transition-all hover:shadow-lg hover:border-blue-500/60 ${isExpanded ? "ring-2 ring-blue-500" : ""} relative`}
+                className={`w-[calc(50%-0.375rem)] sm:w-[calc(25%-0.5rem)] lg:w-[130px] border-blue-500/30 bg-white cursor-pointer transition-all hover:shadow-lg hover:border-blue-500/60 ${isExpanded ? "ring-2 ring-blue-500" : ""} relative`}
               >
                 <div className="absolute top-1 right-1 flex items-center gap-0.5">
                   <button
