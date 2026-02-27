@@ -25,11 +25,9 @@ export const servicesEs: Service[] = [
     duration: "30-45 minutos",
     included: [
       "Consulta personal con tu barbero",
-      "Champú y acondicionador profesional",
       "Corte de precisión con tijeras y/o máquina",
       "Trabajo detallado de bordes y líneas",
-      "Productos de peinado premium",
-      "Bebida de cortesía durante el servicio"
+      "Productos de peinado premium"
     ],
     detailedDescription: [
       "Nuestro Corte Clásico es la base de la excelencia en barbería tradicional. Ya sea que busques un corte de negocios atemporal, un degradado limpio o un desvanecido elegante, nuestros barberos expertos crearán un look que se adapte a tu personalidad y estilo de vida.",
@@ -47,11 +45,9 @@ export const servicesEs: Service[] = [
     duration: "45-60 minutos",
     included: [
       "Consulta de estilo en profundidad",
-      "Champú de lujo y tratamiento de acondicionamiento profundo",
       "Corte de precisión experto",
       "Secado y peinado profesional",
       "Aplicación de productos de peinado de alta gama",
-      "Masaje de cuero cabelludo",
       "Tratamiento con toalla caliente"
     ],
     detailedDescription: [
@@ -93,7 +89,6 @@ export const servicesEs: Service[] = [
     included: [
       "Consulta con el barbero",
       "Corte profesional adaptado para niños",
-      "Champú suave",
       "Peinado y toques finales",
       "Experiencia divertida y cómoda"
     ],

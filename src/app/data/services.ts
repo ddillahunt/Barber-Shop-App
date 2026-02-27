@@ -25,11 +25,9 @@ export const services: Service[] = [
     duration: "30-45 minutes",
     included: [
       "Personal consultation with your barber",
-      "Professional shampoo and conditioning",
       "Precision scissor and/or clipper cutting",
       "Detailed edge work and line-up",
-      "Premium styling products",
-      "Complimentary beverage during service"
+      "Premium styling products"
     ],
     detailedDescription: [
       "Our Classic Haircut is the foundation of traditional barbering excellence. Whether you're looking for a timeless business cut, a clean fade, or a stylish taper, our expert barbers will craft a look that suits your personality and lifestyle.",
@@ -47,11 +45,9 @@ export const services: Service[] = [
     duration: "45-60 minutes",
     included: [
       "In-depth style consultation",
-      "Luxury shampoo and deep conditioning treatment",
       "Expert precision cutting",
       "Professional blow-dry and styling",
       "High-end styling products application",
-      "Scalp massage",
       "Hot towel treatment"
     ],
     detailedDescription: [
@@ -93,7 +89,6 @@ export const services: Service[] = [
     included: [
       "Consultation with barber",
       "Professional haircut tailored for kids",
-      "Gentle shampoo",
       "Styling and finishing touches",
       "Fun and comfortable experience"
     ],
