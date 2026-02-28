@@ -3,13 +3,9 @@ import { Card, CardContent } from "./ui/card";
 import { Phone, MessageSquare, Mail, User } from "lucide-react";
 import { subscribeToBarbers, type Barber } from "../lib/appointments";
 import yefriImg from "../../assets/images/barber-yefri.jpg";
-import joseImg from "../../assets/images/barber-Jose.jpg";
-import maestroImg from "../../assets/images/barber-Maestro.png";
 
 const barberImages: Record<string, string> = {
   "Yefri": yefriImg,
-  "Jose": joseImg,
-  "Maestro": maestroImg,
 };
 
 export function Team() {

@@ -23,14 +23,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths, isSameMonth, isSameDay, isToday } from "date-fns";
 import yefriImg from "../../assets/images/barber-yefri.jpg";
-import joseImg from "../../assets/images/barber-Jose.jpg";
-import maestroImg from "../../assets/images/barber-Maestro.png";
 import logoImg from "../../assets/images/barber-Grandes Ligas logo.png";
 
 const barberImages: Record<string, string> = {
   "Yefri": yefriImg,
-  "Jose": joseImg,
-  "Maestro": maestroImg,
 };
 
 const defaultBarbers = [
