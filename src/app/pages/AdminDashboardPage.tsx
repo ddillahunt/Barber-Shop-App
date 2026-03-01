@@ -23,10 +23,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths, isSameMonth, isSameDay, isToday } from "date-fns";
 import yefriImg from "../../assets/images/barber-yefri.jpg";
+import joseImg from "../../assets/images/barber-Jose.jpg";
+import maestroImg from "../../assets/images/barber-Maestro.png";
 import logoImg from "../../assets/images/barber-Grandes Ligas logo.png";
 
 const barberImages: Record<string, string> = {
   "Yefri": yefriImg,
+  "Jose": joseImg,
+  "Maestro": maestroImg,
 };
 
 const defaultBarbers = [
@@ -437,6 +441,10 @@ export function AdminDashboardPage() {
 
   const handleEditSave = async () => {
     if (!editingAppt?.id) return;
+    if (editAvailableTimeSlots.length === 0) {
+      toast.error("No times available. Please choose another Barber. Thank you.");
+      return;
+    }
     if (!editForm.name || !editForm.phone || !editForm.date) {
       toast.error("Name, phone, and date are required");
       return;
@@ -467,6 +475,10 @@ export function AdminDashboardPage() {
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (availableTimeSlots.length === 0) {
+      toast.error("No times available. Please choose another Barber. Thank you.");
+      return;
+    }
     if (!newAppt.name || !newAppt.phone || !newAppt.date) {
       toast.error("Name, phone, and date are required");
       return;
@@ -1128,10 +1140,10 @@ export function AdminDashboardPage() {
                 <div className="absolute top-1 right-1 flex items-center gap-0.5">
                   <button
                     onClick={(e) => { e.stopPropagation(); handleEditBarberOpen(barber); }}
-                    className="p-0.5 rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                    className="p-1.5 rounded-full text-blue-500 hover:text-blue-700 hover:bg-blue-100 transition-colors"
                     title={`Edit ${barber.name}`}
                   >
-                    <Pencil className="size-3" />
+                    <Pencil className="size-4" />
                   </button>
                   <button
                     onClick={(e) => { e.stopPropagation(); handleDeleteBarber(barber.id!, barber.name); }}
@@ -1142,8 +1154,8 @@ export function AdminDashboardPage() {
                   </button>
                 </div>
                 <CardContent className="p-4 text-center flex flex-col items-center">
-                  {(barber.imageUrl || barberImages[barber.name]) ? (
-                    <img src={barber.imageUrl || barberImages[barber.name]} alt={barber.name} className="w-14 h-14 rounded-full object-cover object-top border-2 border-blue-500/50 mb-2" />
+                  {(barberImages[barber.name] || barber.imageUrl) ? (
+                    <img src={barberImages[barber.name] || barber.imageUrl} alt={barber.name} className="w-14 h-14 rounded-full object-cover object-top border-2 border-blue-500/50 mb-2" />
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-700 to-red-600 flex items-center justify-center mb-2">
                       <User className="size-6 text-white" />
@@ -1459,7 +1471,15 @@ export function AdminDashboardPage() {
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="new-barber">Barber</Label>
-                  <Select value={newAppt.barber} onValueChange={(v) => setNewAppt({ ...newAppt, barber: v, time: "" })}>
+                  <Select value={newAppt.barber} onValueChange={(v) => {
+                    setNewAppt({ ...newAppt, barber: v, time: "" });
+                    if (newAppt.date) {
+                      const booked = appointments.filter((a) => a.date === newAppt.date && a.barber === v).map((a) => a.time).filter(Boolean);
+                      const blocked = blockedTimes.filter((bt) => bt.date === newAppt.date && bt.barber === v).map((bt) => bt.time);
+                      const available = timeSlots.filter((t) => !booked.includes(t) && !blocked.includes(t));
+                      if (available.length === 0) toast.error("No times available. Please choose another Barber. Thank you.");
+                    }
+                  }}>
                     <SelectTrigger id="new-barber"><SelectValue placeholder="Select a barber" /></SelectTrigger>
                     <SelectContent>
                       {barbers.map((b) => (
@@ -1481,7 +1501,16 @@ export function AdminDashboardPage() {
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="new-date">Date *</Label>
-                  <Input id="new-date" type="date" value={newAppt.date} onChange={(e) => setNewAppt({ ...newAppt, date: e.target.value, time: "" })} />
+                  <Input id="new-date" type="date" value={newAppt.date} onChange={(e) => {
+                    const d = e.target.value;
+                    setNewAppt({ ...newAppt, date: d, time: "" });
+                    if (d && newAppt.barber) {
+                      const booked = appointments.filter((a) => a.date === d && a.barber === newAppt.barber).map((a) => a.time).filter(Boolean);
+                      const blocked = blockedTimes.filter((bt) => bt.date === d && bt.barber === newAppt.barber).map((bt) => bt.time);
+                      const available = timeSlots.filter((t) => !booked.includes(t) && !blocked.includes(t));
+                      if (available.length === 0) toast.error("No times available. Please choose another Barber. Thank you.");
+                    }
+                  }} />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="new-time">Time</Label>
@@ -1812,7 +1841,15 @@ export function AdminDashboardPage() {
             </div>
             <div className="space-y-1">
               <Label htmlFor="edit-barber">Barber</Label>
-              <Select value={editForm.barber} onValueChange={(v) => setEditForm({ ...editForm, barber: v })}>
+              <Select value={editForm.barber} onValueChange={(v) => {
+                setEditForm({ ...editForm, barber: v });
+                if (editForm.date) {
+                  const booked = appointments.filter((a) => a.date === editForm.date && a.id !== editingAppt?.id).map((a) => a.time).filter(Boolean);
+                  const blocked = blockedTimes.filter((bt) => bt.date === editForm.date && bt.barber === v).map((bt) => bt.time);
+                  const available = timeSlots.filter((t) => !booked.includes(t) && !blocked.includes(t));
+                  if (available.length === 0) toast.error("No times available. Please choose another Barber. Thank you.");
+                }
+              }}>
                 <SelectTrigger id="edit-barber"><SelectValue placeholder="Select a barber" /></SelectTrigger>
                 <SelectContent>
                   {barbers.map((b) => (
@@ -1834,7 +1871,16 @@ export function AdminDashboardPage() {
             </div>
             <div className="space-y-1">
               <Label htmlFor="edit-date">Date *</Label>
-              <Input id="edit-date" type="date" value={editForm.date} onChange={(e) => setEditForm({ ...editForm, date: e.target.value, time: "" })} />
+              <Input id="edit-date" type="date" value={editForm.date} onChange={(e) => {
+                const d = e.target.value;
+                setEditForm({ ...editForm, date: d, time: "" });
+                if (d && editForm.barber) {
+                  const booked = appointments.filter((a) => a.date === d && a.id !== editingAppt?.id).map((a) => a.time).filter(Boolean);
+                  const blocked = blockedTimes.filter((bt) => bt.date === d && bt.barber === editForm.barber).map((bt) => bt.time);
+                  const available = timeSlots.filter((t) => !booked.includes(t) && !blocked.includes(t));
+                  if (available.length === 0) toast.error("No times available. Please choose another Barber. Thank you.");
+                }
+              }} />
             </div>
             <div className="space-y-1 sm:col-span-2">
               <Label htmlFor="edit-time">Time</Label>

@@ -87,6 +87,12 @@ export function AppointmentBookingEs() {
   const unavailableTimes = [...bookedTimes, ...blockedTimeSlots];
   const availableTimeSlots = timeSlots.filter((t) => !unavailableTimes.includes(t));
 
+  useEffect(() => {
+    if (formData.date && availableTimeSlots.length === 0) {
+      toast.error("No hay horarios disponibles. Por favor elija otro Barbero. Gracias.");
+    }
+  }, [formData.date, formData.barber, availableTimeSlots.length]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -95,6 +101,10 @@ export function AppointmentBookingEs() {
     const phone = formData.phone.trim();
     const notes = formData.notes.trim();
 
+    if (availableTimeSlots.length === 0) {
+      toast.error("No hay horarios disponibles. Por favor elija otro Barbero. Gracias.");
+      return;
+    }
     if (!name || !phone || !formData.date || !formData.time) {
       toast.error("Por favor complete nombre, teléfono, fecha y hora");
       return;
