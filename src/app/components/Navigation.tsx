@@ -59,10 +59,11 @@ export function Navigation() {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
             <DropdownMenu open={isServicesOpen} onOpenChange={setIsServicesOpen}>
-              <DropdownMenuTrigger 
+              <DropdownMenuTrigger
                 className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 outline-none group"
                 onMouseEnter={() => setIsServicesOpen(true)}
                 onMouseLeave={() => setIsServicesOpen(false)}
+                onClick={(e) => { e.preventDefault(); setIsServicesOpen(false); scrollToSection('services'); }}
               >
                 <Scissors className="size-4" />
                 Services
@@ -134,10 +135,10 @@ export function Navigation() {
             <div className="flex flex-col gap-4">
               {/* Services Submenu */}
               <div className="flex flex-col gap-2">
-                <div className="font-medium text-sky-300 flex items-center gap-1.5 px-2">
+                <button onClick={() => scrollToSection('services')} className="font-medium text-sky-300 hover:text-sky-100 flex items-center gap-1.5 px-2 transition-colors">
                   <Scissors className="size-4" />
                   Services
-                </div>
+                </button>
                 <div className="pl-6 flex flex-col gap-2">
                   {services.map((service) => (
                     <button
