@@ -1,7 +1,7 @@
 import { httpsCallable } from "firebase/functions";
 import { functions } from "./firebase";
 
-type EmailType = "shop_notification" | "customer_confirmation" | "reminder" | "contact_notification" | "contact_reply";
+type EmailType = "shop_notification" | "customer_confirmation" | "appointment_update" | "reminder" | "contact_notification" | "contact_reply";
 
 interface EmailParams {
   name: string;
@@ -13,6 +13,10 @@ interface EmailParams {
   time?: string;
   notes?: string;
   message?: string;
+  oldDate?: string;
+  oldTime?: string;
+  oldBarber?: string;
+  oldService?: string;
 }
 
 const sendEmailFn = httpsCallable(functions, "sendEmail");

@@ -465,6 +465,40 @@ export function AdminDashboardPage() {
         prev.map((a) => a.id === editingAppt.id ? { ...a, ...editForm } : a)
       );
       toast.success("Appointment updated");
+
+      // Send update email to customer if email provided
+      if (editForm.email && editForm.email.trim()) {
+        try {
+          const old = editingAppt;
+          const changes: string[] = [];
+          if (editForm.date !== (old?.date || "")) changes.push("Date");
+          if (editForm.time !== (old?.time || "")) changes.push("Time");
+          if (editForm.barber !== (old?.barber || "")) changes.push("Barber");
+          if (editForm.service !== (old?.service || "")) changes.push("Service");
+
+          const changeSummary = changes.length > 0
+            ? `Hi ${editForm.name}, your appointment has been updated. Changed: ${changes.join(", ")}. See your updated details below.`
+            : `Hi ${editForm.name}, your appointment has been updated. See your details below.`;
+
+          await sendEmail("customer_confirmation", {
+            name: editForm.name,
+            email: editForm.email,
+            phone: editForm.phone,
+            barber: editForm.barber,
+            service: editForm.service,
+            date: editForm.date,
+            time: editForm.time,
+            notes: editForm.notes,
+            message: changeSummary,
+          });
+          toast.success("Update email sent to customer");
+        } catch (err: any) {
+          const errorMsg = err?.code || err?.message || String(err);
+          console.error("Update email failed", errorMsg, err);
+          toast.error(`Update email failed: ${errorMsg}`);
+        }
+      }
+
       setEditingAppt(null);
     } catch {
       toast.error("Failed to update appointment");

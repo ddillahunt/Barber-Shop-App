@@ -55,7 +55,7 @@ function checkRateLimit(key: string): void {
 // --- Types ---
 
 interface EmailData {
-  type: "shop_notification" | "customer_confirmation" | "reminder" | "contact_notification" | "contact_reply";
+  type: "shop_notification" | "customer_confirmation" | "appointment_update" | "reminder" | "contact_notification" | "contact_reply";
   name: string;
   email?: string;
   phone?: string;
@@ -65,6 +65,10 @@ interface EmailData {
   time?: string;
   notes?: string;
   message?: string;
+  oldDate?: string;
+  oldTime?: string;
+  oldBarber?: string;
+  oldService?: string;
 }
 
 function buildSubject(data: EmailData): string {
@@ -75,6 +79,8 @@ function buildSubject(data: EmailData): string {
       return `New Appointment: ${name} - ${date || "No date"}`;
     case "customer_confirmation":
       return `Appointment Confirmed - Grandes Ligas Barber`;
+    case "appointment_update":
+      return `Appointment Updated - Grandes Ligas Barber`;
     case "reminder":
       return `Appointment Reminder - Grandes Ligas Barber`;
     case "contact_notification":
@@ -147,6 +153,36 @@ function buildHtml(data: EmailData): string {
           ${footer}
         </div>`;
 
+    case "appointment_update": {
+      const oldDate = sanitize(data.oldDate, 20);
+      const oldTime = sanitize(data.oldTime, 20);
+      const oldBarber = sanitize(data.oldBarber, 100);
+      const oldService = sanitize(data.oldService, 100);
+      const dateChanged = oldDate && oldDate !== date;
+      const timeChanged = oldTime && oldTime !== time;
+      const barberChanged = oldBarber && oldBarber !== barber;
+      const serviceChanged = oldService && oldService !== service;
+      const highlightStyle = "background-color: #FFFF00; font-weight: bold;";
+      const buildRow = (label: string, value: string, changed: boolean | string) =>
+        value ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">${label}:</td><td style="padding: 8px;${changed ? ` ${highlightStyle}` : ""}">${value}${changed ? " (updated)" : ""}</td></tr>` : "";
+      return `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+          ${header}
+          <div style="padding: 24px;">
+            <h2 style="color: #333;">Your Appointment Has Been Updated</h2>
+            <p style="color: #555; font-size: 16px;">Hi ${name}, your appointment details have been updated. Here are your new details:</p>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+              ${buildRow("Date", date, dateChanged)}
+              ${buildRow("Time", time, timeChanged)}
+              ${buildRow("Barber", barber, barberChanged)}
+              ${buildRow("Service", service, serviceChanged)}
+            </table>
+            <p style="color: #555; margin-top: 16px;">If you have any questions, please don't hesitate to contact us. We look forward to seeing you!</p>
+          </div>
+          ${footer}
+        </div>`;
+    }
+
     case "reminder":
       return `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
@@ -203,6 +239,7 @@ function getRecipient(data: EmailData): { email: string; name?: string } {
     case "contact_notification":
       return { email: OWNER_EMAIL, name: "Grandes Ligas Barber" };
     case "customer_confirmation":
+    case "appointment_update":
     case "reminder":
     case "contact_reply":
       if (!data.email || !isValidEmail(data.email)) {
@@ -217,13 +254,16 @@ function getRecipient(data: EmailData): { email: string; name?: string } {
 export const sendEmail = onCall({ secrets: [brevoApiKey] }, async (request) => {
   const data = request.data as EmailData;
 
+  logger.info("sendEmail called", { type: data.type, hasName: !!data.name, hasEmail: !!data.email, hasPhone: !!data.phone });
+
   // Validate required fields
   if (!data.type || !data.name || typeof data.name !== "string") {
+    logger.error("Validation failed: missing required fields", { type: data.type, name: data.name });
     throw new HttpsError("invalid-argument", "Missing required fields: type, name");
   }
 
   // Validate email type
-  const validTypes = ["shop_notification", "customer_confirmation", "reminder", "contact_notification", "contact_reply"];
+  const validTypes = ["shop_notification", "customer_confirmation", "appointment_update", "reminder", "contact_notification", "contact_reply"];
   if (!validTypes.includes(data.type)) {
     throw new HttpsError("invalid-argument", "Invalid email type");
   }
@@ -237,6 +277,8 @@ export const sendEmail = onCall({ secrets: [brevoApiKey] }, async (request) => {
   if (data.phone && !isValidPhone(data.phone)) {
     throw new HttpsError("invalid-argument", "Invalid phone number");
   }
+
+  logger.info("Email validation passed", { type: data.type, email: data.email ? "provided" : "missing", name: data.name });
 
   // Rate limit by caller IP or auth UID
   const rateLimitKey = request.auth?.uid || request.rawRequest?.ip || "anonymous";
