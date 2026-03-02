@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { NavigationEs } from "../components/es/NavigationEs";
 import { ScrollToTop } from "../components/ScrollToTop";
 import { MapPin, Star, Clock, ArrowRight } from "lucide-react";
@@ -6,6 +7,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 export function AboutPageEs() {
   const navigate = useNavigate();
+  useEffect(() => { document.title = "Sobre Nosotros | Grandes Ligas Barber Shop"; }, []);
 
   return (
     <div className="min-h-screen bg-white">

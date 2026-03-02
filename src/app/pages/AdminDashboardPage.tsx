@@ -75,6 +75,7 @@ function formatPhone(value: string) {
 
 export function AdminDashboardPage() {
   const navigate = useNavigate();
+  useEffect(() => { document.title = "Admin Dashboard | Grandes Ligas Barber Shop"; }, []);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);

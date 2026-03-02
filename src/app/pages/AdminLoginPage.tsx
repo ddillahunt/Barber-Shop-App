@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { Button } from "../components/ui/button";
@@ -26,6 +26,7 @@ export function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const [lockedUntil, setLockedUntil] = useState(0);
+  useEffect(() => { document.title = "Admin Login | Grandes Ligas Barber Shop"; }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

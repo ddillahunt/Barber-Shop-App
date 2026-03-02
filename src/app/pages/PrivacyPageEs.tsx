@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { NavigationEs } from "../components/es/NavigationEs";
 import { ScrollToTop } from "../components/ScrollToTop";
 import { Shield } from "lucide-react";
@@ -5,6 +6,8 @@ import logoImg from "../../assets/images/barber-Grandes Ligas logo.png";
 import { Link } from "react-router-dom";
 
 export function PrivacyPageEs() {
+  useEffect(() => { document.title = "Política de Privacidad | Grandes Ligas Barber Shop"; }, []);
+
   return (
     <div className="min-h-screen bg-white">
       <NavigationEs />

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navigation } from "../components/Navigation";
 import { Hero } from "../components/Hero";
 import { Services } from "../components/Services";
@@ -12,6 +13,8 @@ import { Link } from "react-router-dom";
 import logoImg from "../../assets/images/barber-Grandes Ligas logo.png";
 
 export function HomePage() {
+  useEffect(() => { document.title = "Grandes Ligas Barber Shop"; }, []);
+
   return (
     <div className="min-h-screen bg-white">
       <Navigation />

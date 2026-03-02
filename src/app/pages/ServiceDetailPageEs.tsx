@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ArrowLeft, Clock, DollarSign, CheckCircle } from "lucide-react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
@@ -12,6 +13,10 @@ export function ServiceDetailPageEs() {
   const { serviceId } = useParams();
 
   const service = servicesEs.find((s) => s.id === serviceId);
+
+  useEffect(() => {
+    document.title = service ? `${service.title} | Grandes Ligas Barber Shop` : "Servicio No Encontrado | Grandes Ligas Barber Shop";
+  }, [service]);
 
   if (!service) {
     return (
