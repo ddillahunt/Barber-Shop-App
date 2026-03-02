@@ -1776,6 +1776,13 @@ export function AdminDashboardPage() {
                               <div className="flex items-center gap-2 flex-shrink-0">
                                 <Badge variant="outline">{appt.source?.toUpperCase() || "EN"}</Badge>
                                 <Pencil className="size-4 text-blue-500" />
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); handleDelete(appt.id!); }}
+                                  className="text-red-500 hover:text-red-700 p-0.5 rounded hover:bg-red-50 transition-colors"
+                                  title="Delete appointment"
+                                >
+                                  <Trash2 className="size-4" />
+                                </button>
                               </div>
                             </div>
                             <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
