@@ -1,18 +1,33 @@
+import { useState, useEffect } from "react";
 import logoImg from "../../../assets/images/barber-Grandes Ligas logo.png";
 
+const heroImages = [
+  "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920",
+  "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920",
+  "https://images.unsplash.com/photo-1621605815971-fbc98d665033?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920",
+];
+
 export function HeroEs() {
+  const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="relative bg-gradient-to-br from-black via-slate-900 to-slate-800 text-white py-32 overflow-hidden">
-      {/* Background Video */}
-      <video
-        className="absolute inset-0 w-full h-full object-cover opacity-50"
-        autoPlay
-        muted
-        loop
-        playsInline
-      >
-        <source src={`${import.meta.env.BASE_URL}barber-bg.mp4`} type="video/mp4" />
-      </video>
+      {/* Background Image Carousel */}
+      {heroImages.map((src, index) => (
+        <img
+          key={index}
+          src={src}
+          alt="Barbería"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === currentImage ? 'opacity-50' : 'opacity-0'}`}
+        />
+      ))}
 
       {/* Animated gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-blue-500/10 to-red-500/10 animate-pulse" />

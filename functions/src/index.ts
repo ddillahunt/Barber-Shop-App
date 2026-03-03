@@ -356,7 +356,7 @@ export const sendSMS = onCall({ secrets: [brevoApiKey] }, async (request) => {
 
   const payload = {
     type: "transactional",
-    sender: "GrandsLigas",
+    sender: "GrandesLigas",
     recipient,
     content: cleanMessage,
   };

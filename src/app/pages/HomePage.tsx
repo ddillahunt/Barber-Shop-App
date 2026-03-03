@@ -25,7 +25,7 @@ export function HomePage() {
       <Schedule />
       <AppointmentBooking />
       <Contact />
-      
+
       {/* Footer */}
       <footer className="bg-gradient-to-r from-black via-slate-900 to-black text-white py-12 border-t-2 border-blue-500/50">
         <div className="container mx-auto px-4 text-center">
