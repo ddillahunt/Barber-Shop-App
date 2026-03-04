@@ -15,47 +15,6 @@ export interface Service {
 
 export const servicesEs: Service[] = [
   {
-    id: "classic-haircut",
-    icon: Scissors,
-    title: "Corte Clásico",
-    description: "Cortes tradicionales con precisión y estilo",
-    price: "$40",
-    gradient: "from-red-700 to-red-600",
-    bgGradient: "from-slate-900 to-slate-800",
-    duration: "30-45 minutos",
-    included: [
-      "Consulta personal con tu barbero",
-      "Corte de precisión con tijeras y/o máquina",
-      "Trabajo detallado de bordes y líneas",
-      "Productos de peinado premium"
-    ],
-    detailedDescription: [
-      "Nuestro Corte Clásico es la base de la excelencia en barbería tradicional. Ya sea que busques un corte de negocios atemporal, un degradado limpio o un desvanecido elegante, nuestros barberos expertos crearán un look que se adapte a tu personalidad y estilo de vida.",
-      "Cada corte incluye una consulta detallada para comprender tus preferencias, seguida de técnicas de corte de precisión transmitidas a través de generaciones de maestros barberos. Terminamos con un detallado cuidadoso y peinado para asegurarnos de que salgas luciendo elegante y sintiéndote seguro."
-    ]
-  },
-  {
-    id: "premium-cut-style",
-    icon: Sparkles,
-    title: "Corte y Afeitado",
-    description: "Peinado completo con productos premium",
-    price: "$50",
-    gradient: "from-red-600 to-red-700",
-    bgGradient: "from-slate-900 to-slate-800",
-    duration: "45-60 minutos",
-    included: [
-      "Consulta de estilo en profundidad",
-      "Corte de precisión experto",
-      "Secado y peinado profesional",
-      "Aplicación de productos de peinado de alta gama",
-      "Tratamiento con toalla caliente"
-    ],
-    detailedDescription: [
-      "Eleva tu experiencia de cuidado personal con nuestro servicio de Corte y Estilo Premium. Este paquete integral combina corte experto con técnicas avanzadas de peinado para crear un look sofisticado y pulido.",
-      "Nuestros barberos utilizan productos y herramientas premium para ofrecer una experiencia transformadora. Desde la consulta inicial hasta los toques finales de peinado, cada paso está diseñado para superar tus expectativas y dejarte luciendo lo mejor posible."
-    ]
-  },
-  {
     id: "beard-trim-shape",
     icon: Waves,
     title: "Recorte de Barba y Alineado",
@@ -95,6 +54,47 @@ export const servicesEs: Service[] = [
     detailedDescription: [
       "Nuestro servicio de Corte de Niños está diseñado para que la visita de tu hijo a la barbería sea divertida y cómoda. Nuestros barberos experimentados son excelentes con los niños y saben cómo mantenerlos relajados mientras les dan un corte elegante y limpio.",
       "Ya sea su primer corte o un recorte regular, nos tomamos el tiempo para asegurarnos de que cada niño salga luciendo genial y sintiéndose seguro. Para niños de 11 años y menores."
+    ]
+  },
+  {
+    id: "classic-haircut",
+    icon: Scissors,
+    title: "Corte Clásico",
+    description: "Cortes tradicionales con precisión y estilo",
+    price: "$40",
+    gradient: "from-red-700 to-red-600",
+    bgGradient: "from-slate-900 to-slate-800",
+    duration: "30-45 minutos",
+    included: [
+      "Consulta personal con tu barbero",
+      "Corte de precisión con tijeras y/o máquina",
+      "Trabajo detallado de bordes y líneas",
+      "Productos de peinado premium"
+    ],
+    detailedDescription: [
+      "Nuestro Corte Clásico es la base de la excelencia en barbería tradicional. Ya sea que busques un corte de negocios atemporal, un degradado limpio o un desvanecido elegante, nuestros barberos expertos crearán un look que se adapte a tu personalidad y estilo de vida.",
+      "Cada corte incluye una consulta detallada para comprender tus preferencias, seguida de técnicas de corte de precisión transmitidas a través de generaciones de maestros barberos. Terminamos con un detallado cuidadoso y peinado para asegurarnos de que salgas luciendo elegante y sintiéndote seguro."
+    ]
+  },
+  {
+    id: "premium-cut-style",
+    icon: Sparkles,
+    title: "Corte y Afeitado",
+    description: "Peinado completo con productos premium",
+    price: "$50",
+    gradient: "from-red-600 to-red-700",
+    bgGradient: "from-slate-900 to-slate-800",
+    duration: "45-60 minutos",
+    included: [
+      "Consulta de estilo en profundidad",
+      "Corte de precisión experto",
+      "Secado y peinado profesional",
+      "Aplicación de productos de peinado de alta gama",
+      "Tratamiento con toalla caliente"
+    ],
+    detailedDescription: [
+      "Eleva tu experiencia de cuidado personal con nuestro servicio de Corte y Estilo Premium. Este paquete integral combina corte experto con técnicas avanzadas de peinado para crear un look sofisticado y pulido.",
+      "Nuestros barberos utilizan productos y herramientas premium para ofrecer una experiencia transformadora. Desde la consulta inicial hasta los toques finales de peinado, cada paso está diseñado para superar tus expectativas y dejarte luciendo lo mejor posible."
     ]
   }
 ];

@@ -15,47 +15,6 @@ export interface Service {
 
 export const services: Service[] = [
   {
-    id: "classic-haircut",
-    icon: Scissors,
-    title: "Classic Haircut",
-    description: "Traditional cuts with precision and style",
-    price: "$40",
-    gradient: "from-red-700 to-red-600",
-    bgGradient: "from-slate-900 to-slate-800",
-    duration: "30-45 minutes",
-    included: [
-      "Personal consultation with your barber",
-      "Precision scissor and/or clipper cutting",
-      "Detailed edge work and line-up",
-      "Premium styling products"
-    ],
-    detailedDescription: [
-      "Our Classic Haircut is the foundation of traditional barbering excellence. Whether you're looking for a timeless business cut, a clean fade, or a stylish taper, our expert barbers will craft a look that suits your personality and lifestyle.",
-      "Each haircut includes a detailed consultation to understand your preferences, followed by precision cutting techniques passed down through generations of master barbers. We finish with careful detailing and styling to ensure you leave looking sharp and feeling confident."
-    ]
-  },
-  {
-    id: "premium-cut-style",
-    icon: Sparkles,
-    title: "Haircut & Shave",
-    description: "Complete styling with premium products",
-    price: "$50",
-    gradient: "from-red-600 to-red-700",
-    bgGradient: "from-slate-900 to-slate-800",
-    duration: "45-60 minutes",
-    included: [
-      "In-depth style consultation",
-      "Expert precision cutting",
-      "Professional blow-dry and styling",
-      "High-end styling products application",
-      "Hot towel treatment"
-    ],
-    detailedDescription: [
-      "Elevate your grooming experience with our Haircut & Shave service. This comprehensive package combines expert cutting with a professional shave to create a sophisticated, polished look.",
-      "Our barbers use premium products and tools to deliver a transformative experience. From the initial consultation to the final styling touches, every step is designed to exceed your expectations and leave you looking your absolute best."
-    ]
-  },
-  {
     id: "beard-trim-shape",
     icon: Waves,
     title: "Beard Trim & Lineup",
@@ -95,6 +54,47 @@ export const services: Service[] = [
     detailedDescription: [
       "Our Children's Haircut service is designed to make your child's barbershop visit fun and comfortable. Our experienced barbers are great with kids and know how to keep them relaxed while delivering a sharp, stylish cut.",
       "Whether it's a first haircut or a regular trim, we take the time to make sure every child leaves looking great and feeling confident. For kids 11 and under."
+    ]
+  },
+  {
+    id: "classic-haircut",
+    icon: Scissors,
+    title: "Classic Haircut",
+    description: "Traditional cuts with precision and style",
+    price: "$40",
+    gradient: "from-red-700 to-red-600",
+    bgGradient: "from-slate-900 to-slate-800",
+    duration: "30-45 minutes",
+    included: [
+      "Personal consultation with your barber",
+      "Precision scissor and/or clipper cutting",
+      "Detailed edge work and line-up",
+      "Premium styling products"
+    ],
+    detailedDescription: [
+      "Our Classic Haircut is the foundation of traditional barbering excellence. Whether you're looking for a timeless business cut, a clean fade, or a stylish taper, our expert barbers will craft a look that suits your personality and lifestyle.",
+      "Each haircut includes a detailed consultation to understand your preferences, followed by precision cutting techniques passed down through generations of master barbers. We finish with careful detailing and styling to ensure you leave looking sharp and feeling confident."
+    ]
+  },
+  {
+    id: "premium-cut-style",
+    icon: Sparkles,
+    title: "Haircut & Shave",
+    description: "Complete styling with premium products",
+    price: "$50",
+    gradient: "from-red-600 to-red-700",
+    bgGradient: "from-slate-900 to-slate-800",
+    duration: "45-60 minutes",
+    included: [
+      "In-depth style consultation",
+      "Expert precision cutting",
+      "Professional blow-dry and styling",
+      "High-end styling products application",
+      "Hot towel treatment"
+    ],
+    detailedDescription: [
+      "Elevate your grooming experience with our Haircut & Shave service. This comprehensive package combines expert cutting with a professional shave to create a sophisticated, polished look.",
+      "Our barbers use premium products and tools to deliver a transformative experience. From the initial consultation to the final styling touches, every step is designed to exceed your expectations and leave you looking your absolute best."
     ]
   }
 ];
