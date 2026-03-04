@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages & AWS Amplify
 
 on:
   push:
@@ -29,7 +29,7 @@ jobs:
         with:
           path: dist
 
-  deploy:
+  deploy-github-pages:
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -38,3 +38,26 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  deploy-amplify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: DEPLOY_TARGET=amplify VITE_BASE_PATH=/ npm run build
+      - name: Deploy to AWS Amplify
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+        run: |
+          cd dist && zip -r ../deploy.zip . && cd ..
+          aws amplify create-deployment --app-id ddb3xvawthiyv --branch-name main > deployment.json
+          UPLOAD_URL=$(cat deployment.json | python3 -c "import sys,json; print(json.load(sys.stdin)['zipUploadUrl'])")
+          JOB_ID=$(cat deployment.json | python3 -c "import sys,json; print(json.load(sys.stdin)['jobId'])")
+          curl -T deploy.zip "$UPLOAD_URL" --header "Content-Type: application/zip"
+          aws amplify start-deployment --app-id ddb3xvawthiyv --branch-name main --job-id "$JOB_ID"
