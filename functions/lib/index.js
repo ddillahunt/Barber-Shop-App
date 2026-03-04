@@ -3,13 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendAppointmentReminders = exports.sendSMS = exports.sendEmail = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const scheduler_1 = require("firebase-functions/v2/scheduler");
-const params_1 = require("firebase-functions/params");
 const firebase_functions_1 = require("firebase-functions");
 const app_1 = require("firebase-admin/app");
 const firestore_1 = require("firebase-admin/firestore");
+const client_ses_1 = require("@aws-sdk/client-ses");
+const client_sns_1 = require("@aws-sdk/client-sns");
 (0, app_1.initializeApp)();
 const db = (0, firestore_1.getFirestore)();
-const brevoApiKey = (0, params_1.defineSecret)("BREVO_API_KEY");
+const AWS_REGION = "us-east-1";
+const sesClient = new client_ses_1.SESClient({ region: AWS_REGION });
+const snsClient = new client_sns_1.SNSClient({ region: AWS_REGION });
 const OWNER_EMAIL = "ddillahunt59@gmail.com";
 const SENDER = { name: "Grandes Ligas Barber", email: OWNER_EMAIL };
 // --- Security helpers ---
@@ -53,6 +56,8 @@ function buildSubject(data) {
             return `New Appointment: ${name} - ${date || "No date"}`;
         case "customer_confirmation":
             return `Appointment Confirmed - Grandes Ligas Barber`;
+        case "appointment_update":
+            return `Appointment Updated - Grandes Ligas Barber`;
         case "reminder":
             return `Appointment Reminder - Grandes Ligas Barber`;
         case "contact_notification":
@@ -119,6 +124,34 @@ function buildHtml(data) {
           </div>
           ${footer}
         </div>`;
+        case "appointment_update": {
+            const oldDate = sanitize(data.oldDate, 20);
+            const oldTime = sanitize(data.oldTime, 20);
+            const oldBarber = sanitize(data.oldBarber, 100);
+            const oldService = sanitize(data.oldService, 100);
+            const dateChanged = oldDate && oldDate !== date;
+            const timeChanged = oldTime && oldTime !== time;
+            const barberChanged = oldBarber && oldBarber !== barber;
+            const serviceChanged = oldService && oldService !== service;
+            const highlightStyle = "background-color: #FFFF00; font-weight: bold;";
+            const buildRow = (label, value, changed) => value ? `<tr><td style="padding: 8px; font-weight: bold; color: #555;">${label}:</td><td style="padding: 8px;${changed ? ` ${highlightStyle}` : ""}">${value}${changed ? " (updated)" : ""}</td></tr>` : "";
+            return `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+          ${header}
+          <div style="padding: 24px;">
+            <h2 style="color: #333;">Your Appointment Has Been Updated</h2>
+            <p style="color: #555; font-size: 16px;">Hi ${name}, your appointment details have been updated. Here are your new details:</p>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+              ${buildRow("Date", date, dateChanged)}
+              ${buildRow("Time", time, timeChanged)}
+              ${buildRow("Barber", barber, barberChanged)}
+              ${buildRow("Service", service, serviceChanged)}
+            </table>
+            <p style="color: #555; margin-top: 16px;">If you have any questions, please don't hesitate to contact us. We look forward to seeing you!</p>
+          </div>
+          ${footer}
+        </div>`;
+        }
         case "reminder":
             return `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
@@ -171,6 +204,7 @@ function getRecipient(data) {
         case "contact_notification":
             return { email: OWNER_EMAIL, name: "Grandes Ligas Barber" };
         case "customer_confirmation":
+        case "appointment_update":
         case "reminder":
         case "contact_reply":
             if (!data.email || !isValidEmail(data.email)) {
@@ -181,14 +215,16 @@ function getRecipient(data) {
             throw new https_1.HttpsError("invalid-argument", "Invalid email type");
     }
 }
-exports.sendEmail = (0, https_1.onCall)({ secrets: [brevoApiKey] }, async (request) => {
+exports.sendEmail = (0, https_1.onCall)(async (request) => {
     const data = request.data;
+    firebase_functions_1.logger.info("sendEmail called", { type: data.type, hasName: !!data.name, hasEmail: !!data.email, hasPhone: !!data.phone });
     // Validate required fields
     if (!data.type || !data.name || typeof data.name !== "string") {
+        firebase_functions_1.logger.error("Validation failed: missing required fields", { type: data.type, name: data.name });
         throw new https_1.HttpsError("invalid-argument", "Missing required fields: type, name");
     }
     // Validate email type
-    const validTypes = ["shop_notification", "customer_confirmation", "reminder", "contact_notification", "contact_reply"];
+    const validTypes = ["shop_notification", "customer_confirmation", "appointment_update", "reminder", "contact_notification", "contact_reply"];
     if (!validTypes.includes(data.type)) {
         throw new https_1.HttpsError("invalid-argument", "Invalid email type");
     }
@@ -200,31 +236,31 @@ exports.sendEmail = (0, https_1.onCall)({ secrets: [brevoApiKey] }, async (reque
     if (data.phone && !isValidPhone(data.phone)) {
         throw new https_1.HttpsError("invalid-argument", "Invalid phone number");
     }
+    firebase_functions_1.logger.info("Email validation passed", { type: data.type, email: data.email ? "provided" : "missing", name: data.name });
     // Rate limit by caller IP or auth UID
     const rateLimitKey = request.auth?.uid || request.rawRequest?.ip || "anonymous";
     checkRateLimit(`email:${rateLimitKey}`);
     const recipient = getRecipient(data);
     const subject = buildSubject(data);
     const htmlContent = buildHtml(data);
-    const payload = {
-        sender: SENDER,
-        to: [recipient],
-        subject,
-        htmlContent,
-    };
-    firebase_functions_1.logger.info("Sending email", { type: data.type });
-    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
-        method: "POST",
-        headers: {
-            "accept": "application/json",
-            "content-type": "application/json",
-            "api-key": brevoApiKey.value(),
+    firebase_functions_1.logger.info("Sending email via SES", { type: data.type });
+    const command = new client_ses_1.SendEmailCommand({
+        Source: `${SENDER.name} <${SENDER.email}>`,
+        Destination: {
+            ToAddresses: [recipient.name ? `${recipient.name} <${recipient.email}>` : recipient.email],
         },
-        body: JSON.stringify(payload),
+        Message: {
+            Subject: { Data: subject, Charset: "UTF-8" },
+            Body: {
+                Html: { Data: htmlContent, Charset: "UTF-8" },
+            },
+        },
     });
-    if (!response.ok) {
-        const errorBody = await response.text();
-        firebase_functions_1.logger.error("Brevo API error", { status: response.status, body: errorBody });
+    try {
+        await sesClient.send(command);
+    }
+    catch (err) {
+        firebase_functions_1.logger.error("SES email error", { error: String(err) });
         throw new https_1.HttpsError("internal", "Failed to send email");
     }
     firebase_functions_1.logger.info("Email sent successfully", { type: data.type });
@@ -238,7 +274,7 @@ function formatPhoneForSms(phone) {
         return "+" + digits;
     return "+" + digits;
 }
-exports.sendSMS = (0, https_1.onCall)({ secrets: [brevoApiKey] }, async (request) => {
+exports.sendSMS = (0, https_1.onCall)(async (request) => {
     const data = request.data;
     if (!data.phone || !data.message || typeof data.message !== "string") {
         throw new https_1.HttpsError("invalid-argument", "Missing required fields: phone, message");
@@ -256,25 +292,26 @@ exports.sendSMS = (0, https_1.onCall)({ secrets: [brevoApiKey] }, async (request
     const rateLimitKey = request.auth?.uid || request.rawRequest?.ip || "anonymous";
     checkRateLimit(`sms:${rateLimitKey}`);
     const recipient = formatPhoneForSms(data.phone);
-    const payload = {
-        type: "transactional",
-        sender: "GrandsLigas",
-        recipient,
-        content: cleanMessage,
-    };
-    firebase_functions_1.logger.info("Sending SMS");
-    const response = await fetch("https://api.brevo.com/v3/transactionalSMS/sms", {
-        method: "POST",
-        headers: {
-            "accept": "application/json",
-            "content-type": "application/json",
-            "api-key": brevoApiKey.value(),
+    firebase_functions_1.logger.info("Sending SMS via SNS");
+    const command = new client_sns_1.PublishCommand({
+        PhoneNumber: recipient,
+        Message: cleanMessage,
+        MessageAttributes: {
+            "AWS.SNS.SMS.SenderID": {
+                DataType: "String",
+                StringValue: "GrandesLigas",
+            },
+            "AWS.SNS.SMS.SMSType": {
+                DataType: "String",
+                StringValue: "Transactional",
+            },
         },
-        body: JSON.stringify(payload),
     });
-    if (!response.ok) {
-        const errorBody = await response.text();
-        firebase_functions_1.logger.error("Brevo SMS error", { status: response.status, body: errorBody });
+    try {
+        await snsClient.send(command);
+    }
+    catch (err) {
+        firebase_functions_1.logger.error("SNS SMS error", { error: String(err) });
         throw new https_1.HttpsError("internal", "Failed to send SMS");
     }
     firebase_functions_1.logger.info("SMS sent successfully");
@@ -305,29 +342,23 @@ function getTodayInEST() {
     const estStr = now.toLocaleDateString("en-CA", { timeZone: "America/New_York" }); // YYYY-MM-DD
     return estStr;
 }
-async function sendBrevoEmail(apiKey, to, subject, htmlContent) {
-    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
-        method: "POST",
-        headers: {
-            "accept": "application/json",
-            "content-type": "application/json",
-            "api-key": apiKey,
+async function sendSESEmail(to, subject, htmlContent) {
+    const command = new client_ses_1.SendEmailCommand({
+        Source: `${SENDER.name} <${SENDER.email}>`,
+        Destination: {
+            ToAddresses: [to.name ? `${to.name} <${to.email}>` : to.email],
         },
-        body: JSON.stringify({
-            sender: SENDER,
-            to: [to],
-            subject,
-            htmlContent,
-        }),
+        Message: {
+            Subject: { Data: subject, Charset: "UTF-8" },
+            Body: {
+                Html: { Data: htmlContent, Charset: "UTF-8" },
+            },
+        },
     });
-    if (!response.ok) {
-        const errorBody = await response.text();
-        throw new Error(`Brevo error ${response.status}: ${errorBody}`);
-    }
+    await sesClient.send(command);
 }
 exports.sendAppointmentReminders = (0, scheduler_1.onSchedule)({
     schedule: "every 15 minutes",
-    secrets: [brevoApiKey],
     timeZone: "America/New_York",
 }, async () => {
     const today = getTodayInEST();
@@ -369,7 +400,7 @@ exports.sendAppointmentReminders = (0, scheduler_1.onSchedule)({
             };
             const subject = buildSubject(emailData);
             const html = buildHtml(emailData);
-            await sendBrevoEmail(brevoApiKey.value(), { email: appt.email, name: appt.name }, subject, html);
+            await sendSESEmail({ email: appt.email, name: appt.name }, subject, html);
             // Mark reminder as sent
             await doc.ref.update({ reminderSentAt: firestore_1.Timestamp.now() });
             sentCount++;

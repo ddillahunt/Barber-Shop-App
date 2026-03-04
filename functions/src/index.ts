@@ -1,14 +1,17 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
-import { defineSecret } from "firebase-functions/params";
 import { logger } from "firebase-functions";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
 
 initializeApp();
 const db = getFirestore();
 
-const brevoApiKey = defineSecret("BREVO_API_KEY");
+const AWS_REGION = "us-east-1";
+const sesClient = new SESClient({ region: AWS_REGION });
+const snsClient = new SNSClient({ region: AWS_REGION });
 
 const OWNER_EMAIL = "ddillahunt59@gmail.com";
 const SENDER = { name: "Grandes Ligas Barber", email: OWNER_EMAIL };
@@ -251,7 +254,7 @@ function getRecipient(data: EmailData): { email: string; name?: string } {
   }
 }
 
-export const sendEmail = onCall({ secrets: [brevoApiKey] }, async (request) => {
+export const sendEmail = onCall(async (request) => {
   const data = request.data as EmailData;
 
   logger.info("sendEmail called", { type: data.type, hasName: !!data.name, hasEmail: !!data.email, hasPhone: !!data.phone });
@@ -288,28 +291,25 @@ export const sendEmail = onCall({ secrets: [brevoApiKey] }, async (request) => {
   const subject = buildSubject(data);
   const htmlContent = buildHtml(data);
 
-  const payload = {
-    sender: SENDER,
-    to: [recipient],
-    subject,
-    htmlContent,
-  };
+  logger.info("Sending email via SES", { type: data.type });
 
-  logger.info("Sending email", { type: data.type });
-
-  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "api-key": brevoApiKey.value(),
+  const command = new SendEmailCommand({
+    Source: `${SENDER.name} <${SENDER.email}>`,
+    Destination: {
+      ToAddresses: [recipient.name ? `${recipient.name} <${recipient.email}>` : recipient.email],
     },
-    body: JSON.stringify(payload),
+    Message: {
+      Subject: { Data: subject, Charset: "UTF-8" },
+      Body: {
+        Html: { Data: htmlContent, Charset: "UTF-8" },
+      },
+    },
   });
 
-  if (!response.ok) {
-    const errorBody = await response.text();
-    logger.error("Brevo API error", { status: response.status, body: errorBody });
+  try {
+    await sesClient.send(command);
+  } catch (err) {
+    logger.error("SES email error", { error: String(err) });
     throw new HttpsError("internal", "Failed to send email");
   }
 
@@ -330,7 +330,7 @@ function formatPhoneForSms(phone: string): string {
   return "+" + digits;
 }
 
-export const sendSMS = onCall({ secrets: [brevoApiKey] }, async (request) => {
+export const sendSMS = onCall(async (request) => {
   const data = request.data as SmsData;
 
   if (!data.phone || !data.message || typeof data.message !== "string") {
@@ -354,28 +354,27 @@ export const sendSMS = onCall({ secrets: [brevoApiKey] }, async (request) => {
 
   const recipient = formatPhoneForSms(data.phone);
 
-  const payload = {
-    type: "transactional",
-    sender: "GrandesLigas",
-    recipient,
-    content: cleanMessage,
-  };
+  logger.info("Sending SMS via SNS");
 
-  logger.info("Sending SMS");
-
-  const response = await fetch("https://api.brevo.com/v3/transactionalSMS/sms", {
-    method: "POST",
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "api-key": brevoApiKey.value(),
+  const command = new PublishCommand({
+    PhoneNumber: recipient,
+    Message: cleanMessage,
+    MessageAttributes: {
+      "AWS.SNS.SMS.SenderID": {
+        DataType: "String",
+        StringValue: "GrandesLigas",
+      },
+      "AWS.SNS.SMS.SMSType": {
+        DataType: "String",
+        StringValue: "Transactional",
+      },
     },
-    body: JSON.stringify(payload),
   });
 
-  if (!response.ok) {
-    const errorBody = await response.text();
-    logger.error("Brevo SMS error", { status: response.status, body: errorBody });
+  try {
+    await snsClient.send(command);
+  } catch (err) {
+    logger.error("SNS SMS error", { error: String(err) });
     throw new HttpsError("internal", "Failed to send SMS");
   }
 
@@ -410,31 +409,25 @@ function getTodayInEST(): string {
   return estStr;
 }
 
-async function sendBrevoEmail(apiKey: string, to: { email: string; name?: string }, subject: string, htmlContent: string) {
-  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "api-key": apiKey,
+async function sendSESEmail(to: { email: string; name?: string }, subject: string, htmlContent: string) {
+  const command = new SendEmailCommand({
+    Source: `${SENDER.name} <${SENDER.email}>`,
+    Destination: {
+      ToAddresses: [to.name ? `${to.name} <${to.email}>` : to.email],
     },
-    body: JSON.stringify({
-      sender: SENDER,
-      to: [to],
-      subject,
-      htmlContent,
-    }),
+    Message: {
+      Subject: { Data: subject, Charset: "UTF-8" },
+      Body: {
+        Html: { Data: htmlContent, Charset: "UTF-8" },
+      },
+    },
   });
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(`Brevo error ${response.status}: ${errorBody}`);
-  }
+  await sesClient.send(command);
 }
 
 export const sendAppointmentReminders = onSchedule(
   {
     schedule: "every 15 minutes",
-    secrets: [brevoApiKey],
     timeZone: "America/New_York",
   },
   async () => {
@@ -485,8 +478,7 @@ export const sendAppointmentReminders = onSchedule(
         const subject = buildSubject(emailData);
         const html = buildHtml(emailData);
 
-        await sendBrevoEmail(
-          brevoApiKey.value(),
+        await sendSESEmail(
           { email: appt.email, name: appt.name },
           subject,
           html
