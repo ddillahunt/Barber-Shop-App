@@ -25,10 +25,10 @@ const timeSlots = [
 ];
 
 const services = [
-  { name: "Classic Haircut", price: "$40" },
-  { name: "Haircut & Shave", price: "$50" },
   { name: "Beard Trim & Lineup", price: "$30" },
   { name: "Children's Haircut (11 & Under)", price: "$35" },
+  { name: "Classic Haircut", price: "$40" },
+  { name: "Haircut & Shave", price: "$50" },
 ];
 
 function formatPhone(value: string) {
