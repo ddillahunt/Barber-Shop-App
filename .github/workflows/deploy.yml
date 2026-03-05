@@ -1,44 +1,10 @@
-name: Deploy to GitHub Pages & AWS Amplify
+name: Deploy to AWS Amplify
 
 on:
   push:
     branches: [main]
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npm run build
-      - run: cp dist/index.html dist/404.html
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy-github-pages:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
-
   deploy-amplify:
     runs-on: ubuntu-latest
     steps:
@@ -48,7 +14,7 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: DEPLOY_TARGET=amplify VITE_BASE_PATH=/ npm run build
+      - run: npm run build
       - name: Deploy to AWS Amplify
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -57,7 +23,7 @@ jobs:
         run: |
           cd dist && zip -r ../deploy.zip . && cd ..
           aws amplify create-deployment --app-id ddb3xvawthiyv --branch-name main > deployment.json
-          UPLOAD_URL=$(cat deployment.json | python3 -c "import sys,json; print(json.load(sys.stdin)['zipUploadUrl'])")
-          JOB_ID=$(cat deployment.json | python3 -c "import sys,json; print(json.load(sys.stdin)['jobId'])")
+          UPLOAD_URL=$(python3 -c "import json; print(json.load(open('deployment.json'))['zipUploadUrl'])")
+          JOB_ID=$(python3 -c "import json; print(json.load(open('deployment.json'))['jobId'])")
           curl -T deploy.zip "$UPLOAD_URL" --header "Content-Type: application/zip"
           aws amplify start-deployment --app-id ddb3xvawthiyv --branch-name main --job-id "$JOB_ID"
