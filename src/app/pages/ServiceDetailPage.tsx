@@ -133,7 +133,7 @@ export function ServiceDetailPage() {
 
                   <Button
                     onClick={() => {
-                      navigate("/");
+                      navigate("/?service=" + encodeURIComponent(service.title));
                       setTimeout(() => {
                         document.getElementById("booking")?.scrollIntoView();
                       }, 100);

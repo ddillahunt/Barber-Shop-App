@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -39,12 +40,15 @@ function formatPhone(value: string) {
 }
 
 export function AppointmentBooking() {
+  const [searchParams] = useSearchParams();
+  const preselectedService = searchParams.get("service") || "";
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     barber: "",
-    service: "",
+    service: preselectedService,
     date: "",
     time: "",
     notes: ""
