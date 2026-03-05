@@ -19,7 +19,7 @@ export const services: Service[] = [
     icon: Waves,
     title: "Beard Trim & Lineup",
     description: "Expert beard grooming and maintenance",
-    price: "$200",
+    price: "$30",
     gradient: "from-red-700 to-red-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "20-30 minutes",

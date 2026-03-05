@@ -19,7 +19,7 @@ export const servicesEs: Service[] = [
     icon: Waves,
     title: "Recorte de Barba y Alineado",
     description: "Cuidado y mantenimiento experto de la barba",
-    price: "$200",
+    price: "$30",
     gradient: "from-red-700 to-red-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "20-30 minutos",
