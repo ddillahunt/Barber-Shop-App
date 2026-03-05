@@ -1856,7 +1856,7 @@ export function AdminDashboardPage() {
             )}
           </CardContent>
         </Card>
-        <p className="text-center text-slate-400 text-sm mt-8 mb-4">Powered by GDI Digital Solutions</p>
+        <p className="text-center text-slate-400 text-sm mt-8 mb-4">Powered by <a href="https://www.gdidigitalsolutions.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors underline">GDI Digital Solutions</a></p>
       </main>
 
       {/* Edit Appointment Dialog */}

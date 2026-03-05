@@ -122,7 +122,7 @@ export function AdminLoginPage() {
           >
             Back to website
           </button>
-          <p className="text-slate-500 text-xs text-center mt-4">Powered by GDI Digital Solutions</p>
+          <p className="text-slate-500 text-xs text-center mt-4">Powered by <a href="https://www.gdidigitalsolutions.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors underline">GDI Digital Solutions</a></p>
         </CardContent>
       </Card>
     </div>

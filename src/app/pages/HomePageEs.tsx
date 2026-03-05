@@ -48,7 +48,7 @@ export function HomePageEs() {
           <Link to="/admin/login" className="text-slate-600 hover:text-sky-300 transition-colors text-xs mt-2 inline-block">
             Admin
           </Link>
-          <p className="text-slate-400 text-sm mt-3">Powered by GDI Digital Solutions</p>
+          <p className="text-slate-400 text-sm mt-3">Powered by <a href="https://www.gdidigitalsolutions.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors underline">GDI Digital Solutions</a></p>
         </div>
       </footer>
 

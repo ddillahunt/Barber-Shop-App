@@ -136,7 +136,7 @@ export function AboutPageEs() {
           <p className="text-sky-200">
             &copy; 2026 Grandes Ligas Barber Shop. Todos los derechos reservados.
           </p>
-          <p className="text-slate-400 text-sm mt-3">Powered by GDI Digital Solutions</p>
+          <p className="text-slate-400 text-sm mt-3">Powered by <a href="https://www.gdidigitalsolutions.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors underline">GDI Digital Solutions</a></p>
         </div>
       </footer>
 
