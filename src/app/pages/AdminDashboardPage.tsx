@@ -494,9 +494,7 @@ export function AdminDashboardPage() {
           });
           toast.success("Update email sent to customer");
         } catch (err: any) {
-          const errorMsg = err?.code || err?.message || String(err);
-          console.error("Update email failed", errorMsg, err);
-          toast.error(`Update email failed: ${errorMsg}`);
+          console.error("Update email failed", err);
         }
       }
 
