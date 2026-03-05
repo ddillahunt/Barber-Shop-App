@@ -28,7 +28,7 @@ const timeSlots = [
 const services = [
   { name: "Beard Trim & Lineup", price: "$30" },
   { name: "Children's Haircut (11 & Under)", price: "$35" },
-  { name: "Classic Haircut", price: "$45" },
+  { name: "Classic Haircut", price: "$25" },
   { name: "Haircut & Shave", price: "$50" },
 ];
 
