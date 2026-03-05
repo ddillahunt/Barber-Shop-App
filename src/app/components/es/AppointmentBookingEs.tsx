@@ -28,7 +28,7 @@ const timeSlots = [
 const services = [
   { name: "Recorte de Barba y Alineado", price: "$30" },
   { name: "Corte de Niños (11 Años y Menores)", price: "$35" },
-  { name: "Corte Clásico", price: "$25" },
+  { name: "Corte Clásico", price: "$200" },
   { name: "Corte y Afeitado", price: "$50" },
 ];
 
