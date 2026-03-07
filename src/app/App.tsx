@@ -38,7 +38,7 @@ function ScrollToHash() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={(import.meta as any).env.BASE_URL.replace(/\/$/, '')}>
       <ScrollToHash />
       <Toaster />
       <Routes>
