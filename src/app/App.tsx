@@ -38,7 +38,7 @@ function ScrollToHash() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Barber-Shop-App">
       <ScrollToHash />
       <Toaster />
       <Routes>
