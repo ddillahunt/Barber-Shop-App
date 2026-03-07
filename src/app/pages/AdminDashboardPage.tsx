@@ -16,7 +16,7 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { LogOut, CalendarDays, Users, User, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell, Ban, Clock, Download } from "lucide-react";
+import { LogOut, CalendarDays, Users, User, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell, Ban, Clock, Download, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { sendEmail, sendSMS } from "../lib/email";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
@@ -619,6 +619,76 @@ export function AdminDashboardPage() {
     link.click();
     URL.revokeObjectURL(url);
     toast.success(`Exported ${appointments.length} appointments`);
+  };
+
+  const handleExportPDF = () => {
+    if (appointments.length === 0) {
+      toast.error("No appointments to export");
+      return;
+    }
+    const rows = appointments.map((a) => `
+      <tr>
+        <td>${a.name || ""}</td>
+        <td>${a.email || ""}</td>
+        <td>${a.phone || ""}</td>
+        <td>${a.barber?.split(" - ")[0] || ""}</td>
+        <td>${a.service || ""}</td>
+        <td>${a.date || ""}</td>
+        <td>${a.time || ""}</td>
+        <td>${a.notes || ""}</td>
+        <td>${a.completed ? "Yes" : "No"}</td>
+        <td>${a.source || ""}</td>
+        <td>${a.createdAt?.toDate?.() ? a.createdAt.toDate().toLocaleString() : ""}</td>
+      </tr>
+    `).join("");
+    const html = `
+      <html>
+      <head>
+        <title>Appointments - ${new Date().toLocaleDateString()}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          h1 { font-size: 18px; margin-bottom: 4px; }
+          p { font-size: 12px; color: #666; margin-bottom: 16px; }
+          table { width: 100%; border-collapse: collapse; font-size: 11px; }
+          th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
+          th { background: #1e293b; color: white; font-weight: 600; }
+          tr:nth-child(even) { background: #f8fafc; }
+          @media print { body { padding: 0; } }
+        </style>
+      </head>
+      <body>
+        <h1>Grandes Ligas Barber - Appointment Log</h1>
+        <p>Generated: ${new Date().toLocaleString()} | Total: ${appointments.length} appointments</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th><th>Email</th><th>Phone</th><th>Barber</th><th>Service</th>
+              <th>Date</th><th>Time</th><th>Notes</th><th>Done</th><th>Source</th><th>Created</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </body>
+      </html>
+    `;
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "none";
+    document.body.appendChild(iframe);
+    const iframeDoc = iframe.contentWindow?.document;
+    if (iframeDoc) {
+      iframeDoc.open();
+      iframeDoc.write(html);
+      iframeDoc.close();
+      iframe.onload = () => {
+        iframe.contentWindow?.print();
+        setTimeout(() => document.body.removeChild(iframe), 1000);
+      };
+    }
   };
 
   const handleSignOut = () => {
@@ -1611,9 +1681,9 @@ export function AdminDashboardPage() {
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-xl text-slate-900">All Appointments</CardTitle>
             <div className="flex items-center gap-2">
-              <Button size="sm" onClick={handleExportCSV} className="h-8 px-3 text-xs bg-gradient-to-br from-blue-600 to-blue-500 text-white font-bold hover:from-blue-700 hover:to-blue-600">
-                <Download className="size-3 mr-1" />
-                Export CSV
+              <Button size="sm" onClick={handleExportPDF} className="h-8 px-3 text-xs bg-gradient-to-br from-emerald-600 to-emerald-500 text-white font-bold hover:from-emerald-700 hover:to-emerald-600">
+                <FileText className="size-3 mr-1" />
+                Export PDF
               </Button>
               {!showCreateForm && (
                 <Button size="sm" onClick={() => setShowCreateForm(true)} className="h-8 px-3 text-xs bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
