@@ -16,7 +16,7 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { LogOut, CalendarDays, Users, User, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell, Ban, Clock } from "lucide-react";
+import { LogOut, CalendarDays, Users, User, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell, Ban, Clock, Download } from "lucide-react";
 import { toast } from "sonner";
 import { sendEmail, sendSMS } from "../lib/email";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
@@ -583,6 +583,42 @@ export function AdminDashboardPage() {
     } finally {
       setCreating(false);
     }
+  };
+
+  const handleExportCSV = () => {
+    if (appointments.length === 0) {
+      toast.error("No appointments to export");
+      return;
+    }
+    const headers = ["Name", "Email", "Phone", "Barber", "Service", "Date", "Time", "Notes", "Completed", "Source", "Created At"];
+    const escapeCSV = (val: string) => {
+      if (val.includes(",") || val.includes('"') || val.includes("\n")) {
+        return `"${val.replace(/"/g, '""')}"`;
+      }
+      return val;
+    };
+    const rows = appointments.map((a) => [
+      escapeCSV(a.name || ""),
+      escapeCSV(a.email || ""),
+      escapeCSV(a.phone || ""),
+      escapeCSV(a.barber || ""),
+      escapeCSV(a.service || ""),
+      escapeCSV(a.date || ""),
+      escapeCSV(a.time || ""),
+      escapeCSV(a.notes || ""),
+      a.completed ? "Yes" : "No",
+      a.source || "",
+      a.createdAt?.toDate?.() ? a.createdAt.toDate().toLocaleString() : "",
+    ]);
+    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `appointments-${new Date().toISOString().split("T")[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${appointments.length} appointments`);
   };
 
   const handleSignOut = () => {
@@ -1574,12 +1610,18 @@ export function AdminDashboardPage() {
         <Card className="border-blue-500/30 bg-white">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-xl text-slate-900">All Appointments</CardTitle>
-            {!showCreateForm && (
-              <Button size="sm" onClick={() => setShowCreateForm(true)} className="h-8 px-3 text-xs bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
-                <Plus className="size-3 mr-1" />
-                New Appointment
+            <div className="flex items-center gap-2">
+              <Button size="sm" onClick={handleExportCSV} className="h-8 px-3 text-xs bg-gradient-to-br from-blue-600 to-blue-500 text-white font-bold hover:from-blue-700 hover:to-blue-600">
+                <Download className="size-3 mr-1" />
+                Export CSV
               </Button>
-            )}
+              {!showCreateForm && (
+                <Button size="sm" onClick={() => setShowCreateForm(true)} className="h-8 px-3 text-xs bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
+                  <Plus className="size-3 mr-1" />
+                  New Appointment
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="table">
