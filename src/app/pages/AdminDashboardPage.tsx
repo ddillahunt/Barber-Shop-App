@@ -1666,9 +1666,13 @@ export function AdminDashboardPage() {
                   <Label htmlFor="new-notes">Notes</Label>
                   <Textarea id="new-notes" value={newAppt.notes} onChange={(e) => setNewAppt({ ...newAppt, notes: e.target.value })} placeholder="Any special requests or additional information" rows={2} />
                 </div>
-                <div className="flex items-end md:col-span-2">
+                <div className="flex items-end gap-2 md:col-span-2">
                   <Button type="submit" disabled={creating} className="h-9 px-4 text-sm bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
                     {creating ? "Creating..." : "Create Appointment"}
+                  </Button>
+                  <Button type="button" variant="outline" onClick={() => { setShowCreateForm(false); setNewAppt({ name: "", email: "", phone: "", barber: "", service: "", date: "", time: "", notes: "" }); }} className="h-9 px-4 text-sm font-bold">
+                    <X className="size-3 mr-1" />
+                    Cancel
                   </Button>
                 </div>
               </form>
