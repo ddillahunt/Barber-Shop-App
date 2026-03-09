@@ -653,10 +653,17 @@ export function AdminDashboardPage() {
           th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
           th { background: #1e293b; color: white; font-weight: 600; }
           tr:nth-child(even) { background: #f8fafc; }
-          @media print { body { padding: 0; } }
+          .no-print { margin-bottom: 16px; }
+          .print-btn { background: #1e293b; color: white; border: none; padding: 10px 24px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; margin-right: 8px; }
+          .print-btn:hover { background: #334155; }
+          @media print { .no-print { display: none; } body { padding: 0; } }
         </style>
       </head>
       <body>
+        <div class="no-print">
+          <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+          <button class="print-btn" onclick="window.close()">Close</button>
+        </div>
         <h1>Grandes Ligas Barber - Appointment Log</h1>
         <p>Generated: ${new Date().toLocaleString()} | Total: ${appointments.length} appointments</p>
         <table>
@@ -671,23 +678,12 @@ export function AdminDashboardPage() {
       </body>
       </html>
     `;
-    const iframe = document.createElement("iframe");
-    iframe.style.position = "fixed";
-    iframe.style.right = "0";
-    iframe.style.bottom = "0";
-    iframe.style.width = "0";
-    iframe.style.height = "0";
-    iframe.style.border = "none";
-    document.body.appendChild(iframe);
-    const iframeDoc = iframe.contentWindow?.document;
-    if (iframeDoc) {
-      iframeDoc.open();
-      iframeDoc.write(html);
-      iframeDoc.close();
-      iframe.onload = () => {
-        iframe.contentWindow?.print();
-        setTimeout(() => document.body.removeChild(iframe), 1000);
-      };
+    const newTab = window.open("", "_blank");
+    if (newTab) {
+      newTab.document.write(html);
+      newTab.document.close();
+    } else {
+      toast.error("Popup blocked — please allow popups for this site");
     }
   };
 
