@@ -50,17 +50,17 @@ export function NavigationEs() {
   return (
     <nav className="bg-gradient-to-r from-black via-slate-900 to-black backdrop-blur-md shadow-lg sticky top-0 z-50 border-b-2 border-blue-500/50">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-center h-20 gap-6">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/es")}>
             <img src={logoImg} alt="Grandes Ligas" className="h-14 w-auto object-contain" />
             <span className="font-bold italic text-xl bg-gradient-to-r from-sky-300 to-blue-400 bg-clip-text text-transparent">Grandes Ligas</span>
           </div>
           
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-3 xl:gap-5">
             <DropdownMenu open={isServicesOpen} onOpenChange={setIsServicesOpen}>
               <DropdownMenuTrigger
-                className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 outline-none group"
+                className="font-medium text-base text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 outline-none group whitespace-nowrap"
                 onMouseEnter={() => setIsServicesOpen(true)}
                 onMouseLeave={() => setIsServicesOpen(false)}
                 onClick={(e) => { e.preventDefault(); setIsServicesOpen(false); scrollToSection('services'); }}
@@ -91,29 +91,29 @@ export function NavigationEs() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-<button onClick={() => scrollToSection('team')} className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5">
+<button onClick={() => scrollToSection('team')} className="font-medium text-base text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 whitespace-nowrap">
               <Users className="size-4" />
               Nuestro Equipo
             </button>
-            <button onClick={() => scrollToSection('schedule')} className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5">
+            <button onClick={() => scrollToSection('schedule')} className="font-medium text-base text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 whitespace-nowrap">
               <Clock className="size-4" />
               Horario de Atención
             </button>
-            <button onClick={() => scrollToSection('booking')} className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5">
+            <button onClick={() => scrollToSection('booking')} className="font-medium text-base text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 whitespace-nowrap">
               <CalendarCheck className="size-4" />
               Reservar
             </button>
-            <button onClick={() => scrollToSection('contact')} className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5">
+            <button onClick={() => scrollToSection('contact')} className="font-medium text-base text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 whitespace-nowrap">
               <Mail className="size-4" />
               Contacto
             </button>
-            <button onClick={() => { navigate("/es/acerca-de"); window.scrollTo(0, 0); }} className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5">
+            <button onClick={() => { navigate("/es/acerca-de"); window.scrollTo(0, 0); }} className="font-medium text-base text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 whitespace-nowrap">
               <Info className="size-4" />
               Acerca de
             </button>
             <button
-              onClick={() => navigate("/")} 
-              className="font-medium text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5"
+              onClick={() => navigate("/")}
+              className="font-medium text-base text-sky-300 hover:text-sky-100 transition-colors flex items-center gap-1.5 whitespace-nowrap"
             >
               <Languages className="size-4" />
               English
@@ -122,7 +122,7 @@ export function NavigationEs() {
 
           {/* Mobile Hamburger Button */}
           <button 
-            className="md:hidden text-sky-300 hover:text-sky-100 transition-colors"
+            className="lg:hidden text-sky-300 hover:text-sky-100 transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
@@ -131,7 +131,7 @@ export function NavigationEs() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-blue-500/30">
+          <div className="lg:hidden py-4 border-t border-blue-500/30">
             <div className="flex flex-col gap-4">
               {/* Services Submenu */}
               <div className="flex flex-col gap-2">
