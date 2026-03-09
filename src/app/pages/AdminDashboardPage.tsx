@@ -622,7 +622,14 @@ export function AdminDashboardPage() {
   };
 
   const handleExportPDF = () => {
+    // Open tab immediately on click (Safari blocks delayed window.open)
+    const newTab = window.open("", "_blank");
+    if (!newTab) {
+      toast.error("Popup blocked — please allow popups for this site");
+      return;
+    }
     if (appointments.length === 0) {
+      newTab.close();
       toast.error("No appointments to export");
       return;
     }
@@ -678,13 +685,8 @@ export function AdminDashboardPage() {
       </body>
       </html>
     `;
-    const newTab = window.open("", "_blank");
-    if (newTab) {
-      newTab.document.write(html);
-      newTab.document.close();
-    } else {
-      toast.error("Popup blocked — please allow popups for this site");
-    }
+    newTab.document.write(html);
+    newTab.document.close();
   };
 
   const handleSignOut = () => {
