@@ -5,6 +5,7 @@ import { subscribeToBarbers, type Barber } from "../../lib/appointments";
 import yefriImg from "../../../assets/images/barber-yefri.jpg";
 import joseImg from "../../../assets/images/barber-Jose.jpg";
 import maestroImg from "../../../assets/images/barber-Maestro.png";
+import jairoQr from "../../../assets/images/jairo-qr.png";
 
 const barberImages: Record<string, string> = {
   "Yefri": yefriImg,
@@ -53,32 +54,42 @@ export function TeamEs() {
                 <div>
                   <h3 style={{ color: "#7CB9E8", fontSize: "1.25rem", fontWeight: 700 }}>{barber.name}</h3>
                 </div>
-                <p className="text-sky-300 text-sm font-medium">{barber.phone}</p>
-                <div className="flex flex-wrap justify-center gap-2">
-                  <a
-                    href={`tel:${barber.phone.replace(/\D/g, "")}`}
-                    className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 text-sky-300 text-sm px-3 py-1.5 rounded-full hover:bg-blue-500/20 transition-colors"
-                  >
-                    <Phone className="size-4" />
-                    Llamar
-                  </a>
-                  <a
-                    href={`sms:${barber.phone.replace(/\D/g, "")}`}
-                    className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 text-sky-300 text-sm px-3 py-1.5 rounded-full hover:bg-blue-500/20 transition-colors"
-                  >
-                    <MessageSquare className="size-4" />
-                    Texto
-                  </a>
-                  {barber.email && (
-                    <a
-                      href={`mailto:${barber.email}`}
-                      className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 text-sky-300 text-sm px-3 py-1.5 rounded-full hover:bg-blue-500/20 transition-colors"
-                    >
-                      <Mail className="size-4" />
-                      Correo
-                    </a>
-                  )}
-                </div>
+                {barber.name === "Jairo" ? (
+                  <img
+                    src={jairoQr}
+                    alt="Jairo QR Code"
+                    className="w-32 h-32 rounded-lg"
+                  />
+                ) : (
+                  <>
+                    <p className="text-sky-300 text-sm font-medium">{barber.phone}</p>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      <a
+                        href={`tel:${barber.phone.replace(/\D/g, "")}`}
+                        className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 text-sky-300 text-sm px-3 py-1.5 rounded-full hover:bg-blue-500/20 transition-colors"
+                      >
+                        <Phone className="size-4" />
+                        Llamar
+                      </a>
+                      <a
+                        href={`sms:${barber.phone.replace(/\D/g, "")}`}
+                        className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 text-sky-300 text-sm px-3 py-1.5 rounded-full hover:bg-blue-500/20 transition-colors"
+                      >
+                        <MessageSquare className="size-4" />
+                        Texto
+                      </a>
+                      {barber.email && (
+                        <a
+                          href={`mailto:${barber.email}`}
+                          className="inline-flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 text-sky-300 text-sm px-3 py-1.5 rounded-full hover:bg-blue-500/20 transition-colors"
+                        >
+                          <Mail className="size-4" />
+                          Correo
+                        </a>
+                      )}
+                    </div>
+                  </>
+                )}
               </CardContent>
             </Card>
           ))}

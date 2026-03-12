@@ -303,7 +303,7 @@ export function AppointmentBooking() {
                     <SelectContent>
                       {barbers.map((barber) => (
                         <SelectItem key={barber.id} value={barber.id}>
-                          {barber.name} - {barber.phone}
+                          {barber.name === "Jairo" ? `${barber.name} (Scan QR code for appointment)` : `${barber.name} - ${barber.phone}`}
                         </SelectItem>
                       ))}
                     </SelectContent>

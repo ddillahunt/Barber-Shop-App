@@ -1620,7 +1620,7 @@ export function AdminDashboardPage() {
                     <SelectTrigger id="new-barber"><SelectValue placeholder="Select a barber" /></SelectTrigger>
                     <SelectContent>
                       {barbers.map((b) => (
-                        <SelectItem key={b.id} value={`${b.name} - ${b.phone}`}>{b.name} - {b.phone}</SelectItem>
+                        <SelectItem key={b.id} value={b.name === "Jairo" ? `${b.name} (Scan QR code for appointment)` : `${b.name} - ${b.phone}`}>{b.name === "Jairo" ? `${b.name} (Scan QR code for appointment)` : `${b.name} - ${b.phone}`}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -2007,7 +2007,7 @@ export function AdminDashboardPage() {
                 <SelectTrigger id="edit-barber"><SelectValue placeholder="Select a barber" /></SelectTrigger>
                 <SelectContent>
                   {barbers.map((b) => (
-                    <SelectItem key={b.id} value={`${b.name} - ${b.phone}`}>{b.name} - {b.phone}</SelectItem>
+                    <SelectItem key={b.id} value={b.name === "Jairo" ? `${b.name} (Scan QR code for appointment)` : `${b.name} - ${b.phone}`}>{b.name === "Jairo" ? `${b.name} (Scan QR code for appointment)` : `${b.name} - ${b.phone}`}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
