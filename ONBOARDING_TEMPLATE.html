@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Grandes Ligas Barber Shop — Onboarding Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #1e293b; line-height: 1.7; font-size: 14px; background: #fff; }
+
+  .cover { height: 100vh; background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #0f172a 60%, #020617 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; position: relative; overflow: hidden; page-break-after: always; }
+  .cover::before { content: ''; position: absolute; top: -50%; right: -30%; width: 80%; height: 200%; background: radial-gradient(ellipse, rgba(220,38,38,0.12) 0%, transparent 70%); }
+  .cover::after { content: ''; position: absolute; bottom: -40%; left: -20%; width: 60%; height: 150%; background: radial-gradient(ellipse, rgba(59,130,246,0.15) 0%, transparent 70%); }
+  .cover-content { position: relative; z-index: 1; }
+
+  .logo-card {
+    margin: 0 auto 44px;
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 28px 48px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .cover-logo {
+    width: 240px;
+    display: block;
+  }
+
+  .cover-bar { width: 60px; height: 4px; background: linear-gradient(90deg, #dc2626, #3b82f6); border-radius: 2px; margin: 0 auto 30px; }
+  .cover h1 { font-size: 44px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; text-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+  .cover h2 { font-size: 22px; font-weight: 300; opacity: 0.9; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 50px; }
+  .cover-meta { font-size: 13px; opacity: 0.7; letter-spacing: 1px; }
+
+  .toc { padding: 60px 80px; page-break-after: always; }
+  .toc h2 { font-size: 28px; font-weight: 700; color: #dc2626; margin-bottom: 8px; }
+  .toc-bar { width: 50px; height: 4px; background: linear-gradient(90deg, #dc2626, #3b82f6); border-radius: 2px; margin-bottom: 30px; }
+  .toc-list { list-style: none; counter-reset: toc; }
+  .toc-list li { counter-increment: toc; padding: 12px 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; font-size: 15px; }
+  .toc-list li::before { content: counter(toc, decimal-leading-zero); font-weight: 700; color: #dc2626; font-size: 13px; margin-right: 16px; min-width: 28px; }
+  .toc-list li span { font-weight: 500; color: #334155; }
+
+  .content { padding: 0 80px 60px; }
+  .section { page-break-inside: avoid; margin-bottom: 40px; }
+  .section-header { display: flex; align-items: center; margin-bottom: 20px; padding-top: 20px; }
+  .section-number { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: white; margin-right: 16px; flex-shrink: 0; }
+  .section-header h2 { font-size: 24px; font-weight: 700; color: #1e293b; }
+  .section-header h2 small { display: block; font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.5; margin-bottom: 2px; }
+
+  .theme-red .section-number { background: linear-gradient(135deg, #dc2626, #f87171); }
+  .theme-blue .section-number { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+  .theme-slate .section-number { background: linear-gradient(135deg, #475569, #94a3b8); }
+  .theme-purple .section-number { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+  .theme-orange .section-number { background: linear-gradient(135deg, #ea580c, #fb923c); }
+  .theme-teal .section-number { background: linear-gradient(135deg, #0d9488, #5eead4); }
+  .theme-indigo .section-number { background: linear-gradient(135deg, #4f46e5, #818cf8); }
+  .theme-amber .section-number { background: linear-gradient(135deg, #d97706, #fbbf24); }
+  .theme-rose .section-number { background: linear-gradient(135deg, #e11d48, #fb7185); }
+  .theme-cyan .section-number { background: linear-gradient(135deg, #0891b2, #67e8f9); }
+  .theme-green .section-number { background: linear-gradient(135deg, #059669, #34d399); }
+  .theme-sky .section-number { background: linear-gradient(135deg, #0284c7, #38bdf8); }
+
+  .info-box { border-radius: 12px; padding: 18px 22px; margin: 16px 0; font-size: 13px; line-height: 1.6; }
+  .info-box.red { background: linear-gradient(135deg, #fef2f2, #fee2e2); border-left: 4px solid #dc2626; color: #991b1b; }
+  .info-box.blue { background: linear-gradient(135deg, #eff6ff, #dbeafe); border-left: 4px solid #2563eb; color: #1e40af; }
+  .info-box.amber { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-left: 4px solid #d97706; color: #92400e; }
+  .info-box.purple { background: linear-gradient(135deg, #f5f3ff, #ede9fe); border-left: 4px solid #7c3aed; color: #5b21b6; }
+  .info-box.green { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border-left: 4px solid #059669; color: #065f46; }
+  .info-box strong { font-weight: 600; }
+
+  .steps { list-style: none; counter-reset: steps; margin: 16px 0; }
+  .steps li { counter-increment: steps; padding: 10px 0 10px 44px; position: relative; border-left: 2px solid #e2e8f0; margin-left: 14px; }
+  .steps li:last-child { border-left-color: transparent; }
+  .steps li::before { content: counter(steps); position: absolute; left: -13px; top: 8px; width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #dc2626, #f87171); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .steps li strong { color: #dc2626; font-weight: 600; }
+
+  table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 16px 0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  thead th { background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 14px 18px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+  tbody td { padding: 12px 18px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+  tbody tr:nth-child(even) { background: #f8fafc; }
+  tbody tr:last-child td { border-bottom: none; }
+  .icon-cell { font-size: 18px; text-align: center; width: 50px; }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-yellow { background: #fef3c7; color: #92400e; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-gray { background: #f1f5f9; color: #475569; }
+  .badge-purple { background: #ede9fe; color: #5b21b6; }
+
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+  .feature-card { border-radius: 12px; padding: 18px; border: 1px solid #e2e8f0; background: #fff; }
+  .feature-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .feature-card p { font-size: 12px; color: #64748b; line-height: 1.5; }
+  .card-icon { width: 28px; height: 28px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; color: white; flex-shrink: 0; }
+
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, #e2e8f0, transparent); margin: 30px 0; }
+  p { margin: 10px 0; color: #475569; }
+  strong { color: #1e293b; }
+  h3 { font-size: 16px; font-weight: 700; color: #334155; margin: 24px 0 10px; }
+
+  .faq-item { background: #f8fafc; border-radius: 12px; padding: 16px 20px; margin: 10px 0; border: 1px solid #e2e8f0; }
+  .faq-item .q { font-weight: 700; color: #1e293b; margin-bottom: 6px; font-size: 14px; }
+  .faq-item .a { color: #64748b; font-size: 13px; }
+
+  .footer { text-align: center; padding: 40px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+  .page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-content">
+    <div class="logo-card">
+      <img src="LOGO_PLACEHOLDER" class="cover-logo" alt="Grandes Ligas Logo" />
+    </div>
+    <div class="cover-bar"></div>
+    <h1>Appointment System</h1>
+    <h2>Onboarding Guide</h2>
+    <p class="cover-meta">Grandes Ligas Barber Shop &bull; Powered by GDI Digital Solutions &bull; 2026</p>
+  </div>
+</div>
+
+<div class="toc">
+  <h2>Table of Contents</h2>
+  <div class="toc-bar"></div>
+  <ol class="toc-list">
+    <li><span>Getting Started</span></li>
+    <li><span>Website Overview</span></li>
+    <li><span>Booking an Appointment (Customer View)</span></li>
+    <li><span>Services &amp; Pricing</span></li>
+    <li><span>Admin Login</span></li>
+    <li><span>Admin Dashboard Overview</span></li>
+    <li><span>Managing Appointments</span></li>
+    <li><span>Managing Barbers</span></li>
+    <li><span>Blocking Time Slots</span></li>
+    <li><span>Messages &amp; Contact Submissions</span></li>
+    <li><span>Exporting Data</span></li>
+    <li><span>Multi-Language Support</span></li>
+    <li><span>Notifications &amp; Reminders</span></li>
+    <li><span>FAQ</span></li>
+  </ol>
+</div>
+
+<div class="content">
+
+  <!-- SECTION 1: GETTING STARTED -->
+  <div class="section theme-red">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <h2><small>Chapter One</small>Getting Started</h2>
+    </div>
+    <p>The Grandes Ligas Barber Shop Appointment System is a web-based platform that allows customers to book appointments online and gives administrators full control over scheduling, barber management, and business operations.</p>
+    <div class="info-box red"><strong>&#127760; Website URL:</strong> https://main.d1mbv2okmios4g.amplifyapp.com</div>
+    <div class="info-box blue"><strong>&#128187; Requirements:</strong> A modern web browser (Chrome, Edge, Firefox, or Safari). No app download required — the site is fully responsive and works on desktop, tablet, and mobile.</div>
+    <div class="info-box green"><strong>&#128222; Walk-Ins Welcome:</strong> Customers can always walk in without an appointment. The online booking system is an additional convenience, not a requirement. Phone: <strong>(508) 872-5556</strong></div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- SECTION 2: WEBSITE OVERVIEW -->
+  <div class="section theme-blue">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <h2><small>Chapter Two</small>Website Overview</h2>
+    </div>
+    <p>The website is organized into several sections accessible via the top navigation bar and footer links.</p>
+    <table>
+      <thead><tr><th>Section</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Home</strong></td><td>Landing page with hero banner, services showcase, team, schedule, booking form, and contact info</td></tr>
+        <tr><td><strong>Services</strong></td><td>Detailed pages for each service with descriptions, pricing, duration, and a direct booking link</td></tr>
+        <tr><td><strong>Meet Our Team</strong></td><td>Profiles of the barbers on staff with photos and contact info</td></tr>
+        <tr><td><strong>Schedule</strong></td><td>Operating hours for the shop</td></tr>
+        <tr><td><strong>Book Now</strong></td><td>The appointment booking form</td></tr>
+        <tr><td><strong>Contact</strong></td><td>Phone, address, and contact form for inquiries</td></tr>
+        <tr><td><strong>About</strong></td><td>The shop's story, mission, and what makes it special</td></tr>
+        <tr><td><strong>Privacy Policy</strong></td><td>Data handling and privacy information</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box purple"><strong>&#127463;&#127480; Bilingual:</strong> The entire website is available in both <strong>English</strong> and <strong>Spanish</strong>. Spanish pages are accessible at <strong>/es</strong> routes (e.g., /es, /es/servicios, /es/acerca-de).</div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- SECTION 3: BOOKING AN APPOINTMENT -->
+  <div class="section theme-slate">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <h2><small>Chapter Three</small>Booking an Appointment</h2>
+    </div>
+    <p>Customers can book appointments directly from the homepage. The booking form checks real-time availability to prevent double-booking.</p>
+    <h3>&#128197; Booking Steps</h3>
+    <ol class="steps">
+      <li>Scroll to the <strong>Book Now</strong> section on the homepage (or click "Book Now" in the navigation)</li>
+      <li>Enter <strong>Full Name</strong> (required) and <strong>Phone Number</strong> (required)</li>
+      <li>Optionally enter an <strong>Email</strong> address for confirmation</li>
+      <li>Select a <strong>Barber</strong> from the dropdown</li>
+      <li>Choose a <strong>Service</strong> (Beard Trim, Children's Haircut, Classic Haircut, or Haircut &amp; Shave)</li>
+      <li>Pick a <strong>Preferred Date</strong> using the date picker</li>
+      <li>Select a <strong>Preferred Time</strong> — unavailable slots are automatically grayed out</li>
+      <li>Add optional <strong>Notes</strong> for the barber</li>
+      <li>Click <strong>Book Appointment</strong></li>
+    </ol>
+    <div class="info-box blue"><strong>&#9201; Time Slots:</strong> Available every <strong>15 minutes</strong> from <strong>9:00 AM to 7:00 PM</strong>. Slots already booked or blocked by the barber will not appear as available.</div>
+    <div class="info-box green"><strong>&#9989; Confirmation:</strong> After booking, the customer receives an email confirmation (if email was provided) and an SMS confirmation (if phone was provided). The shop also receives a notification.</div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 4: SERVICES & PRICING -->
+  <div class="section theme-orange">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <h2><small>Chapter Four</small>Services &amp; Pricing</h2>
+    </div>
+    <p>Grandes Ligas offers four core services. Each has a dedicated detail page with a full description and a direct "Book This Service" button.</p>
+    <table>
+      <thead><tr><th>Service</th><th>Price</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Beard Trim &amp; Lineup</strong></td><td>$30</td><td>Professional beard shaping, trimming, and lineup</td></tr>
+        <tr><td><strong>Children's Haircut</strong></td><td>$35</td><td>Haircuts for children 11 and under</td></tr>
+        <tr><td><strong>Classic Haircut</strong></td><td>$45</td><td>Full haircut with styling and attention to detail</td></tr>
+        <tr><td><strong>Haircut &amp; Shave</strong></td><td>$50</td><td>Complete haircut paired with a professional shave</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box amber"><strong>&#128176; Payment:</strong> Cash only. Please bring exact change when possible.</div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- SECTION 5: ADMIN LOGIN -->
+  <div class="section theme-purple">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <h2><small>Chapter Five</small>Admin Login</h2>
+    </div>
+    <p>The admin portal is accessible via the <strong>/admin/login</strong> route. A hidden "Admin" link also exists in the website footer for convenience.</p>
+    <h3>&#128274; Logging In</h3>
+    <ol class="steps">
+      <li>Navigate to the admin login page</li>
+      <li>Enter your <strong>Username</strong> and <strong>Password</strong></li>
+      <li>Click <strong>Sign In</strong></li>
+    </ol>
+    <div class="info-box red"><strong>&#128721; Rate Limiting:</strong> After <strong>5 failed login attempts</strong>, the system locks you out for <strong>30 seconds</strong>. A countdown timer is displayed. Wait for it to expire before trying again.</div>
+    <div class="info-box amber"><strong>&#128272; Security:</strong> Credentials are hashed with SHA-256. Sessions are stored in the browser's session storage — closing the browser tab will log you out.</div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- SECTION 6: ADMIN DASHBOARD OVERVIEW -->
+  <div class="section theme-indigo">
+    <div class="section-header">
+      <div class="section-number">6</div>
+      <h2><small>Chapter Six</small>Admin Dashboard Overview</h2>
+    </div>
+    <p>After logging in, you'll see the main admin dashboard with a live clock, current date, and real-time statistics.</p>
+    <h3>&#128202; Statistics Cards</h3>
+    <div class="card-grid">
+      <div class="feature-card"><h4><span class="card-icon" style="background:linear-gradient(135deg,#dc2626,#f87171)">&#128197;</span> Total Appointments</h4><p>The total count of all appointments in the system, both past and upcoming.</p></div>
+      <div class="feature-card"><h4><span class="card-icon" style="background:linear-gradient(135deg,#2563eb,#60a5fa)">&#128101;</span> Today's Appointments</h4><p>How many appointments are scheduled for the current day.</p></div>
+      <div class="feature-card"><h4><span class="card-icon" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)">&#127760;</span> Booking Source</h4><p>Shows how many bookings came from the English (EN) vs Spanish (ES) site.</p></div>
+      <div class="feature-card"><h4><span class="card-icon" style="background:linear-gradient(135deg,#ea580c,#fb923c)">&#128172;</span> Messages</h4><p>Count of unread contact form submissions from customers.</p></div>
+    </div>
+    <h3>&#128296; Dashboard Header Controls</h3>
+    <table>
+      <thead><tr><th>Control</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Live Clock</strong></td><td>Displays current time in HH:MM:SS AM/PM format</td></tr>
+        <tr><td><strong>Date Display</strong></td><td>Shows current day and date</td></tr>
+        <tr><td><strong>Refresh</strong></td><td>Manually refresh the dashboard data</td></tr>
+        <tr><td><strong>Sign Out</strong></td><td>Logs you out and returns to the login page</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 7: MANAGING APPOINTMENTS -->
+  <div class="section theme-teal">
+    <div class="section-header">
+      <div class="section-number">7</div>
+      <h2><small>Chapter Seven</small>Managing Appointments</h2>
+    </div>
+    <p>The appointments section is the core of the admin dashboard. View, create, edit, delete, and track all bookings.</p>
+    <h3>&#128203; Appointments Table</h3>
+    <table>
+      <thead><tr><th>Column</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Name</strong></td><td>Customer's full name</td></tr>
+        <tr><td><strong>Email</strong></td><td>Customer's email address</td></tr>
+        <tr><td><strong>Phone</strong></td><td>Customer's phone number</td></tr>
+        <tr><td><strong>Barber</strong></td><td>Assigned barber</td></tr>
+        <tr><td><strong>Service</strong></td><td>Selected service type</td></tr>
+        <tr><td><strong>Date</strong></td><td>Appointment date</td></tr>
+        <tr><td><strong>Time</strong></td><td>Appointment time</td></tr>
+        <tr><td><strong>Notes</strong></td><td>Any special instructions</td></tr>
+        <tr><td><strong>Completed</strong></td><td>Whether the appointment has been marked as done</td></tr>
+      </tbody>
+    </table>
+    <h3>&#10133; Creating an Appointment (Admin)</h3>
+    <ol class="steps">
+      <li>Click <strong>Add Appointment</strong> (or the "+" button)</li>
+      <li>Fill in: <strong>Name, Phone, Barber, Service, Date, Time</strong> (Email and Notes are optional)</li>
+      <li>The system checks for conflicts — it will warn you if the slot is already booked or blocked</li>
+      <li>Click <strong>Save</strong> — notifications are sent to the shop and customer</li>
+    </ol>
+    <h3>&#9999; Editing an Appointment</h3>
+    <ol class="steps">
+      <li>Click the <strong>Edit</strong> button on any appointment row</li>
+      <li>Modify the desired fields</li>
+      <li>Click <strong>Save</strong> — the customer receives an update notification with the old and new details</li>
+    </ol>
+    <h3>&#128465; Deleting Appointments</h3>
+    <p>Delete individual appointments or use <strong>bulk select</strong> to check multiple rows and delete them all at once.</p>
+    <div class="info-box green"><strong>&#9989; Mark as Completed:</strong> Toggle the completed status on any appointment to track which customers have been served.</div>
+    <div class="info-box blue"><strong>&#128197; Calendar View:</strong> Switch to the calendar view for a monthly visualization. Click any date to see that day's appointments. Navigate between months with the arrow buttons.</div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- SECTION 8: MANAGING BARBERS -->
+  <div class="section theme-rose">
+    <div class="section-header">
+      <div class="section-number">8</div>
+      <h2><small>Chapter Eight</small>Managing Barbers</h2>
+    </div>
+    <p>The barber management section lets you add, edit, and remove barbers from the system. Barbers appear in the booking dropdown for customers to select.</p>
+    <h3>&#10133; Adding a Barber</h3>
+    <ol class="steps">
+      <li>Click <strong>Add Barber</strong></li>
+      <li>Enter the barber's <strong>Name</strong>, <strong>Phone</strong>, and <strong>Email</strong></li>
+      <li>Upload a <strong>Profile Photo</strong> (optional)</li>
+      <li>Click <strong>Save</strong></li>
+    </ol>
+    <h3>&#9999; Editing a Barber</h3>
+    <ol class="steps">
+      <li>Click the <strong>Edit</strong> button next to the barber</li>
+      <li>Update their information or upload a new photo</li>
+      <li>Click <strong>Save</strong></li>
+    </ol>
+    <div class="info-box amber"><strong>&#9888; Deleting a Barber:</strong> Removing a barber will not delete their existing appointments, but they will no longer appear as an option for new bookings.</div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 9: BLOCKING TIME SLOTS -->
+  <div class="section theme-cyan">
+    <div class="section-header">
+      <div class="section-number">9</div>
+      <h2><small>Chapter Nine</small>Blocking Time Slots</h2>
+    </div>
+    <p>Block specific time slots or entire date ranges to prevent customers from booking during unavailable periods (breaks, vacations, days off).</p>
+    <h3>&#128197; Single Day Block</h3>
+    <ol class="steps">
+      <li>Select the <strong>Barber</strong> and <strong>Date</strong></li>
+      <li>Use the <strong>time range selector</strong> (From/To) or click <strong>All Day</strong> to block every slot</li>
+      <li>Optionally select individual time slots from the grid — <span class="badge badge-blue">Blue</span> = already booked, <span class="badge badge-yellow">Orange</span> = already blocked, <span class="badge badge-red">Red</span> = selected to block</li>
+      <li>Add an optional <strong>reason</strong></li>
+      <li>Click <strong>Save</strong></li>
+    </ol>
+    <h3>&#128197; Date Range Block</h3>
+    <ol class="steps">
+      <li>Select the <strong>Barber</strong></li>
+      <li>Choose a <strong>Start Date</strong> and <strong>End Date</strong> (max 60-day range)</li>
+      <li>Add an optional <strong>reason</strong> (e.g., "Vacation")</li>
+      <li>Click <strong>Save</strong> — all time slots for every day in the range are blocked</li>
+    </ol>
+    <div class="info-box blue"><strong>&#128260; Managing Blocks:</strong> Existing blocked times can be <strong>edited</strong> (change dates or times) or <strong>deleted</strong> to reopen availability.</div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- SECTION 10: MESSAGES -->
+  <div class="section theme-amber">
+    <div class="section-header">
+      <div class="section-number">10</div>
+      <h2><small>Chapter Ten</small>Messages &amp; Contact Submissions</h2>
+    </div>
+    <p>When customers fill out the <strong>Contact</strong> form on the website, their submissions appear in the Messages section of the admin dashboard.</p>
+    <table>
+      <thead><tr><th>Field</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Name</strong></td><td>Customer's name</td></tr>
+        <tr><td><strong>Email</strong></td><td>Customer's email</td></tr>
+        <tr><td><strong>Phone</strong></td><td>Customer's phone number</td></tr>
+        <tr><td><strong>Message</strong></td><td>The message content</td></tr>
+      </tbody>
+    </table>
+    <p>Messages can be <strong>deleted</strong> once addressed. The shop also receives an email notification when a new contact form is submitted.</p>
+  </div>
+  <div class="divider"></div>
+
+  <!-- SECTION 11: EXPORTING DATA -->
+  <div class="section theme-green">
+    <div class="section-header">
+      <div class="section-number">11</div>
+      <h2><small>Chapter Eleven</small>Exporting Data</h2>
+    </div>
+    <p>The admin dashboard provides two export options for appointment records.</p>
+    <div class="card-grid">
+      <div class="feature-card"><h4><span class="card-icon" style="background:linear-gradient(135deg,#059669,#34d399)">&#128196;</span> Export as CSV</h4><p>Download all appointment data as a comma-separated values file. Opens in Excel, Google Sheets, or any spreadsheet application. Includes all fields: name, email, phone, barber, service, date, time, notes, status, source, and creation date.</p></div>
+      <div class="feature-card"><h4><span class="card-icon" style="background:linear-gradient(135deg,#dc2626,#f87171)">&#128462;</span> Export as PDF</h4><p>Generate a formatted appointment log as a printable PDF. Opens in a new window with Print and Close buttons. Includes the shop header, generation timestamp, and total appointment count.</p></div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 12: MULTI-LANGUAGE -->
+  <div class="section theme-sky">
+    <div class="section-header">
+      <div class="section-number">12</div>
+      <h2><small>Chapter Twelve</small>Multi-Language Support</h2>
+    </div>
+    <p>The entire customer-facing website is available in both <strong>English</strong> and <strong>Spanish</strong>. Every page has a translated counterpart.</p>
+    <table>
+      <thead><tr><th>English Route</th><th>Spanish Route</th></tr></thead>
+      <tbody>
+        <tr><td><strong>/</strong> (Homepage)</td><td><strong>/es</strong></td></tr>
+        <tr><td><strong>/services/:id</strong></td><td><strong>/es/servicios/:id</strong></td></tr>
+        <tr><td><strong>/about</strong></td><td><strong>/es/acerca-de</strong></td></tr>
+        <tr><td><strong>/privacy</strong></td><td><strong>/es/privacidad</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="info-box purple"><strong>&#128202; Source Tracking:</strong> The system tracks whether each appointment was booked from the English or Spanish site. This data is visible in the admin dashboard's "Booking Source" card as EN/ES badges.</div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- SECTION 13: NOTIFICATIONS -->
+  <div class="section theme-blue">
+    <div class="section-header">
+      <div class="section-number">13</div>
+      <h2><small>Chapter Thirteen</small>Notifications &amp; Reminders</h2>
+    </div>
+    <p>The system sends automated notifications via email and SMS at key points in the appointment lifecycle.</p>
+    <table>
+      <thead><tr><th>Notification</th><th>Recipient</th><th>Trigger</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Shop Notification</strong></td><td>Shop</td><td>New appointment is booked</td></tr>
+        <tr><td><strong>Customer Confirmation</strong></td><td>Customer</td><td>Appointment is successfully created</td></tr>
+        <tr><td><strong>Appointment Update</strong></td><td>Customer</td><td>Admin edits the appointment (shows old vs new details)</td></tr>
+        <tr><td><strong>Appointment Reminder</strong></td><td>Customer</td><td>Automated reminder 1 hour before the appointment</td></tr>
+        <tr><td><strong>Contact Notification</strong></td><td>Shop</td><td>Customer submits a contact form</td></tr>
+        <tr><td><strong>SMS Confirmation</strong></td><td>Customer</td><td>Appointment booked (sent to phone number)</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box green"><strong>&#128236; Email &amp; SMS:</strong> Email is sent via <strong>AWS SES</strong> and SMS via <strong>AWS SNS</strong>. Customers must provide an email or phone number to receive notifications.</div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- SECTION 14: FAQ -->
+  <div class="section theme-red">
+    <div class="section-header">
+      <div class="section-number">14</div>
+      <h2><small>Chapter Fourteen</small>Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-item"><div class="q">&#128172; Do customers need to book online?</div><div class="a">No — walk-ins are always welcome! The online booking system is an added convenience. Customers can also call <strong>(508) 872-5556</strong> to check availability.</div></div>
+    <div class="faq-item"><div class="q">&#128172; What payment methods are accepted?</div><div class="a"><strong>Cash only.</strong> Customers should bring cash to their appointment.</div></div>
+    <div class="faq-item"><div class="q">&#128172; Can a customer book without an email?</div><div class="a">Yes. Only the <strong>name</strong> and <strong>phone number</strong> are required. Email is optional but recommended for receiving confirmations.</div></div>
+    <div class="faq-item"><div class="q">&#128172; How do I block a barber's day off?</div><div class="a">Go to the <strong>Block Time</strong> section, select the barber and date, click <strong>"All Day"</strong>, and save. For vacations, use the <strong>Date Range Block</strong> feature.</div></div>
+    <div class="faq-item"><div class="q">&#128172; What happens if a customer books a conflicting time?</div><div class="a">The system automatically prevents double-booking. Unavailable time slots are grayed out and cannot be selected.</div></div>
+    <div class="faq-item"><div class="q">&#128172; How do I access the admin dashboard?</div><div class="a">Navigate to <strong>/admin/login</strong> or click the "Admin" link in the website footer. Enter your username and password to sign in.</div></div>
+    <div class="faq-item"><div class="q">&#128172; Can I export my appointment data?</div><div class="a">Yes. The admin dashboard offers both <strong>CSV</strong> and <strong>PDF</strong> export options for all appointment records.</div></div>
+    <div class="faq-item"><div class="q">&#128172; Is the website available in Spanish?</div><div class="a">Yes! The entire customer-facing site is available in Spanish at the <strong>/es</strong> routes. Customers can switch languages from the navigation.</div></div>
+    <div class="faq-item"><div class="q">&#128172; I got locked out after too many login attempts.</div><div class="a">Wait <strong>30 seconds</strong> for the lockout timer to expire, then try again with the correct credentials.</div></div>
+  </div>
+
+  <div class="footer">
+    <p><strong>Grandes Ligas Barber Shop</strong> &bull; Appointment System Onboarding Guide &bull; 2026</p>
+    <p>Powered by <strong>GDI Digital Solutions</strong> &bull; For additional help, contact your system administrator.</p>
+  </div>
+
+</div>
+</body>
+</html>

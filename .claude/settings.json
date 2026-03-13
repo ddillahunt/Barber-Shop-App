@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(unzip:*)",
+      "Bash(curl:*)",
+      "Read(//c/Users/ddill/Downloads/src/**)",
+      "Read(//c/Users/ddill/Downloads/**)",
+      "Bash(git stash:*)",
+      "Bash(git rm:*)",
+      "Bash(git reset:*)",
+      "Read(//c/Users/ddill/**)",
+      "Bash(npx firebase functions:log:*)",
+      "Bash(npx firebase functions:secrets:destroy:*)",
+      "Bash(npx firebase deploy:*)",
+      "Bash(firebase deploy:*)",
+      "Bash(npx firebase:*)",
+      "Bash(npx -p typescript tsc:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(firebase functions:secrets:set:*)",
+      "Bash(firebase functions:log:*)",
+      "Bash(firebase functions:delete:*)",
+      "Bash(npx firebase-tools deploy --only storage)",
+      "Bash(npx firebase-tools auth:export /dev/null)"
+    ],
+    "additionalDirectories": [
+      "\\tmp",
+      "c:\\Users\\ddill\\Downloads",
+      "c:\\Users\\ddill\\Downloads\\Barber Shop\\functions"
+    ]
+  }
+}
