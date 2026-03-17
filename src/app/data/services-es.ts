@@ -61,7 +61,7 @@ export const servicesEs: Service[] = [
     icon: Scissors,
     title: "Corte Clásico",
     description: "Cortes tradicionales con precisión y estilo",
-    price: "$40",
+    price: "$45",
     gradient: "from-red-700 to-red-600",
     bgGradient: "from-slate-900 to-slate-800",
     duration: "30-45 minutos",

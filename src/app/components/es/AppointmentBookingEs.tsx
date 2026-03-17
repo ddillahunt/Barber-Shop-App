@@ -28,7 +28,7 @@ const timeSlots = [
 const services = [
   { name: "Recorte de Barba y Alineado", price: "$30" },
   { name: "Corte de Niños (11 Años y Menores)", price: "$35" },
-  { name: "Corte Clásico", price: "$40" },
+  { name: "Corte Clásico", price: "$45" },
   { name: "Corte y Afeitado", price: "$50" },
 ];
 
@@ -307,7 +307,7 @@ export function AppointmentBookingEs() {
                     <SelectContent>
                       {barbers.map((barber) => (
                         <SelectItem key={barber.id} value={barber.id}>
-                          {barber.name} - {barber.phone}
+                          {barber.name === "Jairo" ? `${barber.name} (Scan QR code for appointment)` : `${barber.name} - ${barber.phone}`}
                         </SelectItem>
                       ))}
                     </SelectContent>

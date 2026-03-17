@@ -38,7 +38,7 @@ function ScrollToHash() {
 
 export default function App() {
   return (
-    <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || "/Barber-Shop-App"}>
+    <BrowserRouter basename={(import.meta as any).env.BASE_URL.replace(/\/$/, '')}>
       <ScrollToHash />
       <Toaster />
       <Routes>

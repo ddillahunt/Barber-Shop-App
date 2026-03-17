@@ -16,7 +16,7 @@ import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { LogOut, CalendarDays, Users, User, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell, Ban, Clock } from "lucide-react";
+import { LogOut, CalendarDays, Users, User, RefreshCw, Trash2, MessageSquare, Plus, X, Pencil, ChevronLeft, ChevronRight, Check, Bell, Ban, Clock, Download, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { sendEmail, sendSMS } from "../lib/email";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
@@ -61,7 +61,7 @@ const timeSlots = [
 const services = [
   { name: "Beard Trim & Lineup", price: "$30" },
   { name: "Children's Haircut (11 & Under)", price: "$35" },
-  { name: "Classic Haircut", price: "$40" },
+  { name: "Classic Haircut", price: "$45" },
   { name: "Haircut & Shave", price: "$50" },
 ];
 
@@ -582,6 +582,110 @@ export function AdminDashboardPage() {
     } finally {
       setCreating(false);
     }
+  };
+
+  const handleExportCSV = () => {
+    if (appointments.length === 0) {
+      toast.error("No appointments to export");
+      return;
+    }
+    const headers = ["Name", "Email", "Phone", "Barber", "Service", "Date", "Time", "Notes", "Completed", "Source", "Created At"];
+    const escapeCSV = (val: string) => {
+      if (val.includes(",") || val.includes('"') || val.includes("\n")) {
+        return `"${val.replace(/"/g, '""')}"`;
+      }
+      return val;
+    };
+    const rows = appointments.map((a) => [
+      escapeCSV(a.name || ""),
+      escapeCSV(a.email || ""),
+      escapeCSV(a.phone || ""),
+      escapeCSV(a.barber || ""),
+      escapeCSV(a.service || ""),
+      escapeCSV(a.date || ""),
+      escapeCSV(a.time || ""),
+      escapeCSV(a.notes || ""),
+      a.completed ? "Yes" : "No",
+      a.source || "",
+      a.createdAt?.toDate?.() ? a.createdAt.toDate().toLocaleString() : "",
+    ]);
+    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `appointments-${new Date().toISOString().split("T")[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${appointments.length} appointments`);
+  };
+
+  const handleExportPDF = () => {
+    // Open tab immediately on click (Safari blocks delayed window.open)
+    const newTab = window.open("", "_blank");
+    if (!newTab) {
+      toast.error("Popup blocked — please allow popups for this site");
+      return;
+    }
+    if (appointments.length === 0) {
+      newTab.close();
+      toast.error("No appointments to export");
+      return;
+    }
+    const rows = appointments.map((a) => `
+      <tr>
+        <td>${a.name || ""}</td>
+        <td>${a.email || ""}</td>
+        <td>${a.phone || ""}</td>
+        <td>${a.barber?.split(" - ")[0] || ""}</td>
+        <td>${a.service || ""}</td>
+        <td>${a.date || ""}</td>
+        <td>${a.time || ""}</td>
+        <td>${a.notes || ""}</td>
+        <td>${a.completed ? "Yes" : "No"}</td>
+        <td>${a.source || ""}</td>
+        <td>${a.createdAt?.toDate?.() ? a.createdAt.toDate().toLocaleString() : ""}</td>
+      </tr>
+    `).join("");
+    const html = `
+      <html>
+      <head>
+        <title>Appointments - ${new Date().toLocaleDateString()}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          h1 { font-size: 18px; margin-bottom: 4px; }
+          p { font-size: 12px; color: #666; margin-bottom: 16px; }
+          table { width: 100%; border-collapse: collapse; font-size: 11px; }
+          th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
+          th { background: #1e293b; color: white; font-weight: 600; }
+          tr:nth-child(even) { background: #f8fafc; }
+          .no-print { margin-bottom: 16px; }
+          .print-btn { background: #1e293b; color: white; border: none; padding: 10px 24px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; margin-right: 8px; }
+          .print-btn:hover { background: #334155; }
+          @media print { .no-print { display: none; } body { padding: 0; } }
+        </style>
+      </head>
+      <body>
+        <div class="no-print">
+          <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+          <button class="print-btn" onclick="window.close()">Close</button>
+        </div>
+        <h1>Grandes Ligas Barber - Appointment Log</h1>
+        <p>Generated: ${new Date().toLocaleString()} | Total: ${appointments.length} appointments</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th><th>Email</th><th>Phone</th><th>Barber</th><th>Service</th>
+              <th>Date</th><th>Time</th><th>Notes</th><th>Done</th><th>Source</th><th>Created</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </body>
+      </html>
+    `;
+    newTab.document.write(html);
+    newTab.document.close();
   };
 
   const handleSignOut = () => {
@@ -1515,7 +1619,7 @@ export function AdminDashboardPage() {
                     <SelectTrigger id="new-barber"><SelectValue placeholder="Select a barber" /></SelectTrigger>
                     <SelectContent>
                       {barbers.map((b) => (
-                        <SelectItem key={b.id} value={`${b.name} - ${b.phone}`}>{b.name} - {b.phone}</SelectItem>
+                        <SelectItem key={b.id} value={b.name === "Jairo" ? `${b.name} (Scan QR code for appointment)` : `${b.name} - ${b.phone}`}>{b.name === "Jairo" ? `${b.name} (Scan QR code for appointment)` : `${b.name} - ${b.phone}`}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -1559,9 +1663,13 @@ export function AdminDashboardPage() {
                   <Label htmlFor="new-notes">Notes</Label>
                   <Textarea id="new-notes" value={newAppt.notes} onChange={(e) => setNewAppt({ ...newAppt, notes: e.target.value })} placeholder="Any special requests or additional information" rows={2} />
                 </div>
-                <div className="flex items-end md:col-span-2">
+                <div className="flex items-end gap-2 md:col-span-2">
                   <Button type="submit" disabled={creating} className="h-9 px-4 text-sm bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
                     {creating ? "Creating..." : "Create Appointment"}
+                  </Button>
+                  <Button type="button" variant="outline" onClick={() => { setShowCreateForm(false); setNewAppt({ name: "", email: "", phone: "", barber: "", service: "", date: "", time: "", notes: "" }); }} className="h-9 px-4 text-sm font-bold">
+                    <X className="size-3 mr-1" />
+                    Cancel
                   </Button>
                 </div>
               </form>
@@ -1573,12 +1681,18 @@ export function AdminDashboardPage() {
         <Card className="border-blue-500/30 bg-white">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-xl text-slate-900">All Appointments</CardTitle>
-            {!showCreateForm && (
-              <Button size="sm" onClick={() => setShowCreateForm(true)} className="h-8 px-3 text-xs bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
-                <Plus className="size-3 mr-1" />
-                New Appointment
+            <div className="flex items-center gap-2">
+              <Button size="sm" onClick={handleExportPDF} className="h-8 px-3 text-xs bg-gradient-to-br from-emerald-600 to-emerald-500 text-white font-bold hover:from-emerald-700 hover:to-emerald-600">
+                <FileText className="size-3 mr-1" />
+                Export PDF
               </Button>
-            )}
+              {!showCreateForm && (
+                <Button size="sm" onClick={() => setShowCreateForm(true)} className="h-8 px-3 text-xs bg-gradient-to-br from-red-700 to-red-600 text-white font-bold hover:from-red-800 hover:to-red-700">
+                  <Plus className="size-3 mr-1" />
+                  New Appointment
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="table">
@@ -1892,7 +2006,7 @@ export function AdminDashboardPage() {
                 <SelectTrigger id="edit-barber"><SelectValue placeholder="Select a barber" /></SelectTrigger>
                 <SelectContent>
                   {barbers.map((b) => (
-                    <SelectItem key={b.id} value={`${b.name} - ${b.phone}`}>{b.name} - {b.phone}</SelectItem>
+                    <SelectItem key={b.id} value={b.name === "Jairo" ? `${b.name} (Scan QR code for appointment)` : `${b.name} - ${b.phone}`}>{b.name === "Jairo" ? `${b.name} (Scan QR code for appointment)` : `${b.name} - ${b.phone}`}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

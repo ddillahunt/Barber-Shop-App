@@ -297,7 +297,6 @@ async function handleSendSMS(data, sourceIp) {
     PhoneNumber: phoneNumber,
     Message: cleanMessage,
     MessageAttributes: {
-      "AWS.SNS.SMS.SenderID": { DataType: "String", StringValue: "GrandesLigas" },
       "AWS.SNS.SMS.SMSType": { DataType: "String", StringValue: "Transactional" },
     },
   });

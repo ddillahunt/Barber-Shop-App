@@ -1,0 +1,45 @@
+name: Promote Testing to Production
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge testing into main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          git merge origin/testing -m "Promote testing to production"
+          git push origin main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Deploy to AWS Amplify
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+        run: |
+          cd dist && zip -r ../deploy.zip . && cd ..
+          aws amplify create-deployment --app-id ddb3xvawthiyv --branch-name main > deployment.json
+          UPLOAD_URL=$(python3 -c "import json; print(json.load(open('deployment.json'))['zipUploadUrl'])")
+          JOB_ID=$(python3 -c "import json; print(json.load(open('deployment.json'))['jobId'])")
+          curl -T deploy.zip "$UPLOAD_URL" --header "Content-Type: application/zip"
+          aws amplify start-deployment --app-id ddb3xvawthiyv --branch-name main --job-id "$JOB_ID"
