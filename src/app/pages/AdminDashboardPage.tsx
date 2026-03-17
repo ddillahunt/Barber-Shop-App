@@ -42,7 +42,6 @@ const defaultBarbers = [
   { id: "6", name: "Montro", phone: "(508) 371-5827" },
   { id: "7", name: "Jairo", phone: "(347) 374-9866" },
   { id: "8", name: "Jose", phone: "(774) 279-2881" },
-  { id: "9", name: "Darrell Dillahunt", phone: "(774) 279-4008" },
 ];
 
 const timeSlots = [
