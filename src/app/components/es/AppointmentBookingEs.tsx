@@ -59,8 +59,12 @@ export function AppointmentBookingEs() {
   const [blockedTimeSlots, setBlockedTimeSlots] = useState<string[]>([]);
   const [barbers, setBarbers] = useState<Barber[]>([]);
 
+  const EXCLUDED_BARBERS = ["Darrell Dillahunt", "Tom Dillahunt"];
+
   useEffect(() => {
-    const unsub = subscribeToBarbers(setBarbers);
+    const unsub = subscribeToBarbers((all) =>
+      setBarbers(all.filter((b) => !EXCLUDED_BARBERS.includes(b.name)))
+    );
     return () => unsub();
   }, []);
 
