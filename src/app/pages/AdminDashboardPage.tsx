@@ -42,6 +42,7 @@ const defaultBarbers = [
   { id: "6", name: "Montro", phone: "(508) 371-5827" },
   { id: "7", name: "Jairo", phone: "(347) 374-9866" },
   { id: "8", name: "Jose", phone: "(774) 279-2881" },
+  { id: "9", name: "Darrell Dillahunt", phone: "(774) 279-4008" },
 ];
 
 const timeSlots = [
@@ -144,8 +145,9 @@ export function AdminDashboardPage() {
       setLoading(false);
     });
     unsubMsgs = subscribeToMessages(setMessages);
+    const EXCLUDED_BARBERS = ["Darrell Dillahunt", "Tom Dillahunt"];
     unsubBarbers = subscribeToBarbers((data) => {
-      setBarbers(data);
+      setBarbers(data.filter((b) => !EXCLUDED_BARBERS.includes(b.name)));
       // Seed default barbers into Firestore on first load if collection is empty
       if (data.length === 0 && !barbersSeeded) {
         setBarbersSeeded(true);

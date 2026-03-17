@@ -13,15 +13,11 @@ const barberImages: Record<string, string> = {
   "Maestro": maestroImg,
 };
 
-const EXCLUDED_BARBERS = ["Darrell Dillahunt", "Tom Dillahunt"];
-
 export function TeamEs() {
   const [barbers, setBarbers] = useState<Barber[]>([]);
 
   useEffect(() => {
-    const unsub = subscribeToBarbers((all) =>
-      setBarbers(all.filter((b) => !EXCLUDED_BARBERS.includes(b.name)))
-    );
+    const unsub = subscribeToBarbers(setBarbers);
     return () => unsub();
   }, []);
 

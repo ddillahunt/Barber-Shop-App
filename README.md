@@ -1,7 +1,7 @@
 
-  # Barber Shop Website
+  # GDI Ticketing System (Copy)
 
-  This is a code bundle for Barber Shop Website. The original project is available at https://www.figma.com/design/0omnD5W7ZmR3tmalCFBtlQ/Barber-Shop-Website.
+  This is a code bundle for GDI Ticketing System (Copy). The original project is available at https://www.figma.com/design/iqCDA0eeLInFBLYnPzyfLi/GDI-Ticketing-System--Copy-.
 
   ## Running the code
 
